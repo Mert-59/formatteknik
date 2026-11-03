@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
-
-const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
+import { EASE as ease } from '../lib/motion'
 
 /** İç sayfaların ortak açılışı: etiket, büyük başlık, kısa metin. */
 export default function PageHero({ label, title, text }: { label: string; title: ReactNode; text?: string }) {

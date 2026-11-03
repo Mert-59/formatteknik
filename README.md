@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# Format Teknik — formatteknik.com.tr
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Çorlu/Tekirdağ merkezli kesici takım, ölçüm ve sarf malzemesi tedarikçisinin web sitesi.
+Vite + React + TypeScript + Tailwind v4. Animasyonlar: GSAP (giriş, kaydırma efektleri) ve Motion (menü, çekmece, sayfa geçişleri).
 
-Currently, two official plugins are available:
+## Komutlar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev      # geliştirme sunucusu
+npm run build    # tip denetimi + üretim derlemesi → dist/
+npm run lint     # oxlint
+npm run preview  # dist/ klasörünü yerelde sunar
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## İçerik nereden yönetilir
+
+| Ne | Dosya |
+|---|---|
+| Firma adı, adres, telefon, WhatsApp, e-posta, menü | `src/config/site.ts` |
+| Ürün grupları (ad, açıklama, örnek kod, çizim) | `src/data/catalog.ts` |
+| Markalar ve logoları (`public/brands/`) | `src/data/brands.ts` |
+| Sayfa başlıkları / açıklamaları | her sayfadaki `usePageMeta(...)` |
+| Paylaşım önizlemesi, yapılandırılmış veri | `index.html` |
+| Site haritası | `public/sitemap.xml` |
+
+## Yapı
+
+- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; yalnızca anasayfada indirilir.
+- `src/cart/` — sepet: tarayıcıda saklanır, WhatsApp veya e-posta mesajı olarak gönderilir. Sunucu gerekmez.
+- `src/lib/scroll.ts` — kaydırma kilidi ve modal odak yönetimi (sepet, mobil menü).
+
+## Yayına alma
+
+Site tek sayfalı bir uygulamadır (SPA). Sunucu, var olmayan her yol için `index.html` döndürmelidir;
+aksi hâlde `/urunler` gibi adresler sayfa yenilenince 404 verir. Barındırıcıya göre ayar:
+
+- **Netlify:** `public/_redirects` → `/*  /index.html  200`
+- **Vercel:** `vercel.json` → `{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }`
+- **Apache (cPanel):** `.htaccess` ile `FallbackResource /index.html`

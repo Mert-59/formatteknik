@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import PageHero from '../components/PageHero'
 import SectionHead from '../components/SectionHead'
 import BrandWall from '../components/BrandWall'
+import { usePageMeta } from '../lib/usePageMeta'
 
 const RANGE = [
   { t: 'Kesici takımlar', d: 'Torna ve frezeleme uçları, matkaplar, kılavuzlar, raybalar.' },
@@ -12,6 +13,10 @@ const RANGE = [
 ]
 
 export default function About() {
+  usePageMeta(
+    'Kurumsal',
+    'Format Teknik; talaşlı imalat sektörüne kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri tedarik eden, Çorlu merkezli bir çözüm ortağıdır.',
+  )
   return (
     <>
       <PageHero
@@ -57,7 +62,7 @@ export default function About() {
       <section className="mx-auto max-w-[1440px] px-5 pb-28 md:px-10">
         <SectionHead index="02" label="MARKALARIMIZ" title={<>Bayiliğini yaptığımız markalar.</>} />
         <BrandWall />
-        <Link to="/iletisim" className="group mt-14 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-4 text-[15px] font-medium text-paper transition-colors hover:bg-accent">
+        <Link to="/iletisim" className="group mt-14 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-4 text-[15px] font-medium text-paper transition-colors hover:bg-accent-ink">
           Bizimle iletişime geçin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </section>

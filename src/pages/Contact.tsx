@@ -3,6 +3,7 @@ import { ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import PageHero from '../components/PageHero'
 import { SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
+import { usePageMeta } from '../lib/usePageMeta'
 
 function Card({ icon, label, children, href, cta, external }: { icon: ReactNode; label: string; children: ReactNode; href: string; cta: string; external?: boolean }) {
   return (
@@ -26,6 +27,7 @@ function Card({ icon, label, children, href, cta, external }: { icon: ReactNode;
 }
 
 export default function Contact() {
+  usePageMeta('İletişim', `Format Teknik iletişim: telefon, WhatsApp, e-posta ve adres. ${SITE.address}.`)
   const { setOpen, count } = useCart()
   return (
     <>
@@ -63,7 +65,7 @@ export default function Contact() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="shrink-0 rounded-full bg-paper px-6 py-4 text-[15px] font-medium text-ink transition-colors hover:bg-accent hover:text-white"
+            className="shrink-0 rounded-full bg-paper px-6 py-4 text-[15px] font-medium text-ink transition-colors hover:bg-accent-ink hover:text-white"
           >
             Sepeti aç {count > 0 && `(${count})`}
           </button>

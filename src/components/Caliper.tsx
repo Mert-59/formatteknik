@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { prefersReducedMotion } from '../lib/scroll'
 
 /*
  * Etkileşimli dijital kumpas (viewBox 1200×230).
@@ -91,12 +92,14 @@ export default function Caliper({ active }: { active: boolean }) {
         idle = gsap.timeline({ repeat: -1 })
         for (const stop of stops) idle.to(s, { mm: stop, duration: 1.4, ease: 'power3.inOut', onUpdate: render }).to({}, { duration: 1.3 })
       }
-      let idleTimer = window.setTimeout(startIdle, 1400)
+      // Hareket azaltma tercihinde kumpas kendi kendine oynamaz; yalnızca kullanıcı oynatır.
+      const reduced = prefersReducedMotion()
+      let idleTimer = reduced ? 0 : window.setTimeout(startIdle, 1400)
       const wake = () => {
         idle?.kill()
         idle = null
         window.clearTimeout(idleTimer)
-        idleTimer = window.setTimeout(startIdle, 3500)
+        if (!reduced) idleTimer = window.setTimeout(startIdle, 3500)
       }
 
       const toMm = (clientX: number) => {
@@ -134,7 +137,10 @@ export default function Caliper({ active }: { active: boolean }) {
       window.addEventListener('pointerup', onUp)
 
       // Açılış: sıfırdan 1 inç'e
-      gsap.to(s, { mm: INCH, duration: 1.6, delay: 0.6, ease: 'power3.inOut', onUpdate: render })
+      if (reduced) {
+        s.mm = INCH
+        render()
+      } else gsap.to(s, { mm: INCH, duration: 1.6, delay: 0.6, ease: 'power3.inOut', onUpdate: render })
 
       return () => {
         idle?.kill()

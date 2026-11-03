@@ -1,39 +1,36 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { motion } from 'motion/react'
+import { MotionConfig, motion } from 'motion/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Intro from './intro/Intro'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './cart/CartDrawer'
 import { CartProvider } from './cart/CartContext'
 import { IntroContext, type IntroPhase } from './lib/introState'
-import { scrollToTop, useSmoothScroll } from './lib/smoothScroll'
+import { prefersReducedMotion, scrollToTop, useScrollLock } from './lib/scroll'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 
-const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+// 3D giriş (Three.js + il verisi) ayrı parça olarak yüklenir: diğer sayfalar bu yükü indirmez.
+const Intro = lazy(() => import('./intro/Intro'))
 
 function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Giriş yalnızca anasayfaya doğrudan gelindiğinde oynar.
+  // Giriş, anasayfaya doğrudan gelindiğinde her seferinde oynar.
   const [phase, setPhase] = useState<IntroPhase>(() =>
     location.pathname === '/' && !prefersReducedMotion() ? 'intro' : 'done',
   )
   const [run, setRun] = useState(0)
 
+  useScrollLock(phase !== 'done')
   useEffect(() => {
-    const html = document.documentElement
-    html.style.overflow = phase === 'done' ? '' : 'hidden'
-    if (phase !== 'intro') html.style.background = '' // ilk boyamadaki koyu zemin (index.html) kalkar
+    if (phase !== 'intro') document.documentElement.style.background = '' // ilk boyamadaki koyu zemin (index.html) kalkar
   }, [phase])
-
-  useSmoothScroll(phase === 'done')
 
   // Sayfa değişince başa dön; düzen oturunca tetikleyicileri yeniden ölç.
   useEffect(() => {
@@ -76,7 +73,10 @@ function Shell() {
       <Footer />
       <CartDrawer />
       {phase !== 'done' && (
-        <Intro key={run} onReveal={() => setPhase('revealing')} onComplete={() => setPhase('done')} />
+        // Parça inene kadar koyu zemin: anasayfa bir an bile görünmesin
+        <Suspense fallback={<div className="fixed inset-0 z-50 bg-night" />}>
+          <Intro key={run} onReveal={() => setPhase('revealing')} onComplete={() => setPhase('done')} />
+        </Suspense>
       )}
     </IntroContext.Provider>
   )
@@ -85,9 +85,11 @@ function Shell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <Shell />
-      </CartProvider>
+      <MotionConfig reducedMotion="user">
+        <CartProvider>
+          <Shell />
+        </CartProvider>
+      </MotionConfig>
     </BrowserRouter>
   )
 }

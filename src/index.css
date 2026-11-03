@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 @theme {
   /* Site — açık tema */
@@ -11,6 +10,7 @@
   --color-line: #e3e6e8;
   --color-accent: #e5401b; /* girişteki Tekirdağ kızılı */
   --color-accent-ink: #c2330f; /* beyaz üstünde küçük metin için (AA) */
+  --color-whatsapp: #128c7e; /* WhatsApp düğmesi üzerine gelince */
 
   /* Giriş — koyu tema */
   --color-night: #0a0c0f;
@@ -43,14 +43,6 @@ body {
 /* Geniş başlık kesimi */
 .font-wide {
   font-stretch: 125%;
-}
-
-/* Yatay kaydırma şeritlerinde kaydırma çubuğunu gizle */
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
 }
 
 /* Çentikli cihazlar: sabit öğeler ekran kenarı/ana çubuk boşluklarına uyar */

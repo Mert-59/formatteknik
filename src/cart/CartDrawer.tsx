@@ -1,50 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { Minus, Plus, Send, Trash2, X } from 'lucide-react'
+import { Mail, Minus, Plus, Send, Trash2, X } from 'lucide-react'
 import { useCart } from './CartContext'
-import { whatsappUrl } from '../config/site'
-import { lockScroll } from '../lib/smoothScroll'
+import { SITE, whatsappUrl } from '../config/site'
+import { useModal, useScrollLock } from '../lib/scroll'
+import { EASE_CURTAIN } from '../lib/motion'
 
 const field =
-  'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-[14px] outline-none transition-colors placeholder:text-muted/70 focus:border-ink'
+  'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-[14px] outline-none transition-colors placeholder:text-muted focus:border-ink'
+const label = 'mb-1.5 block font-mono text-[10px] tracking-[0.18em] text-muted'
 
 export default function CartDrawer() {
   const { items, open, setOpen, setQty, remove, clear, buildMessage, count } = useCart()
   const [customer, setCustomer] = useState({ name: '', company: '', note: '' })
+  const dialog = useRef<HTMLDivElement>(null)
+  const panel = useRef<HTMLElement>(null)
+  const id = useId()
+  const close = useCallback(() => setOpen(false), [setOpen])
 
-  useEffect(() => {
-    lockScroll(open)
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
-    window.addEventListener('keydown', onKey)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      lockScroll(false)
-    }
-  }, [open, setOpen])
+  useScrollLock(open)
+  useModal(dialog, open, close, panel)
 
-  const send = () => {
+  const sendWhatsApp = () => {
     window.open(whatsappUrl(buildMessage(customer)), '_blank', 'noopener')
   }
+  // WhatsApp kullanmayan (ör. masaüstündeki satın alma birimi) için aynı mesaj e-postayla
+  const mailHref = `mailto:${SITE.email}?subject=${encodeURIComponent('Web sitesi sipariş / teklif talebi')}&body=${encodeURIComponent(buildMessage(customer))}`
 
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Sipariş sepeti">
+        <div ref={dialog} className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Sipariş sepeti">
           <motion.div
             className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
+            onClick={close}
           />
           <motion.aside
+            ref={panel}
             className="absolute inset-y-0 right-0 flex w-[min(460px,100vw)] flex-col bg-paper shadow-[-30px_0_80px_rgba(15,18,21,0.12)]"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.55, ease: EASE_CURTAIN }}
           >
             <div className="flex items-center justify-between border-b border-line px-5 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:py-5">
               <div>
@@ -55,7 +56,7 @@ export default function CartDrawer() {
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="grid size-10 place-items-center rounded-full border border-line transition-colors hover:border-ink"
                 aria-label="Sepeti kapat"
               >
@@ -70,11 +71,11 @@ export default function CartDrawer() {
                 </div>
                 <p className="text-[18px] font-semibold">Sepetiniz boş</p>
                 <p className="mt-2 max-w-xs text-[14px] text-muted">
-                  Ürün grubunu seçin, ürün kodunu ve adedi yazıp sepete ekleyin. Sonra sepeti WhatsApp ile bize gönderin.
+                  Ürün grubunu seçin, ürün kodunu ve adedi yazıp sepete ekleyin. Sonra sepeti WhatsApp ya da e-posta ile bize gönderin.
                 </p>
                 <Link
                   to="/urunler"
-                  onClick={() => setOpen(false)}
+                  onClick={close}
                   className="mt-6 rounded-full bg-ink px-5 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-graphite"
                 >
                   Ürünlere göz atın
@@ -82,7 +83,7 @@ export default function CartDrawer() {
               </div>
             ) : (
               <>
-                <div className="flex-1 overflow-y-auto overscroll-contain" data-lenis-prevent>
+                <div className="flex-1 overflow-y-auto overscroll-contain">
                   <ul className="divide-y divide-line">
                     <AnimatePresence initial={false}>
                       {items.map((it, i) => (
@@ -103,11 +104,19 @@ export default function CartDrawer() {
                           </div>
                           <div className="flex flex-col items-end gap-2">
                             <div className="flex items-center rounded-full border border-line">
-                              <button type="button" className="grid size-10 place-items-center sm:size-8" onClick={() => setQty(it.id, it.qty - 1)} aria-label="Azalt">
+                              <button
+                                type="button"
+                                className="grid size-10 place-items-center disabled:opacity-30 sm:size-8"
+                                onClick={() => setQty(it.id, it.qty - 1)}
+                                disabled={it.qty <= 1}
+                                aria-label={`${it.code} adedini azalt`}
+                              >
                                 <Minus className="size-3.5" />
                               </button>
-                              <span className="min-w-8 text-center font-mono text-[13px] tabular-nums">{it.qty}</span>
-                              <button type="button" className="grid size-10 place-items-center sm:size-8" onClick={() => setQty(it.id, it.qty + 1)} aria-label="Arttır">
+                              <span className="min-w-8 text-center font-mono text-[13px] tabular-nums" aria-label={`Adet ${it.qty}`}>
+                                {it.qty}
+                              </span>
+                              <button type="button" className="grid size-10 place-items-center sm:size-8" onClick={() => setQty(it.id, it.qty + 1)} aria-label={`${it.code} adedini arttır`}>
                                 <Plus className="size-3.5" />
                               </button>
                             </div>
@@ -120,25 +129,47 @@ export default function CartDrawer() {
                     </AnimatePresence>
                   </ul>
 
-                  <div className="space-y-3 border-t border-line px-5 py-5 sm:px-6">
-                    <p className="font-mono text-[10px] tracking-[0.22em] text-muted">BİLGİLERİNİZ (İSTEĞE BAĞLI)</p>
-                    <input className={field} placeholder="Ad Soyad" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} />
-                    <input className={field} placeholder="Firma" value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} />
-                    <textarea className={`${field} min-h-20 resize-none`} placeholder="Not (teslimat, tolerans, alternatif marka…)" value={customer.note} onChange={(e) => setCustomer({ ...customer, note: e.target.value })} />
-                  </div>
+                  <fieldset className="space-y-3 border-t border-line px-5 py-5 sm:px-6">
+                    <legend className="float-left mb-1 w-full font-mono text-[10px] tracking-[0.22em] text-muted">BİLGİLERİNİZ (İSTEĞE BAĞLI)</legend>
+                    <div className="clear-both">
+                      <label htmlFor={`${id}-name`} className={label}>AD SOYAD</label>
+                      <input id={`${id}-name`} className={field} autoComplete="name" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} />
+                    </div>
+                    <div>
+                      <label htmlFor={`${id}-company`} className={label}>FİRMA</label>
+                      <input id={`${id}-company`} className={field} autoComplete="organization" value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} />
+                    </div>
+                    <div>
+                      <label htmlFor={`${id}-note`} className={label}>NOT</label>
+                      <textarea
+                        id={`${id}-note`}
+                        className={`${field} min-h-20 resize-none`}
+                        placeholder="Teslimat, tolerans, alternatif marka…"
+                        value={customer.note}
+                        onChange={(e) => setCustomer({ ...customer, note: e.target.value })}
+                      />
+                    </div>
+                  </fieldset>
                 </div>
 
                 <div className="safe-b border-t border-line px-5 pt-4 sm:px-6 sm:pt-5">
                   <button
                     type="button"
-                    onClick={send}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-full bg-ink px-5 py-4 text-[15px] font-medium text-paper transition-colors hover:bg-[#128C7E]"
+                    onClick={sendWhatsApp}
+                    className="flex w-full items-center justify-center gap-2.5 rounded-full bg-ink px-5 py-4 text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
                   >
                     <Send className="size-4" />
                     WhatsApp ile gönder
                   </button>
-                  <div className="mt-3 flex items-center justify-between text-[12px] text-muted">
-                    <span>Mesajı göndermeden önce WhatsApp’ta düzenleyebilirsiniz.</span>
+                  <a
+                    href={mailHref}
+                    className="mt-2 flex w-full items-center justify-center gap-2.5 rounded-full border border-ink/15 px-5 py-3.5 text-[14px] font-medium transition-colors hover:border-ink"
+                  >
+                    <Mail className="size-4" />
+                    E-posta ile gönder
+                  </a>
+                  <div className="mt-3 flex items-center justify-between gap-3 text-[12px] text-muted">
+                    <span>Mesajı göndermeden önce düzenleyebilirsiniz.</span>
                     <button type="button" onClick={clear} className="shrink-0 underline-offset-2 hover:text-ink hover:underline">
                       Temizle
                     </button>

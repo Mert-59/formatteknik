@@ -1,6 +1,8 @@
 /** Firma bilgileri — tek yerden yönetilir. (Kaynak: mevcut formatteknik.com.tr) */
 export const SITE = {
   name: 'Format Teknik',
+  /** Yayın adresi (sonda / yok) — canonical, sitemap ve index.html ile aynı olmalı */
+  url: 'https://formatteknik.com.tr',
   city: 'Çorlu / Tekirdağ',
   address: 'Çobançeşme Mah. Bülent Ecevit Bulvarı, Arka İnşaat B Blok No: 207 D, Çorlu / Tekirdağ',
   mapsUrl:
