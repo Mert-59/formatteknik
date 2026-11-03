@@ -1,0 +1,119 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  /* Site — açık tema */
+  --color-paper: #ffffff;
+  --color-mist: #f4f5f4;
+  --color-ink: #0f1215;
+  --color-graphite: #3a4048;
+  --color-muted: #6b727a;
+  --color-line: #e3e6e8;
+  --color-accent: #e5401b; /* girişteki Tekirdağ kızılı */
+  --color-accent-ink: #c2330f; /* beyaz üstünde küçük metin için (AA) */
+
+  /* Giriş — koyu tema */
+  --color-night: #0a0c0f;
+  --color-snow: #e9edf1;
+  --color-fog: #7f8a96;
+
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Geniş başlık kesimi */
+.font-wide {
+  font-stretch: 125%;
+}
+
+/* Yatay kaydırma şeritlerinde kaydırma çubuğunu gizle */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Çentikli cihazlar: sabit öğeler ekran kenarı/ana çubuk boşluklarına uyar */
+.safe-x {
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+@media (min-width: 768px) {
+  .safe-x {
+    padding-left: max(2.5rem, env(safe-area-inset-left));
+    padding-right: max(2.5rem, env(safe-area-inset-right));
+  }
+}
+.safe-b {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+
+/* Altbilgideki dev yazı: "FORMAT TEKNİK" ≈10.3em, kapsayıcıya tam sığar */
+.footer-mark {
+  font-size: min(calc((100vw - 2.5rem) / 10.5), 130px);
+}
+@media (min-width: 768px) {
+  .footer-mark {
+    font-size: min(calc((100vw - 5rem) / 10.5), 130px);
+  }
+}
+
+/* iOS, 16px altındaki alanlara odaklanınca sayfayı yakınlaştırır */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* SVG teknik çizimler: pathLength="1" ile çizilip "plotter" gibi açılır */
+.plot * {
+  stroke-dasharray: 1;
+  stroke-dashoffset: var(--plot, 0);
+}
+.plot .plot-center {
+  stroke-dasharray: 6 3 1 3;
+  stroke-dashoffset: 0;
+  stroke-width: 0.8;
+  opacity: calc(0.35 * (1 - var(--plot, 0)));
+}
+.plot .plot-label {
+  opacity: calc(1 - var(--plot, 0));
+}
+@media (prefers-reduced-motion: reduce) {
+  .plot * {
+    stroke-dashoffset: 0 !important;
+  }
+  .plot .plot-label {
+    opacity: 1 !important;
+  }
+  .plot .plot-center {
+    opacity: 0.35 !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
