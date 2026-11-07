@@ -16,6 +16,9 @@ const COLS = [
   { n: 5, span: ['', 'lg:col-span-2', 'lg:col-span-3', 'lg:col-span-4', 'lg:col-span-5'] },
 ]
 
+/** img width/height öznitelikleri için temel kutu (yerleşim kaymasını önler; asıl boyut CSS'te) */
+const LOGO_BOX = 48
+
 function lastCellSpan(count: number) {
   return COLS.map(({ n, span }) => {
     const rem = count % n
@@ -40,7 +43,10 @@ export default function BrandWall() {
   )
 
   return (
-    <div ref={root} className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
+    <div
+      ref={root}
+      className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line [--logo-k:40px] sm:grid-cols-3 sm:[--logo-k:50px] lg:grid-cols-5 lg:[--logo-k:56px]"
+    >
       {BRANDS.map((b, i) => (
         <div
           key={b.name}
@@ -58,12 +64,24 @@ export default function BrandWall() {
           ))}
 
           {b.logo ? (
-            <img
-              src={b.logo}
-              alt={b.name}
-              loading="lazy"
-              className="max-h-12 max-w-[70%] object-contain opacity-70 grayscale transition-all duration-500 group-hover:opacity-100 group-hover:grayscale-0"
-            />
+            <span className="flex max-w-[78%] flex-col items-center gap-2.5">
+              <img
+                src={b.logo}
+                alt={b.name}
+                loading="lazy"
+                decoding="async"
+                width={Math.round(LOGO_BOX * (b.ratio ?? 3))}
+                height={LOGO_BOX}
+                // Eşit görsel ağırlık: yükseklik ∝ 1/√oran → her logo yaklaşık aynı alanı kaplar
+                style={{ height: `calc(var(--logo-k) / ${Math.sqrt(b.ratio ?? 3).toFixed(3)})` }}
+                className="w-auto max-w-full object-contain opacity-75 grayscale transition-[filter,opacity] duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+              />
+              {b.caption && (
+                <span className="font-mono text-[9px] tracking-[0.24em] text-muted transition-colors duration-300 group-hover:text-ink">
+                  {b.name.toLocaleUpperCase('en')}
+                </span>
+              )}
+            </span>
           ) : (
             <span className="font-wide text-[clamp(17px,1.6vw,24px)] font-semibold tracking-[-0.01em] text-graphite transition-colors duration-300 group-hover:text-ink">
               {b.name}
@@ -71,7 +89,7 @@ export default function BrandWall() {
           )}
 
           <span className="absolute bottom-4 right-4 font-mono text-[9px] tracking-[0.18em] text-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {b.logo ? b.name.toLocaleUpperCase('tr-TR') : 'LOGO YAKINDA'}
+            {b.logo ? (b.caption ? '' : b.name.toLocaleUpperCase('en')) : 'LOGO YAKINDA'}
           </span>
         </div>
       ))}

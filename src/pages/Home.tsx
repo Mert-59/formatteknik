@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CATEGORIES } from '../data/catalog'
 import { useIntro } from '../lib/introState'
+import { useCart } from '../cart/CartContext'
 import { EASE } from '../lib/motion'
 import { usePageMeta } from '../lib/usePageMeta'
 import Caliper from '../components/Caliper'
@@ -27,6 +28,7 @@ const line: Variants = {
 
 function Hero() {
   const { phase } = useIntro()
+  const { openCart } = useCart()
   const entered = phase !== 'intro'
 
   return (
@@ -65,11 +67,15 @@ function Hero() {
               Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Havacılık, medikal, otomotiv ve makina sektörlerine.
             </p>
             <div className="mt-6 flex flex-wrap gap-2.5">
-              <Link to="/urunler" className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-accent-ink">
-                Ürünleri keşfedin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-              <Link to="/iletisim" className="inline-flex items-center rounded-full border border-ink/15 px-5 py-3 text-[14px] font-medium transition-colors hover:border-ink">
-                İletişim
+              <button
+                type="button"
+                onClick={() => openCart({ focus: true })}
+                className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-accent-ink"
+              >
+                Kodla sipariş verin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </button>
+              <Link to="/urunler" className="inline-flex items-center rounded-full border border-ink/15 px-5 py-3 text-[14px] font-medium transition-colors hover:border-ink">
+                Ürün grupları
               </Link>
             </div>
           </motion.div>
@@ -107,7 +113,7 @@ function ProductGrid() {
         index="01"
         label="ÜRÜN GRUPLARI"
         title={<>Talaşlı imalatın tüm takımları.</>}
-        aside={<>Dokuz ürün grubu, tek bir adres. İhtiyacınızı kodla ya da tarifle sepete ekleyin.</>}
+        aside={<>Dokuz ürün grubu, tek bir adres. İhtiyacınızı kodla ya da tarifle teklif fişine ekleyin.</>}
       />
       {/* teknik şartname tablosu: telefonda satır, geniş ekranda 3×3 */}
       <ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-3">
@@ -159,13 +165,14 @@ function Brands() {
 /* ----------------------------------------------------- SEPET NASIL ÇALIŞIR */
 
 const STEPS = [
-  { t: 'Ürün grubunu seçin', d: 'Dokuz ürün grubundan ihtiyacınıza uygun olanı seçin.' },
-  { t: 'Kodu ve adedi yazın', d: 'Ürün kodunu ya da ölçü ve kullanım amacını yazıp sepete ekleyin.' },
-  { t: 'Sepeti gönderin', d: 'Sepetiniz düzenli bir mesaj olarak hazırlanır; WhatsApp ya da e-postayla tek dokunuşla bize ulaşır.' },
+  { t: 'Kodu yazın', d: 'Ürün kodunu ya da ölçü ve kullanım amacını yazın. Elinizde liste varsa tek seferde yapıştırın.' },
+  { t: 'Fişe ekleyin', d: 'Enter’a basın, sıradakine geçin. Ürün grubu ve marka isteğe bağlı.' },
+  { t: 'WhatsApp’tan gönderin', d: 'Fişiniz numaralı, düzenli bir mesaj olarak hazırlanır; tek dokunuşla bize ulaşır.' },
 ]
 
 function HowToOrder() {
   const root = useRef<HTMLDivElement>(null)
+  const { openCart } = useCart()
   useGSAP(
     () => {
       const st = { trigger: root.current, start: 'top 75%', end: 'top 35%', scrub: true }
@@ -177,7 +184,7 @@ function HowToOrder() {
   return (
     <section>
       <div ref={root} className="mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-32">
-        <SectionHead index="03" label="SEPET SİPARİŞİ" title={<>Üç adımda sipariş.</>} />
+        <SectionHead index="03" label="TEKLİF FİŞİ" title={<>Üç adımda sipariş.</>} aside={<>Üyelik yok, form yok. Fişiniz bu cihazda saklanır; hazır olduğunda gönderirsiniz.</>} />
         <div className="relative grid gap-10 md:grid-cols-3 md:gap-6">
           <div className="step-line absolute left-0 right-0 top-[27px] hidden h-px origin-left bg-ink/25 md:block" />
           <div className="step-line-v absolute bottom-10 left-[27px] top-0 w-px origin-top bg-ink/25 md:hidden" />
@@ -193,12 +200,13 @@ function HowToOrder() {
             </div>
           ))}
         </div>
-        <Link
-          to="/urunler"
+        <button
+          type="button"
+          onClick={() => openCart({ focus: true })}
           className="group mt-14 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-4 text-[15px] font-medium text-paper transition-colors hover:bg-accent-ink"
         >
-          Sepet oluşturmaya başlayın <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
+          Fişi açın, ilk kodu yazın <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+        </button>
       </div>
     </section>
   )

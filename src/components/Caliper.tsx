@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { prefersReducedMotion } from '../lib/scroll'
@@ -7,7 +7,7 @@ import { prefersReducedMotion } from '../lib/scroll'
  * Etkileşimli dijital kumpas (viewBox 1200×230).
  * - Fare: hareketli çene imleci yatayda takip eder.
  * - Dokunmatik: kumpas sürüklenir.
- * - Boşta: kendi kendine ölçüm yapar (inç değerlerine uğrar).
+ * - Boşta: bir tur kendi kendine ölçüm yapar (inç değerlerine uğrar) ve durur.
  * - Tam inç değerlerinde ekranın üstünde "= N inç" belirir (küçük sürpriz).
  */
 
@@ -17,6 +17,7 @@ const RANGE = 150 // mm
 const INCH = 25.4
 const IDLE_STOPS = [25.4, 63.5, 12, 101.6, 50.8, 38.1, 76.2]
 const SLIDER_RIGHT = 406 // sürgü gövdesinin sağ kenarı (0 mm'de)
+const REVEAL_EDGE = 28 // markanın açığa çıkış kenarının yumuşaklığı (birim)
 
 /** Dar ekranda cetvelin yalnızca baş kısmı gösterilir: kumpas ~%60 büyür, gerisi ekran dışına uzanır. */
 const VIEW = {
@@ -62,6 +63,9 @@ export default function Caliper({ active }: { active: boolean }) {
   const gap = useRef<SVGRectElement>(null)
   const dim = useRef<SVGPathElement>(null)
   const inch = useRef<SVGTextElement>(null)
+  const reveal = useRef<SVGLinearGradientElement>(null)
+  // SVG url(#…) için güvenli kimlik
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '')
   const compact = useCompact()
   const view = compact ? VIEW.compact : VIEW.wide
   // Sürgü görünür alanın dışına çıkmasın
@@ -77,6 +81,9 @@ export default function Caliper({ active }: { active: boolean }) {
         slider.current!.setAttribute('transform', `translate(${x} 0)`)
         value.current!.textContent = fmt(s.mm)
         gap.current!.setAttribute('width', String(Math.max(0, x)))
+        // Marka, hareketli çenenin ölçüm yüzeyinin hemen gerisinden yumuşak bir kenarla açığa çıkar
+        reveal.current!.setAttribute('x1', String(ZERO + x - REVEAL_EDGE))
+        reveal.current!.setAttribute('x2', String(ZERO + x - 2))
         dim.current!.setAttribute('d', `M${ZERO} 186 H${ZERO + x}`)
         const inches = s.mm / INCH
         const near = Math.round(inches)
@@ -85,21 +92,21 @@ export default function Caliper({ active }: { active: boolean }) {
       }
       const to = gsap.quickTo(s, 'mm', { duration: 0.7, ease: 'power3.out', onUpdate: render })
 
-      // Boşta gezinti
+      // Boşta gezinti: bir tur durakları dolaşır, 1 inç'te durur. Sürekli hareket göz yormasın;
+      // kullanıcı dokunduktan sonra kumpas yalnızca onunla oynar.
       let idle: gsap.core.Timeline | null = null
       const startIdle = () => {
         idle?.kill()
-        idle = gsap.timeline({ repeat: -1 })
-        for (const stop of stops) idle.to(s, { mm: stop, duration: 1.4, ease: 'power3.inOut', onUpdate: render }).to({}, { duration: 1.3 })
+        idle = gsap.timeline()
+        for (const stop of [...stops, INCH]) idle.to(s, { mm: stop, duration: 1.4, ease: 'power3.inOut', onUpdate: render }).to({}, { duration: 1.3 })
       }
       // Hareket azaltma tercihinde kumpas kendi kendine oynamaz; yalnızca kullanıcı oynatır.
       const reduced = prefersReducedMotion()
-      let idleTimer = reduced ? 0 : window.setTimeout(startIdle, 1400)
+      const idleTimer = reduced ? 0 : window.setTimeout(startIdle, 2400)
       const wake = () => {
         idle?.kill()
         idle = null
         window.clearTimeout(idleTimer)
-        if (!reduced) idleTimer = window.setTimeout(startIdle, 3500)
       }
 
       const toMm = (clientX: number) => {
@@ -177,6 +184,33 @@ export default function Caliper({ active }: { active: boolean }) {
 
         {/* ölçülen aralık */}
         <rect ref={gap} x={ZERO} y={96} width={0} height={104} fill="var(--color-accent)" fillOpacity={0.07} stroke="none" />
+
+        {/* Çeneler açıldıkça aralığın içinde beliren marka: sürgünün çenesi geri çekildikçe kazınmış gibi görünür.
+            ~1 inç'te "FORMAT", ~2 inç'te tam "FORMAT TEKNİK" okunur. */}
+        <defs>
+          <linearGradient ref={reveal} id={`${uid}-reveal`} gradientUnits="userSpaceOnUse" x1={ZERO - REVEAL_EDGE} y1={0} x2={ZERO} y2={0}>
+            <stop offset="0" stopColor="#fff" />
+            <stop offset="1" stopColor="#000" />
+          </linearGradient>
+          <mask id={`${uid}-mask`} maskUnits="userSpaceOnUse" x={ZERO} y={96} width={1000} height={104}>
+            <rect x={ZERO} y={96} width={1000} height={104} fill={`url(#${uid}-reveal)`} />
+          </mask>
+        </defs>
+        <g mask={`url(#${uid}-mask)`} stroke="none" aria-hidden>
+          <text x={ZERO + 16} y={146} className="fill-accent-ink" style={{ fontFeatureSettings: '"kern"' }}>
+            <tspan className="font-wide text-[30px] font-semibold" letterSpacing="-0.4">
+              FORMAT
+            </tspan>
+            <tspan dx={9} className="font-mono text-[15px] font-medium" letterSpacing="3.4" fillOpacity={0.72}>
+              TEKNİK
+            </tspan>
+          </text>
+          {/* ince künye çizgisi + kısa alt yazı */}
+          <path d={`M${ZERO + 17} 160 h232`} stroke="var(--color-accent-ink)" strokeOpacity={0.28} strokeWidth={0.8} />
+          <text x={ZERO + 17} y={174} className="fill-accent-ink font-mono text-[8.5px]" letterSpacing="2.2" fillOpacity={0.6}>
+            KESİCİ TAKIM · ÖLÇÜM · SARF — ÇORLU
+          </text>
+        </g>
         <path ref={dim} d={`M${ZERO} 186 H${ZERO}`} stroke="var(--color-accent)" strokeWidth={1} />
 
         {/* sürgü */}

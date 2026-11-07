@@ -26,8 +26,14 @@ npm run preview  # dist/ klasörünü yerelde sunar
 
 ## Yapı
 
-- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; yalnızca anasayfada indirilir.
-- `src/cart/` — sepet: tarayıcıda saklanır, WhatsApp veya e-posta mesajı olarak gönderilir. Sunucu gerekmez.
+- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; anasayfa her açıldığında
+  oynar, diğer sayfalar bu yükü indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
+- `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp veya e-posta mesajı olarak gönderilir. Sunucu gerekmez.
+  - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
+  - `parse.ts` — "Liste yapıştır": her satır bir kalem; `x10`, `10 adet`, `; 10` veya Excel sekmesi adet olarak okunur.
+  - `CartDrawer.tsx` — fiş çekmecesi: fiş no (`FT-YYAAGG-NNNN`), mesaj önizleme, gönderince "GÖNDERİLDİ" mührü.
+  - `CartBar.tsx` — telefonda fişte kalem varken alttaki çubuk.
+  - Ad ve firma cihazda hatırlanır (`ft-customer-v1`); fiş no ve gönderim zamanı `ft-order-v1`'de tutulur.
 - `src/lib/scroll.ts` — kaydırma kilidi ve modal odak yönetimi (sepet, mobil menü).
 
 ## Yayına alma

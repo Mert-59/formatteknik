@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './cart/CartDrawer'
+import CartBar from './cart/CartBar'
 import { CartProvider } from './cart/CartContext'
 import { IntroContext, type IntroPhase } from './lib/introState'
 import { prefersReducedMotion, scrollToTop, useScrollLock } from './lib/scroll'
@@ -21,7 +22,7 @@ function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Giriş, anasayfaya doğrudan gelindiğinde her seferinde oynar.
+  // Giriş, anasayfaya her gelindiğinde (doğrudan açılış / yenileme) oynar.
   const [phase, setPhase] = useState<IntroPhase>(() =>
     location.pathname === '/' && !prefersReducedMotion() ? 'intro' : 'done',
   )
@@ -71,6 +72,7 @@ function Shell() {
         </Routes>
       </motion.main>
       <Footer />
+      <CartBar />
       <CartDrawer />
       {phase !== 'done' && (
         // Parça inene kadar koyu zemin: anasayfa bir an bile görünmesin

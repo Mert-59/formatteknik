@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#fbfbfa" />
     <script>
-      // Anasayfada giriş animasyonu koyu zeminde başlar: JS yüklenene kadar beyaz parlama olmasın.
-      if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches)
-        document.documentElement.style.background = '#0a0c0f'
+      // Anasayfada giriş koyu zeminde başlar: JS yüklenene kadar açık renk parlama olmasın.
+      window.__ftIntro = location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (window.__ftIntro) document.documentElement.style.background = '#0a0c0f'
     </script>
     <title>Format Teknik | Çorlu</title>
     <meta

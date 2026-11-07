@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { Menu, MessageCircle, Phone, ShoppingBag, X } from 'lucide-react'
+import { Menu, MessageCircle, Phone, ReceiptText, X } from 'lucide-react'
 import gsap from 'gsap'
 import { NAV, SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
@@ -18,22 +18,22 @@ export function Wordmark({ className = '' }: { className?: string }) {
 }
 
 function CartButton({ onClick }: { onClick: () => void }) {
-  const { count, lastAddedAt } = useCart()
+  const { count, lastAdded } = useCart()
   const badge = useRef<HTMLSpanElement>(null)
   useEffect(() => {
-    if (!lastAddedAt || !badge.current) return
+    if (!lastAdded.at || !badge.current) return
     gsap.fromTo(badge.current, { scale: 1.6 }, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.4)' })
-  }, [lastAddedAt])
+  }, [lastAdded.at])
 
   return (
     <button
       type="button"
       onClick={onClick}
       className="group relative flex h-11 items-center gap-2.5 rounded-full max-sm:pl-3.5 md:h-10 border border-ink/15 bg-paper pl-4 pr-1.5 text-[13px] font-medium transition-colors hover:border-ink"
-      aria-label={`Sepet siparişi, ${count} adet`}
+      aria-label={`Teklif fişi, ${count} kalem`}
     >
-      <ShoppingBag className="size-4" strokeWidth={1.6} />
-      <span className="max-sm:hidden">Sepet Siparişi</span>
+      <ReceiptText className="size-4" strokeWidth={1.6} />
+      <span className="max-sm:hidden">Teklif Fişi</span>
       <span
         ref={badge}
         className={`grid h-7 min-w-7 place-items-center rounded-full px-1.5 font-mono text-[11px] tabular-nums transition-colors ${count ? 'bg-accent-ink text-white' : 'bg-mist text-muted'}`}
@@ -45,7 +45,7 @@ function CartButton({ onClick }: { onClick: () => void }) {
 }
 
 export default function Header() {
-  const { setOpen } = useCart()
+  const { openCart } = useCart()
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
   // Menü açıldığı sayfaya bağlıdır: sayfa değişince kendiliğinden kapanır.
@@ -105,7 +105,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-1.5 min-[360px]:gap-2">
-            <CartButton onClick={() => setOpen(true)} />
+            <CartButton onClick={() => openCart()} />
             <button
               type="button"
               className="grid size-11 place-items-center rounded-full border border-ink/15 md:size-10 lg:hidden"

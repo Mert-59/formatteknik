@@ -33,14 +33,14 @@ export default function Footer() {
         <div className="md:col-span-4">
           <p className="font-mono text-[10px] tracking-[0.22em] text-muted">HİKÂYE</p>
           <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-muted">
-            Bu sitenin girişinde Türkiye haritasından Çorlu’ya uçtunuz. Bir kez daha izlemek ister misiniz?
+            Bu sitenin girişi, Türkiye haritasından Çorlu’ya uçar. İzlemek ister misiniz?
           </p>
           <button
             type="button"
             onClick={replay}
             className="mt-4 inline-flex items-center gap-3 rounded-full border border-ink/15 px-4 py-2.5 font-mono text-[11px] tracking-[0.16em] transition-colors hover:border-ink"
           >
-            ↺ GİRİŞİ TEKRAR İZLE
+            ↺ GİRİŞİ İZLE
           </button>
         </div>
       </div>

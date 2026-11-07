@@ -28,7 +28,7 @@ function Card({ icon, label, children, href, cta, external }: { icon: ReactNode;
 
 export default function Contact() {
   usePageMeta('İletişim', `Format Teknik iletişim: telefon, WhatsApp, e-posta ve adres. ${SITE.address}.`)
-  const { setOpen, count } = useCart()
+  const { openCart, count } = useCart()
   return (
     <>
       <PageHero
@@ -57,17 +57,17 @@ export default function Contact() {
       <section className="mx-auto max-w-[1440px] px-5 pb-28 md:px-10">
         <div className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-ink p-8 text-paper md:flex-row md:items-center md:p-12">
           <div>
-            <p className="font-mono text-[10px] tracking-[0.22em] text-paper/60">SEPET SİPARİŞİ</p>
+            <p className="font-mono text-[10px] tracking-[0.22em] text-paper/60">TEKLİF FİŞİ</p>
             <p className="mt-3 max-w-xl font-wide text-[clamp(24px,2.6vw,36px)] font-semibold leading-tight tracking-[-0.02em]">
-              Birden fazla ürün mü arıyorsunuz? Sepet oluşturup tek mesajla gönderin.
+              Birden fazla ürün mü arıyorsunuz? Kodları fişe yazın, tek mesajla gönderin.
             </p>
           </div>
           <button
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={() => openCart({ focus: count === 0 })}
             className="shrink-0 rounded-full bg-paper px-6 py-4 text-[15px] font-medium text-ink transition-colors hover:bg-accent-ink hover:text-white"
           >
-            Sepeti aç {count > 0 && `(${count})`}
+            {count > 0 ? `Fişi aç (${count} kalem)` : 'Fiş oluştur'}
           </button>
         </div>
       </section>
