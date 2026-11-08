@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, MessageCircle, Phone, ReceiptText, X } from 'lucide-react'
+import { ArrowUpRight, Menu, MessageCircle, Phone, ReceiptText, X } from 'lucide-react'
+import { InstagramIcon } from './icons'
 import gsap from 'gsap'
 import { NAV, SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
@@ -161,18 +162,35 @@ export default function Header() {
             </nav>
 
             {/* hızlı iletişim — telefonda tek dokunuşla */}
-            <div className="anim-fade-up safe-x mt-auto grid grid-cols-2 gap-2 pt-8" style={anim({ delay: 0.45, dur: 0.6, y: '20px' })}>
-              <a href={SITE.phoneHref} className="flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 text-[14px] font-medium">
-                <Phone className="size-4" /> Ara
-              </a>
+            <div className="anim-fade-up safe-x mt-auto pt-8" style={anim({ delay: 0.45, dur: 0.6, y: '20px' })}>
+              {/* Instagram: hesap adıyla, diğer düğmelerle aynı hap biçiminde */}
               <a
-                href={whatsappUrl(`Merhaba ${SITE.name}, bilgi almak istiyorum.`)}
+                href={SITE.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-paper"
+                aria-label={`Instagram: ${SITE.instagramHandle} (yeni sekmede açılır)`}
+                className="group mb-2 flex h-12 items-center justify-between rounded-full border border-ink/15 px-5 text-[14px] font-medium transition-colors hover:border-ink"
               >
-                <MessageCircle className="size-4" /> WhatsApp
+                <span className="flex items-center gap-2">
+                  <InstagramIcon className="size-4" /> Instagram
+                </span>
+                <span className="flex items-center gap-1 font-mono text-[11px] font-normal tracking-[0.08em] text-muted group-hover:text-ink">
+                  {SITE.instagramHandle} <ArrowUpRight className="size-3.5" />
+                </span>
               </a>
+              <div className="grid grid-cols-2 gap-2">
+                <a href={SITE.phoneHref} className="flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 text-[14px] font-medium">
+                  <Phone className="size-4" /> Ara
+                </a>
+                <a
+                  href={whatsappUrl(`Merhaba ${SITE.name}, bilgi almak istiyorum.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-paper"
+                >
+                  <MessageCircle className="size-4" /> WhatsApp
+                </a>
+              </div>
             </div>
           </div>
         )}
