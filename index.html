@@ -21,7 +21,13 @@
           return true
         }
       })()
-      if (window.__ftIntro) document.documentElement.style.background = '#0a0c0f'
+      // Giriş oynayacaksa: koyu zemin + ön-render içeriği giriş katmanı gelene kadar gizli (index.css → .ft-intro)
+      if (window.__ftIntro) {
+        document.documentElement.style.background = '#0a0c0f'
+        document.documentElement.classList.add('ft-intro')
+      }
+      // JS çalışıyor: kaydırmayla çizilen teknik çizimler çizilmemiş başlasın (index.css → .js .plot)
+      document.documentElement.classList.add('js')
     </script>
     <title>Format Teknik | Çorlu</title>
     <meta

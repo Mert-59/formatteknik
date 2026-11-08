@@ -29,6 +29,23 @@ Sektör açıklamaları da `src/data/company.ts` içinde (`SECTORS`); dilediğin
 
 Logo dosyalarını proje klasörüne bırakmanız yeterli. Arka planı temizlenip `public/brands/` klasörüne işlenmeleri ve `src/data/brands.ts` dosyasına eklenmeleri gerekiyor.
 
+### Ürün grubu sayfaları — `src/data/guides.ts`
+
+Dokuz grubun sayfası (`/urunler/torna-uclari` vb.) **taslak** metinlerle yayında. Teknik doğruluğu sizin gözden geçirmeniz gerekiyor;
+her grup için genel bakış, kod rehberi, "fişe yazarken belirtin" ve seçim ipuçları aynı dosyada.
+
+- [ ] Torna Uçları
+- [ ] Takma Uçlu Freze
+- [ ] Kılavuz
+- [ ] Karbür Matkap
+- [ ] Karbür Freze
+- [ ] Ölçü Aletleri
+- [ ] HSS Matkap
+- [ ] Shrink-Fit Holder
+- [ ] Pens Kayar Otomat
+- [ ] **Marka–grup eşleşmesi.** Her grubun `brands` listesine o grupta tedarik edilen markaları yazın, ör. `brands: ['Mitsubishi', 'OSG']`.
+      Adlar `src/data/brands.ts`'teki gibi yazılmalı; logosu olan marka logosuyla görünür. Liste boşken "Markalar" bölümü gösterilmez.
+
 ## Yayına almadan önce
 
 - [ ] **Firma bilgilerini son kez kontrol edin.** Telefon, WhatsApp numarası, e-posta ve adres `src/config/site.ts` dosyasında.

@@ -40,7 +40,10 @@ export const NAV = [
   { to: '/iletisim', label: 'İletişim' },
 ] as const
 
-export const whatsappUrl = (text: string) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`
+/** Ürün grubu sayfasının adresi, ör. /urunler/torna-uclari */
+export const categoryPath = (slug: string) => `/urunler/${slug}`
+
+export const whatsappUrl =(text: string) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`
 
 /**
  * "Fotoğrafla sor": WhatsApp'ı hazır metinle açar; fotoğrafı müşteri sohbete kendisi ekler

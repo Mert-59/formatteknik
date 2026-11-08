@@ -32,4 +32,9 @@ export default defineConfig({
     // Giriş parçası (Three.js) bilinçli olarak büyük; yalnızca anasayfada iner.
     chunkSizeWarningLimit: 800,
   },
+  // Ön-render derlemesi (src/entry-server.tsx → dist-ssr, bkz. scripts/prerender.mjs):
+  // tüm paketler tek dosyaya alınır; Node'un paket çözümlemesine (gsap/motion alt yolları) takılmasın.
+  ssr: {
+    noExternal: true,
+  },
 })

@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react'
 import { SITE, whatsappUrl } from '../config/site'
 
 /**
@@ -97,26 +97,52 @@ function newOrderNo() {
   return `FT-${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}-${String(Math.floor(1000 + Math.random() * 9000))}`
 }
 
+function loadOrder(hasItems: boolean): Order {
+  const raw = read<Record<string, unknown>>(ORDER_KEY, { no: '' }, (x) => isObj(x) && typeof x.no === 'string')
+  const o: Order = { no: raw.no as string, sentAt: typeof raw.sentAt === 'number' ? raw.sentAt : 0 }
+  // Eski sürümden kalan dolu sepet: fiş numarası yoksa üret
+  return o.no || !hasItems ? o : { no: newOrderNo(), sentAt: 0 }
+}
+
+function loadCustomer(): Customer {
+  const c = read<Record<string, unknown>>(CUSTOMER_KEY, {}, isObj)
+  return { name: typeof c.name === 'string' ? c.name : '', company: typeof c.company === 'string' ? c.company : '', note: '' }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(loadItems)
-  const [order, setOrder] = useState<Order>(() => {
-    const raw = read<Record<string, unknown>>(ORDER_KEY, { no: '' }, (x) => isObj(x) && typeof x.no === 'string')
-    const o: Order = { no: raw.no as string, sentAt: typeof raw.sentAt === 'number' ? raw.sentAt : 0 }
-    // Eski sürümden kalan dolu sepet: fiş numarası yoksa üret
-    return o.no || !items.length ? o : { no: newOrderNo(), sentAt: 0 }
-  })
-  const [customer, setCustomerState] = useState<Customer>(() => ({
-    ...read(CUSTOMER_KEY, { name: '', company: '' }, isObj),
-    note: '',
-  }))
+  /*
+   * Ön-render: sunucuda ve tarayıcının ilk (devralma) çiziminde fiş boştur; kayıtlı fiş, ekrana
+   * çizilmeden hemen önce (useLayoutEffect) okunur. `ready` olmadan hiçbir şey yazılmaz:
+   * aksi hâlde ilk çizimdeki boş fiş, kayıtlı fişin üzerine yazılırdı.
+   */
+  const [ready, setReady] = useState(false)
+  const [items, setItems] = useState<CartItem[]>([])
+  const [order, setOrder] = useState<Order>({ no: '', sentAt: 0 })
+  const [customer, setCustomerState] = useState<Customer>({ name: '', company: '', note: '' })
   const [open, setOpen] = useState(false)
   const [focusAdd, setFocusAdd] = useState(false)
   const [lastAdded, setLastAdded] = useState<{ keys: string[]; at: number }>({ keys: [], at: 0 })
 
-  useEffect(() => write(KEY, items), [items])
-  useEffect(() => write(ORDER_KEY, order), [order])
+  useLayoutEffect(() => {
+    // Bilinçli: tarayıcı deposundan (localStorage) okuma; ön-render HTML'i ile uyuşmazlık olmasın diye çizimden önce.
+    const saved = loadItems()
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setItems(saved)
+    setOrder(loadOrder(saved.length > 0))
+    setCustomerState(loadCustomer())
+    setReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (ready) write(KEY, items)
+  }, [ready, items])
+  useEffect(() => {
+    if (ready) write(ORDER_KEY, order)
+  }, [ready, order])
   // Ad ve firma bir sonraki siparişte hazır gelsin; not her fişe özeldir.
-  useEffect(() => write(CUSTOMER_KEY, { name: customer.name, company: customer.company }), [customer.name, customer.company])
+  useEffect(() => {
+    if (ready) write(CUSTOMER_KEY, { name: customer.name, company: customer.company })
+  }, [ready, customer.name, customer.company])
 
   const setCustomer = useCallback((c: Customer) => setCustomerState(c), [])
 

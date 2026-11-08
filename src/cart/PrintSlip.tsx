@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom'
 import { SITE } from '../config/site'
 import { useCart } from './CartContext'
 import { p2, stampTime } from './slipUtils'
+import { useIsClient } from '../lib/client'
 
 /**
  * Teklif fişinin yazdırma / PDF görünümü (A4).
@@ -18,7 +19,8 @@ const today = () => {
 
 export default function PrintSlip() {
   const { items, units, orderNo, sentAt, customer } = useCart()
-  if (!items.length) return null
+  const isClient = useIsClient() // portal yalnızca tarayıcıda (ön-render'da document yok)
+  if (!isClient || !items.length) return null
 
   const who = [
     ['Ad Soyad', customer.name.trim()],

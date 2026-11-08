@@ -79,7 +79,16 @@ body {
   }
 }
 
-/* SVG teknik çizimler: pathLength="1" ile çizilip "plotter" gibi açılır */
+/* Ön-render: giriş oynayacak ilk ziyarette sayfa, giriş katmanı ekrana gelene kadar gizli (index.html betiği ekler, App.tsx kaldırır) */
+html.ft-intro #root {
+  visibility: hidden;
+}
+
+/* SVG teknik çizimler: pathLength="1" ile çizilip "plotter" gibi açılır.
+   JS varken çizimler boş başlar (ön-render HTML'inde çizili görünüp sonra silinmesinler); JS yoksa çizili kalır. */
+html.js .plot {
+  --plot: 1;
+}
 .plot * {
   stroke-dasharray: 1;
   stroke-dashoffset: var(--plot, 0);

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { MotionConfig, motion } from 'motion/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -12,6 +12,7 @@ import { IntroContext, markIntroSeen, shouldAutoPlayIntro, type IntroPhase } fro
 import { scrollToTop, useScrollLock } from './lib/scroll'
 import Home from './pages/Home'
 import Products from './pages/Products'
+import CategoryPage from './pages/CategoryPage'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
@@ -23,13 +24,32 @@ function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Giriş kendiliğinden yalnızca ilk ziyarette oynar (karar index.html'de); altbilgiden tekrar izlenebilir.
-  const [phase, setPhase] = useState<IntroPhase>(() => (shouldAutoPlayIntro() ? 'intro' : 'done'))
+  /*
+   * Giriş kendiliğinden yalnızca ilk ziyarette oynar (karar index.html'deki betikte); altbilgiden tekrar izlenebilir.
+   * Ön-render'daki HTML girişsiz ('done') çizilir; tarayıcıda karar, ekrana çizilmeden hemen önce uygulanır.
+   * O ana kadar index.html'deki betik sayfayı koyu zemin + `ft-intro` sınıfıyla gizli tutar (bkz. index.css).
+   */
+  const [phase, setPhase] = useState<IntroPhase>('done')
   const [run, setRun] = useState(0)
+  // Sayfa geçişi solması ilk açılışta oynamaz: ön-render içeriği hemen görünür
+  const [pageFade, setPageFade] = useState(false)
+
+  useLayoutEffect(() => {
+    // Bilinçli: karar tarayıcıya özgü (index.html betiği); ön-render HTML'i ile uyuşmazlık olmasın diye çizimden önce uygulanır.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (shouldAutoPlayIntro()) setPhase('intro')
+    setPageFade(true)
+  }, [])
+
+  useLayoutEffect(() => {
+    // giriş katmanı ekranda ya da giriş hiç oynamayacak: ön-render içeriğini gizleyen sınıf kalkar
+    if (phase === 'intro' || !shouldAutoPlayIntro()) document.documentElement.classList.remove('ft-intro')
+  }, [phase])
 
   useScrollLock(phase !== 'done')
   useEffect(() => {
-    if (phase !== 'intro') document.documentElement.style.background = '' // ilk boyamadaki koyu zemin (index.html) kalkar
+    // ilk boyamadaki koyu zemin (index.html) kalkar — giriş oynayacaksa geçişe kadar bekler
+    if (phase !== 'intro' && !shouldAutoPlayIntro()) document.documentElement.style.background = ''
   }, [phase])
 
   // Sayfa değişince başa dön; düzen oturunca tetikleyicileri yeniden ölç.
@@ -58,13 +78,14 @@ function Shell() {
       <Header />
       <motion.main
         key={location.pathname}
-        initial={{ opacity: 0 }}
+        initial={pageFade ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/urunler" element={<Products />} />
+          <Route path="/urunler/:slug" element={<CategoryPage />} />
           <Route path="/kurumsal" element={<About />} />
           <Route path="/iletisim" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
@@ -91,14 +112,21 @@ function Shell() {
   )
 }
 
+/** Yönlendiriciden bağımsız uygulama: tarayıcıda BrowserRouter, ön-render'da StaticRouter içine konur. */
+export function AppContent() {
+  return (
+    <MotionConfig reducedMotion="user">
+      <CartProvider>
+        <Shell />
+      </CartProvider>
+    </MotionConfig>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <MotionConfig reducedMotion="user">
-        <CartProvider>
-          <Shell />
-        </CartProvider>
-      </MotionConfig>
+      <AppContent />
     </BrowserRouter>
   )
 }

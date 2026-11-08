@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ArrowRight, Camera, Plus, Send } from 'lucide-react'
 import { CATEGORIES } from '../data/catalog'
-import { SITE, photoWhatsappUrl } from '../config/site'
+import { SITE, categoryPath, photoWhatsappUrl } from '../config/site'
+import { useIsClient } from '../lib/client'
 import ToolDrawing from '../components/ToolDrawing'
 import PageHero from '../components/PageHero'
 import QuickAdd from '../cart/QuickAdd'
@@ -94,7 +95,10 @@ export default function Products() {
     'Torna uçları, frezeler, kılavuz, karbür ve HSS matkaplar, ölçü aletleri, shrink-fit tutucular ve pensler. Kodu yazın, teklif fişine ekleyin, WhatsApp’tan gönderin.',
   )
   const root = useRef<HTMLDivElement>(null)
-  const { hash } = useLocation()
+  // #çapa yalnızca tarayıcıda bilinir: ön-render'da ve devralmada '' (bkz. lib/client.ts), hemen ardından gerçek değer
+  const isClient = useIsClient()
+  const { hash: locationHash } = useLocation()
+  const hash = isClient ? locationHash : ''
   const { openCart, count, orderNo } = useCart()
   // /urunler#torna-uclari → o grup açık gelir (adres sonradan değişirse de)
   const [openSlug, setOpenSlug] = useState(() => fromHash(hash))
@@ -219,6 +223,13 @@ export default function Products() {
                           <div className="rounded-2xl border border-line bg-paper p-4 md:p-5">
                             <QuickAdd category={c.slug} autoFocus={byUser} showOpen />
                           </div>
+                          {/* grubun kendi sayfası: kod rehberi, teklif isterken belirtilecekler, seçim ipuçları */}
+                          <Link
+                            to={categoryPath(c.slug)}
+                            className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-graphite underline-offset-4 hover:text-ink hover:underline"
+                          >
+                            {c.name}: kod rehberi ve seçim ipuçları <ArrowRight className="size-4" />
+                          </Link>
                         </div>
                       </motion.div>
                     )}

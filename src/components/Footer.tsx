@@ -53,7 +53,10 @@ export default function Footer() {
       </div>
 
       <div className="safe-b mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-5 pt-6 font-mono text-[10px] tracking-[0.16em] text-muted md:px-10">
-        <span>© {YEAR} {SITE.name.toLocaleUpperCase('tr-TR')}</span>
+        {/* yıl derleme anında yazılır; yılbaşında yeniden derlenene kadar tarayıcıdaki yıl farklı olabilir */}
+        <span suppressHydrationWarning>
+          © {YEAR} {SITE.name.toLocaleUpperCase('tr-TR')}
+        </span>
         <span>{SITE.city.toLocaleUpperCase('tr-TR')}</span>
       </div>
     </footer>

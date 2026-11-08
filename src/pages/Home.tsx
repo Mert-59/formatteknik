@@ -5,6 +5,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CATEGORIES } from '../data/catalog'
+import { categoryPath } from '../config/site'
 import { useIntro } from '../lib/introState'
 import { useCart } from '../cart/CartContext'
 import { EASE } from '../lib/motion'
@@ -120,7 +121,7 @@ function ProductGrid() {
         {CATEGORIES.map((c, i) => (
           <li key={c.slug} className="grid-card bg-paper">
             <Link
-              to={`/urunler#${c.slug}`}
+              to={categoryPath(c.slug)}
               className="group grid h-full grid-cols-[88px_minmax(0,1fr)] items-center gap-4 p-4 transition-colors duration-500 hover:bg-mist sm:flex sm:flex-col sm:items-stretch sm:gap-0 sm:p-5 md:p-6"
             >
               <div className="rounded-xl bg-mist px-2 py-3 text-ink transition-colors duration-500 group-hover:bg-paper group-hover:text-accent-ink sm:order-2 sm:mt-4 sm:px-4 sm:py-5">

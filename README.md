@@ -8,9 +8,9 @@ Vite + React + TypeScript + Tailwind v4. Animasyonlar: GSAP (giriş, kaydırma e
 ```sh
 npm install
 npm run dev      # geliştirme sunucusu
-npm run build    # tip denetimi + üretim derlemesi → dist/
+npm run build    # tip denetimi + üretim derlemesi + ön-render → dist/
 npm run lint     # oxlint
-npm run preview  # dist/ klasörünü yerelde sunar
+npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404.html) → http://localhost:4173
 ```
 
 ## İçerik nereden yönetilir
@@ -19,14 +19,26 @@ npm run preview  # dist/ klasörünü yerelde sunar
 |---|---|
 | Firma adı, adres, telefon, WhatsApp, e-posta, menü | `src/config/site.ts` |
 | Ürün grupları (ad, açıklama, örnek kod, çizim) | `src/data/catalog.ts` |
+| Ürün grubu sayfalarının içeriği (`/urunler/<grup>`: kod rehberi, teklif bilgileri, ipuçları, markalar) | `src/data/guides.ts` |
+| Kurumsal sayfa bilgileri (kuruluş, teslimat, fotoğraflar, referanslar) | `src/data/company.ts` |
 | Markalar ve logoları (`public/brands/`) | `src/data/brands.ts` |
 | Sayfa başlıkları / açıklamaları | her sayfadaki `usePageMeta(...)` |
 | Paylaşım önizlemesi, yapılandırılmış veri | `index.html` |
-| Site haritası | `public/sitemap.xml` |
+| Site haritası | derlemede kendiliğinden üretilir (`dist/sitemap.xml`) |
 
 ## Yapı
 
-- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; anasayfa her açıldığında
+- **Ön-render** — `npm run build` her sayfanın HTML'ini içeriği dolu olarak üretir
+  (`dist/index.html`, `urunler.html`, `urunler/<grup>.html` ×9, `kurumsal.html`, `iletisim.html`, `404.html`)
+  ve `dist/sitemap.xml`'i bu sayfalardan yazar. Yeni bir ürün grubu `catalog.ts` + `guides.ts`'e eklenince
+  sayfası ve site haritası kaydı kendiliğinden oluşur. Her dosyada o sayfanın kendi
+  başlığı, açıklaması, canonical adresi ve paylaşım etiketleri vardır; arama motorları ve WhatsApp/LinkedIn
+  önizlemeleri JavaScript çalıştırmadan sayfayı okur. Tarayıcıda React bu HTML'i devralır (hydration).
+  - `src/entry-server.tsx` sayfayı sunucuda çizer, `scripts/prerender.mjs` dosyaları yazar.
+  - Kural: **çizim sırasında** tarayıcıya özgü bir şey (`window`, `localStorage`, ekran genişliği, `#çapa`) okunmaz;
+    bunlar `src/lib/client.ts` kancalarıyla ya da `useLayoutEffect` içinde okunur. Aksi hâlde derleme
+    hata verir ya da tarayıcı konsolunda "hydration" uyarısı çıkar.
+- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; yalnızca ilk ziyarette kendiliğinden
   oynar, diğer sayfalar bu yükü indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
 - `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp mesajı olarak gönderilir. Sunucu gerekmez.
   - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
@@ -38,9 +50,17 @@ npm run preview  # dist/ klasörünü yerelde sunar
 
 ## Yayına alma
 
-Site tek sayfalı bir uygulamadır (SPA). Sunucu, var olmayan her yol için `index.html` döndürmelidir;
-aksi hâlde `/urunler` gibi adresler sayfa yenilenince 404 verir. Barındırıcıya göre ayar:
+`npm run build` → `dist/` klasörü yayına alınır. Her sayfa ayrı bir HTML dosyasıdır; barındırıcı
+`/urunler` adresinde `urunler.html`'i sunmalı, bulunamayan adreslerde `404.html`'i 404 koduyla döndürmelidir.
+Gereken ayarlar projede hazır:
 
-- **Netlify:** `public/_redirects` → `/*  /index.html  200`
-- **Vercel:** `vercel.json` → `{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }`
-- **Apache (cPanel):** `.htaccess` ile `FallbackResource /index.html`
+- **Vercel:** proje kökündeki `vercel.json` (`cleanUrls: true`). `404.html` kendiliğinden kullanılır.
+- **Netlify:** ek ayar gerekmez; `urunler.html`'i `/urunler` adresinde ve `404.html`'i kendiliğinden sunar.
+- **Apache (cPanel):** `public/.htaccess` derlemede `dist/`'e kopyalanır; `dist/` içeriğiyle birlikte yükleyin
+  (gizli dosya olduğu için FTP programında "gizli dosyaları göster" açık olmalı).
+
+Eski "her adreste index.html döndür" (SPA) yönlendirmesine artık gerek yok; eklenirse sayfalar yine çalışır
+(tarayıcı doğru sayfayı kendisi çizer) ama o adreslerde ön-render'ın SEO faydası kaybolur.
+
+Yayından sonra kontrol: `/urunler` adresini açıp sayfa kaynağını görüntüleyin (Ctrl+U) — ürün grupları
+HTML'in içinde görünmeli ve `<title>` "Ürünlerimiz | Format Teknik" olmalı.

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { usePageMeta } from '../lib/usePageMeta'
 
 export default function NotFound() {
-  usePageMeta('Sayfa bulunamadı')
+  usePageMeta('Sayfa bulunamadı', undefined, { noindex: true })
   return (
     <section className="mx-auto flex min-h-[70svh] max-w-[1440px] flex-col justify-center px-5 pt-32 md:px-10">
       <p className="font-mono text-[11px] tracking-[0.22em] text-muted">HATA 404 — TOLERANS DIŞI</p>

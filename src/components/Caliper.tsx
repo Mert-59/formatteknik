@@ -1,7 +1,8 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { prefersReducedMotion } from '../lib/scroll'
+import { useMediaQuery } from '../lib/client'
 
 /*
  * Etkileşimli dijital kumpas (viewBox 1200×230).
@@ -25,17 +26,8 @@ const VIEW = {
   compact: { x: 40, w: 760 },
 }
 
-function useCompact() {
-  const query = '(max-width: 767px)'
-  const [compact, setCompact] = useState(() => window.matchMedia(query).matches)
-  useEffect(() => {
-    const mq = window.matchMedia(query)
-    const on = () => setCompact(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [])
-  return compact
-}
+/** Dar ekran mı? Ön-render'da geniş varsayılır; tarayıcıda hemen gerçek değere geçer (bkz. lib/client.ts). */
+const useCompact = () => useMediaQuery('(max-width: 767px)')
 
 const fmt = (mm: number) => mm.toFixed(2).replace('.', ',')
 

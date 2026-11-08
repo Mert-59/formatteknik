@@ -1,0 +1,22 @@
+# Format Teknik — Apache / cPanel ayarı (diğer barındırıcılarda yok sayılır)
+# Her sayfa ayrı bir HTML dosyasıdır: /urunler adresi urunler.html'i sunar (bkz. README.md "Yayına alma").
+
+Options -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+# /urunler hem urunler.html hem urunler/ klasörü (ürün grubu sayfaları) olarak var:
+# Apache'nin "/urunler → /urunler/" otomatik yönlendirmesi kapalı olmalı.
+DirectorySlash Off
+
+RewriteEngine On
+
+# /urunler.html → /urunler (tek adres, arama motorları için)
+RewriteCond %{THE_REQUEST} \s/([^.?\s]+)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# /urunler/ → /urunler
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# /urunler → urunler.html
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^([^.]+)$ /$1.html [L]
