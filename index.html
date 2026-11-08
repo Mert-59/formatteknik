@@ -6,31 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#fbfbfa" />
     <script>
-      // 3D giriş kendiliğinden her 3 ziyarette bir oynar: 1., 4., 7. … ziyaret (src/lib/introState.ts ile aynı anahtarlar).
-      // Ziyaret: yeni sekme/oturum ya da 30 dakikadan uzun aradan sonra dönüş; aynı ziyarette sayfa yenilemek sayılmaz.
-      // Girişin "sırası gelen" ziyarette ilk açılan sayfa anasayfa değilse, anasayfa açılınca oynar.
+      // 3D giriş kendiliğinden anasayfanın her 3 açılışında bir oynar: 1., 4., 7. … açılış (yenileme dahil).
+      // Sayaç yalnızca anasayfanın tam yüklenişinde artar (site içi menüyle anasayfaya dönmek sayfayı yüklemez, sayılmaz).
       // Hareket azaltma, veri tasarrufu ya da zayıf cihazda hiç oynamaz; altbilgideki "Girişi izle" her zaman çalışır.
       // Anasayfada giriş koyu zeminde başlar: JS yüklenene kadar açık renk parlama olmasın.
       window.__ftIntro = (function () {
+        if (location.pathname !== '/') return false
         var due = true
         try {
-          var ls = localStorage, ss = sessionStorage, now = Date.now()
-          var last = +ls.getItem('ft-last-active') || 0
-          if (!ss.getItem('ft-visit') || now - last > 30 * 60 * 1000) {
-            var count = parseInt(ls.getItem('ft-visits') || '', 10)
-            // önceki sürüm: girişi görmüş ziyaretçi 1. ziyaretini yapmış sayılır
-            if (isNaN(count)) count = ls.getItem('ft-intro-seen-v1') ? 1 : 0
-            count += 1
-            ls.setItem('ft-visits', String(count))
-            ss.setItem('ft-visit', '1')
-            if (count % 3 === 1) ss.setItem('ft-intro-due', '1')
-            else ss.removeItem('ft-intro-due')
-          }
-          // son etkinlik: sayfa açılışı (site içi sayfa geçişlerinde App.tsx günceller) — 30 dakika kuralı buna göre işler
-          ls.setItem('ft-last-active', String(now))
-          due = ss.getItem('ft-intro-due') === '1'
+          var ls = localStorage
+          var count = parseInt(ls.getItem('ft-home-loads') || '', 10)
+          // önceki sürümlerde girişi görmüş ziyaretçi 1. açılışını yapmış sayılır (sıradaki giriş 4. açılışta)
+          if (isNaN(count)) count = ls.getItem('ft-intro-seen-v1') || ls.getItem('ft-visits') ? 1 : 0
+          count += 1
+          ls.setItem('ft-home-loads', String(count))
+          // önceki sürümün ziyaret sayacı artık kullanılmıyor
+          ls.removeItem('ft-visits')
+          ls.removeItem('ft-last-active')
+          due = count % 3 === 1
         } catch (e) {}
-        if (!due || location.pathname !== '/') return false
+        if (!due) return false
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false
         var n = navigator
         if (n.connection && n.connection.saveData) return false

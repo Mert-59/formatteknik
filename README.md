@@ -41,7 +41,7 @@ npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404
   - Kural: **çizim sırasında** tarayıcıya özgü bir şey (`window`, `localStorage`, ekran genişliği, `#çapa`) okunmaz;
     bunlar `src/lib/client.ts` kancalarıyla ya da `useLayoutEffect` içinde okunur. Aksi hâlde derleme
     hata verir ya da tarayıcı konsolunda "hydration" uyarısı çıkar.
-- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; her 3 ziyarette bir (1., 4., 7. …; ziyaret = yeni oturum ya da 30 dk ara) kendiliğinden
+- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; anasayfanın her 3 açılışında bir (1., 4., 7. …, yenileme dahil) kendiliğinden
   oynar, diğer sayfalar bu yükü indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
 - `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp mesajı olarak gönderilir. Sunucu gerekmez.
   - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
