@@ -31,7 +31,7 @@ Logo dosyalarını proje klasörüne bırakmanız yeterli. Arka planı temizleni
 ### Ürün grubu sayfaları — `src/data/guides.ts`
 
 Dokuz grubun sayfası (`/urunler/torna-uclari` vb.) **taslak** metinlerle yayında. Teknik doğruluğu sizin gözden geçirmeniz gerekiyor;
-her grup için genel bakış, kod rehberi, "fişe yazarken belirtin" ve seçim ipuçları aynı dosyada.
+her grup için sayfa açıklaması ve "Genel bakış" metni aynı dosyada.
 
 - [ ] Torna Uçları
 - [ ] Takma Uçlu Freze
@@ -44,6 +44,18 @@ her grup için genel bakış, kod rehberi, "fişe yazarken belirtin" ve seçim i
 - [ ] Pens Kayar Otomat
 - [ ] **Marka–grup eşleşmesi.** Her grubun `brands` listesine o grupta tedarik edilen markaları yazın, ör. `brands: ['Mitsubishi', 'OSG']`.
       Adlar `src/data/brands.ts`'teki gibi yazılmalı; logosu olan marka logosuyla görünür. Liste boşken "Markalar" bölümü gösterilmez.
+
+### PDF kataloglar — `src/data/catalogs.ts`
+
+Eski siteden 11 katalog alındı (8 Kasım 2026); büyükler ekran için sıkıştırıldı. Kontrol edilmesi gerekenler:
+
+- [x] **Mitutoyo kataloğu Fransızca (2019 baskısı, içinde 2019 euro fiyatları var)** — 8 Kasım 2026: olduğu gibi kalması kararlaştırıldı.
+      İleride güncel baskı gelirse `public/kataloglar/mitutoyo-olcu-aletleri.pdf` dosyasını değiştirip `catalogs.ts`'te sayfa / dil bilgisini güncelleyin.
+- [ ] **Shrink-Fit Holder grubunun kataloğu yok.** Eski sitede de "MTS Katalog" sayfası boştu. PDF gelirse ekleyin.
+- [ ] **IZAR "kataloğu" tek sayfalık bir ürün föyü** (TEMAK kataloğunun 150. sayfası). Tam katalog varsa değiştirin.
+- [ ] Katalog başlıklarını gözden geçirin (PDF kapaklarından çıkarıldı).
+
+Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya bakın.
 
 ## Yayına almadan önce
 

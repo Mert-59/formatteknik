@@ -10,7 +10,7 @@
  *
  * Şablonda beklenen etiketlerden biri bulunamazsa derleme hata verir (sessizce yanlış HTML üretmesin).
  */
-import { copyFile, mkdir, readFile, writeFile, rm } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, writeFile, rm, stat } from 'node:fs/promises'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -18,8 +18,16 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ssrDir = join(root, 'dist-ssr')
 
-const { render, NAV, SITE, CATEGORY_PATHS } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href)
+const { render, NAV, SITE, CATEGORY_PATHS, EXTRA_PATHS, CATALOG_FILES } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href)
 const template = await readFile(join(dist, 'index.html'), 'utf8')
+
+// Katalog denetimi: src/data/catalogs.ts'teki her PDF ve kapak dist/'te olmalı; yoksa sitede kırık bağlantı olur.
+const missing = []
+for (const url of CATALOG_FILES) if (!(await stat(join(dist, url.slice(1))).catch(() => null))?.isFile()) missing.push(url)
+if (missing.length) {
+  throw new Error(`[prerender] Katalog dosyası eksik (public/ altına koyun ya da src/data/catalogs.ts'ten çıkarın):\n  ${missing.join('\n  ')}`)
+}
+console.log(`  ✓ ${CATALOG_FILES.length / 2} katalog: PDF ve kapak dosyaları yerinde`)
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
@@ -35,6 +43,7 @@ const meta = (attr, key) => new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^
 const pages = [
   ...NAV.map((n) => n.to),
   ...CATEGORY_PATHS, // /urunler/torna-uclari → urunler/torna-uclari.html
+  ...EXTRA_PATHS, // /kataloglar → kataloglar.html
 ].map((url) => ({ url, route: url, file: url === '/' ? 'index.html' : `${url.slice(1)}.html` }))
 // bilinmeyen her adres için: barındırıcılar 404.html'i "bulunamadı" sayfası olarak sunar
 pages.push({ url: '/__404__', route: '404', file: '404.html' })
@@ -70,8 +79,13 @@ for (const page of pages) {
   console.log(`  ✓ ${page.file.padEnd(34)} ${head.title}  (${(out.length / 1024).toFixed(1)} KB)`)
 }
 
-// /urunler hem urunler.html hem urunler/ klasörü olarak var: klasör adresine giden barındırıcılar için aynı sayfa
-await copyFile(join(dist, 'urunler.html'), join(dist, 'urunler', 'index.html'))
+// /urunler (grup sayfaları) ve /kataloglar (PDF'ler) hem sayfa.html hem aynı adlı klasör olarak var:
+// klasör adresine giden barındırıcılar için klasöre aynı sayfanın index.html kopyası konur.
+for (const page of pages) {
+  if (page.route === '404' || page.url === '/') continue
+  const dir = join(dist, page.url.slice(1))
+  if ((await stat(dir).catch(() => null))?.isDirectory()) await copyFile(join(dist, page.file), join(dir, 'index.html'))
+}
 
 // Site haritası: dizine eklenecek tüm sayfalar (elle güncellemeye gerek yok)
 const sitemap =

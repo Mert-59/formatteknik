@@ -7,6 +7,27 @@ import Engrave from './Engrave'
 
 const YEAR = new Date().getFullYear()
 
+/**
+ * Tasarım imzası: "by Mert" etiketi (mertarabaci.com.tr).
+ * Biçim: sola sivri uçlu etiket (clip-path) ve ucunda delik — teknik çizim / fiyat etiketi dili.
+ * Renk: mürekkep zemin, kâğıt yazı; üzerine gelince sitenin kızılı.
+ */
+function MakerTag() {
+  return (
+    <a
+      href="https://mertarabaci.com.tr/"
+      target="_blank"
+      rel="noopener"
+      aria-label="Tasarım ve geliştirme: Mert (mertarabaci.com.tr, yeni sekmede açılır)"
+      className="group relative inline-flex h-7 items-center rounded-r-[6px] bg-ink pl-[18px] pr-3 font-sans text-[12px] font-semibold tracking-normal text-paper transition-colors duration-300 [clip-path:polygon(11px_0,100%_0,100%_100%,11px_100%,0_50%)] hover:bg-accent-ink focus-visible:bg-accent-ink"
+    >
+      {/* etiket deliği */}
+      <span aria-hidden className="absolute left-[9px] top-1/2 size-[5px] -translate-y-1/2 rounded-full bg-paper" />
+      <span className="pl-1.5">by Mert</span>
+    </a>
+  )
+}
+
 export default function Footer() {
   const { replay } = useIntro()
   return (
@@ -37,7 +58,7 @@ export default function Footer() {
         <div className="md:col-span-3">
           <p className="font-mono text-[10px] tracking-[0.22em] text-muted">SAYFALAR</p>
           <ul className="mt-4 space-y-2 text-[15px]">
-            {NAV.map((n) => (
+            {[...NAV, { to: '/kataloglar', label: 'Kataloglar' }].map((n) => (
               <li key={n.to}>
                 <Link to={n.to} className="text-graphite hover:text-ink">{n.label}</Link>
               </li>
@@ -70,7 +91,10 @@ export default function Footer() {
         <span suppressHydrationWarning>
           © {YEAR} {SITE.name.toLocaleUpperCase('tr-TR')}
         </span>
-        <span>{SITE.city.toLocaleUpperCase('tr-TR')}</span>
+        <span className="flex items-center gap-4">
+          <span>{SITE.city.toLocaleUpperCase('tr-TR')}</span>
+          <MakerTag />
+        </span>
       </div>
     </footer>
   )

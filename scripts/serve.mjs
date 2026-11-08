@@ -16,6 +16,7 @@ const types = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.json': 'application/json',
   '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
+  '.pdf': 'application/pdf', // kataloglar: tarayıcı indirmek yerine görüntülesin
 }
 
 const isFile = async (p) => (await stat(p).catch(() => null))?.isFile() ?? false

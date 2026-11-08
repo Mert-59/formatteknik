@@ -20,8 +20,10 @@ npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404
 |---|---|
 | Firma adı, adres, telefon, WhatsApp, e-posta, menü | `src/config/site.ts` |
 | Ürün grupları (ad, açıklama, örnek kod, çizim) | `src/data/catalog.ts` |
-| Ürün grubu sayfalarının içeriği (`/urunler/<grup>`: kod rehberi, teklif bilgileri, ipuçları, markalar) | `src/data/guides.ts` |
+| Ürün grubu sayfalarının içeriği (`/urunler/<grup>`: genel bakış, sayfa açıklaması, markalar) | `src/data/guides.ts` |
 | Kurumsal sayfa bilgileri (kuruluş, teslimat, fotoğraflar, referanslar) | `src/data/company.ts` |
+| PDF kataloglar (grup sayfalarında ve `/kataloglar`'da) — dosyalar `public/kataloglar/`, kapaklar `public/kataloglar/kapak/` | `src/data/catalogs.ts` |
+| Eski siteden yönlendirmeler (`/tr/...`, eski PDF adresleri) | `vercel.json` → `redirects` |
 | Markalar ve logoları (`public/brands/`) | `src/data/brands.ts` |
 | Sayfa başlıkları / açıklamaları | her sayfadaki `usePageMeta(...)` |
 | Paylaşım önizlemesi, yapılandırılmış veri | `index.html` |

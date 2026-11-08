@@ -12,6 +12,7 @@ import { scrollToTop, useScrollLock } from './lib/scroll'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import CategoryPage from './pages/CategoryPage'
+import Catalogs from './pages/Catalogs'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
@@ -81,6 +82,7 @@ function Shell() {
           <Route path="/" element={<Home />} />
           <Route path="/urunler" element={<Products />} />
           <Route path="/urunler/:slug" element={<CategoryPage />} />
+          <Route path="/kataloglar" element={<Catalogs />} />
           <Route path="/kurumsal" element={<About />} />
           <Route path="/iletisim" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

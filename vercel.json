@@ -2,5 +2,36 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/kataloglar/(.*)\\.pdf",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+    }
+  ],
+  "redirects": [
+    { "source": "/tr", "destination": "/", "permanent": true },
+    { "source": "/tr/urunler", "destination": "/urunler", "permanent": true },
+    { "source": "/tr/kataloglar", "destination": "/kataloglar", "permanent": true },
+    { "source": "/tr/iletisim", "destination": "/iletisim", "permanent": true },
+    { "source": "/tr/kategori-kilavuz/59", "destination": "/urunler/kilavuz", "permanent": true },
+    { "source": "/tr/kategori-karbur-freze/64", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-format-ozel-takim-freze-katalog/66", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-hss-matkap/20", "destination": "/urunler/hss-matkap", "permanent": true },
+    { "source": "/tr/kategori-shrink-fit-holder/55", "destination": "/urunler/shrink-fit-holder", "permanent": true },
+    { "source": "/tr/kategori-mts-katalog/69", "destination": "/urunler/shrink-fit-holder", "permanent": true },
+    { "source": "/tr/kategori-format-karbur-matkap-katalog/62", "destination": "/urunler/karbur-matkap", "permanent": true },
+    { "source": "/tr/kategori-osg-karbur-matkap-katalog/63", "destination": "/urunler/karbur-matkap", "permanent": true },
+    { "source": "/uploads/files/mitsubishi-tornalama.pdf", "destination": "/kataloglar/mitsubishi-tornalama.pdf", "permanent": true },
+    { "source": "/uploads/files/mitsubishi-takma-uclu-frezeler.pdf", "destination": "/kataloglar/mitsubishi-takma-uclu-freze.pdf", "permanent": true },
+    { "source": "/uploads/files/mitsubishi-matkap.pdf", "destination": "/kataloglar/mitsubishi-karbur-matkap.pdf", "permanent": true },
+    { "source": "/uploads/files/mitutoyo-katalog.pdf", "destination": "/kataloglar/mitutoyo-olcu-aletleri.pdf", "permanent": true },
+    { "source": "/uploads/files/202503/upload_67d1d99e1add3.pdf", "destination": "/kataloglar/sanowa-kilavuz-eco.pdf", "permanent": true },
+    { "source": "/uploads/files/202509/upload_68b9a20dd9a6b.pdf", "destination": "/kataloglar/carmon-kilavuz.pdf", "permanent": true },
+    { "source": "/uploads/files/202512/upload_694e43279773f.pdf", "destination": "/kataloglar/format-kilavuz.pdf", "permanent": true },
+    { "source": "/uploads/files/202512/upload_694a9180df0e1.pdf", "destination": "/kataloglar/mitsubishi-frezeleme.pdf", "permanent": true },
+    { "source": "/uploads/files/202512/upload_694e6468624f0.pdf", "destination": "/kataloglar/izar-hss-matkap.pdf", "permanent": true },
+    { "source": "/uploads/files/202509/upload_68bfca8f4eda4.pdf", "destination": "/kataloglar/format-hss-matkap.pdf", "permanent": true },
+    { "source": "/uploads/files/202503/upload_67d1d57d74b91.pdf", "destination": "/kataloglar/pens-kayar-otomat.pdf", "permanent": true }
+  ]
 }

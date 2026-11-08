@@ -2,8 +2,9 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { ArrowRight, Camera, Plus, Send } from 'lucide-react'
+import { ArrowRight, Camera, FileText, Plus, Send } from 'lucide-react'
 import { CATEGORIES } from '../data/catalog'
+import { CATALOGS } from '../data/catalogs'
 import { SITE, categoryPath, photoWhatsappUrl } from '../config/site'
 import { useIsClient } from '../lib/client'
 import ToolDrawing from '../components/ToolDrawing'
@@ -184,6 +185,9 @@ export default function Products() {
               >
                 <Camera className="size-4" /> Kodu bilmiyorum, fotoğrafla sor
               </a>
+              <Link to="/kataloglar" className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                <FileText className="size-4" /> Kataloglar (PDF)
+              </Link>
             </div>
           </div>
 
@@ -231,13 +235,18 @@ export default function Products() {
                           <div className="rounded-2xl border border-line bg-paper p-4 md:p-5">
                             <QuickAdd category={c.slug} autoFocus={byUser} showOpen />
                           </div>
-                          {/* grubun kendi sayfası: kod rehberi, teklif isterken belirtilecekler, seçim ipuçları */}
-                          <Link
-                            to={categoryPath(c.slug)}
-                            className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-graphite underline-offset-4 hover:text-ink hover:underline"
-                          >
-                            {c.name}: kod rehberi ve seçim ipuçları <ArrowRight className="size-4" />
-                          </Link>
+                          {/* grubun kendi sayfası */}
+                          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] font-medium text-graphite">
+                            <Link to={categoryPath(c.slug)} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                              {c.name} sayfası <ArrowRight className="size-4" />
+                            </Link>
+                            {/* grubun PDF kataloğu varsa: grup sayfasındaki katalog bölümüne */}
+                            {(CATALOGS[c.slug]?.length ?? 0) > 0 && (
+                              <Link to={`${categoryPath(c.slug)}#katalog`} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                                <FileText className="size-4" /> {CATALOGS[c.slug].length > 1 ? `${CATALOGS[c.slug].length} PDF katalog` : 'PDF katalog'}
+                              </Link>
+                            )}
+                          </div>
                         </div>
                   </Collapse>
                 </li>

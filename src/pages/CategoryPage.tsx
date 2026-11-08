@@ -1,11 +1,14 @@
-import { useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Camera } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import { ArrowDown, ArrowRight, ArrowUpRight, Camera, FileText } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CATEGORIES, type Category } from '../data/catalog'
 import { GUIDES, type Guide } from '../data/guides'
 import { BRANDS } from '../data/brands'
+import { CATALOGS } from '../data/catalogs'
+import CatalogCard from '../components/CatalogCard'
+import { scrollToElement } from '../lib/scroll'
 import { SITE, categoryPath, photoWhatsappUrl } from '../config/site'
 import ToolDrawing from '../components/ToolDrawing'
 import SectionHead from '../components/SectionHead'
@@ -42,6 +45,18 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
   }, { scope: root })
 
   const brands = g.brands.map((name) => BRANDS.find((b) => b.name === name) ?? { name })
+  const catalogs = CATALOGS[c.slug] ?? []
+  const { hash } = useLocation()
+
+  // Başka sayfadan /urunler/<grup>#katalog ile gelinince katalog bölümüne kay (sayfa içi bağlantıda tarayıcı kendisi kayar)
+  useEffect(() => {
+    if (hash !== '#katalog') return
+    const t = window.setTimeout(() => {
+      const el = document.getElementById('katalog')
+      if (el) scrollToElement(el, window.innerWidth < 768 ? -80 : -104)
+    }, 250)
+    return () => window.clearTimeout(t)
+  }, [hash])
   const others = CATEGORIES.filter((o) => o.slug !== c.slug)
 
   // Bölüm numaraları sırayla (gizli marka bölümü numara atlatmaz)
@@ -87,6 +102,17 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
             <p className="anim-fade-up mt-6 max-w-xl text-[17px] leading-relaxed text-graphite [--anim-delay:0.35s] [--anim-dur:0.9s] [--anim-y:16px]">
               {c.description}
             </p>
+            {/* katalog varsa: aşağıdaki katalog bölümüne kısa yol */}
+            {catalogs.length > 0 && (
+              <a
+                href="#katalog"
+                className="anim-fade-up mt-6 inline-flex h-10 items-center gap-2 rounded-full border border-ink/15 px-4 text-[13px] font-medium transition-colors hover:border-ink [--anim-delay:0.5s]"
+              >
+                <FileText className="size-4" />
+                {catalogs.length > 1 ? `${catalogs.length} PDF katalog` : 'PDF katalog'}
+                <ArrowDown className="size-3.5 text-muted" />
+              </a>
+            )}
           </div>
           <div className="hero-plot rounded-3xl bg-mist px-6 py-8 text-ink md:px-10 md:py-12 lg:col-span-5">
             <ToolDrawing kind={c.drawing} className="mx-auto w-full max-w-[420px]" />
@@ -125,53 +151,28 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
             </div>
           </section>
 
-          {/* kod / ölçü rehberi */}
-          <section>
-            <SectionHead compact index={next()} label="KOD REHBERİ" title={<>{g.anatomy.heading}</>} />
-            {/* esnek satırlar: tek sayıda parçada son hücre satırı doldurur (gri boşluk kalmaz) */}
-            <ol className="flex flex-wrap gap-px overflow-hidden rounded-2xl border border-line bg-line">
-              {g.anatomy.segments.map((s, i) => (
-                <li key={s.code + s.label} className="flex grow basis-full gap-4 bg-paper p-5 sm:basis-[calc(50%-1px)]">
-                  <span className="font-mono text-[10px] tracking-[0.2em] text-muted">{p2(i + 1)}</span>
-                  <div className="min-w-0">
-                    <p className="font-mono text-[22px] font-medium leading-none text-ink">
-                      <span className="border-b-2 border-accent pb-0.5">{s.code}</span>
-                    </p>
-                    <p className="mt-3 font-mono text-[10px] tracking-[0.18em] text-muted">{s.label.toLocaleUpperCase('tr-TR')}</p>
-                    <p className="mt-1 text-[14px] leading-relaxed text-graphite">{s.meaning}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            {g.anatomy.note && <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-muted">{g.anatomy.note}</p>}
-          </section>
-
-          {/* teklif isterken */}
-          <section>
-            <SectionHead compact index={next()} label="TEKLİF İSTERKEN" title={<>Fişe yazarken belirtin.</>} />
-            <dl className="divide-y divide-line border-y border-line">
-              {g.specs.map((s) => (
-                <div key={s.label} className="grid gap-1 py-4 sm:grid-cols-[minmax(0,14rem)_1fr] sm:gap-6">
-                  <dt className="text-[15px] font-medium">{s.label}</dt>
-                  <dd className="text-[15px] leading-relaxed text-graphite">{s.hint}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-4 text-[14px] text-muted">Hepsini bilmeniz gerekmez: bildiğinizi yazın, gerisini birlikte netleştiririz.</p>
-          </section>
-
-          {/* seçim ipuçları */}
-          <section>
-            <SectionHead compact index={next()} label="SEÇİM İPUÇLARI" title={<>Seçerken dikkat edin.</>} />
-            <ul className="space-y-4">
-              {g.tips.map((t, i) => (
-                <li key={t} className="flex gap-4 text-[15px] leading-relaxed text-graphite md:text-[16px]">
-                  <span className="pt-1 font-mono text-[10px] tracking-[0.2em] text-muted">{p2(i + 1)}</span>
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+          {/* PDF kataloglar — data/catalogs.ts'te bu grup için katalog yoksa gösterilmez */}
+          {catalogs.length > 0 && (
+            <section id="katalog" className="scroll-mt-28">
+              <SectionHead
+                compact
+                index={next()}
+                label="KATALOG"
+                title={<>{catalogs.length > 1 ? 'Ürün katalogları.' : 'Ürün kataloğu.'}</>}
+              />
+              <div className="space-y-4">
+                {catalogs.map((k) => (
+                  <CatalogCard key={k.id} catalog={k} />
+                ))}
+              </div>
+              <Link
+                to="/kataloglar"
+                className="group mt-5 inline-flex items-center gap-1.5 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline"
+              >
+                Tüm kataloglar <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </section>
+          )}
 
           {/* markalar — guides.ts'te liste boşsa gösterilmez */}
           {brands.length > 0 && (
