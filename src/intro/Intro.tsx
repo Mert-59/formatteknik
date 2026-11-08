@@ -40,7 +40,6 @@ export default function Intro({ onReveal, onComplete }: Props) {
   const barRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLSpanElement>(null)
   const crossRef = useRef<HTMLDivElement>(null)
-  const altRef = useRef<HTMLSpanElement>(null)
   const placeRef = useRef<HTMLSpanElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const skipRef = useRef<() => void>(() => {})
@@ -139,7 +138,6 @@ export default function Intro({ onReveal, onComplete }: Props) {
         cy = p.y
         if (mask.p > 0) applyMask()
 
-        altRef.current!.textContent = `${Math.round(scene.altitudeKm()).toLocaleString('tr-TR')} km`
         if (frame++ % 6 === 0) {
           const [lon, lat] = scene.targetLonLat()
           placeRef.current!.textContent = placeName(lon, lat).toLocaleUpperCase('tr-TR')
@@ -215,7 +213,6 @@ export default function Intro({ onReveal, onComplete }: Props) {
 
         {/* okumalar */}
         <div className="hud absolute bottom-5 left-5 grid grid-cols-[auto_auto] gap-x-5 gap-y-1 font-mono text-[10px] tracking-[0.16em] text-fog md:bottom-8 md:left-8 md:text-[11px]">
-          <span>İRTİFA</span><span ref={altRef} className="tabular-nums text-snow">—</span>
           <span>KONUM</span><span ref={placeRef} className="text-accent">—</span>
         </div>
 

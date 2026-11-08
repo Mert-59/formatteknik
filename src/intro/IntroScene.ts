@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
-import { KM_PER_UNIT, PLATE, PROVINCES, TARGET_PROVINCE, provinceShapes, ringSegments, unproject } from './geo'
+import { PLATE, PROVINCES, TARGET_PROVINCE, provinceShapes, ringSegments, unproject } from './geo'
 import { createPlate } from './engraving'
 
 const DEG = Math.PI / 180
@@ -249,10 +249,6 @@ export class IntroScene {
   /** Ekran merkezindeki (kameranın baktığı) noktanın boylam/enlemi */
   targetLonLat() {
     return unproject(this.cam.tx, -this.cam.tz)
-  }
-
-  altitudeKm() {
-    return this.camera.position.y * KM_PER_UNIT
   }
 
   /* ----------------------------------------------------------------- döngü */
