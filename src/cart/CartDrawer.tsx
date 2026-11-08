@@ -1,14 +1,13 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'motion/react'
 import { Camera, Check, ChevronDown, Copy, Phone, Printer, Send, X } from 'lucide-react'
 import { SITE, photoWhatsappUrl } from '../config/site'
-import { useCart } from './CartContext'
+import { itemKey, useCart } from './CartContext'
 import { copyText, isLongMessage, printSlip } from './slipUtils'
 import QuickAdd from './QuickAdd'
 import { SlipItem, Stamp } from './Slip'
 import { useModal, useScrollLock } from '../lib/scroll'
-import { EASE_CURTAIN } from '../lib/motion'
+import { usePresence } from '../lib/presence'
 
 const field =
   'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-[14px] outline-none transition-colors placeholder:text-muted focus:border-ink'
@@ -74,12 +73,14 @@ function CopyButton({ text, onFail }: { text: string; onFail: () => void }) {
 
 export default function CartDrawer() {
   const {
-    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, customer, setCustomer, buildMessage, sendWhatsApp, clear,
+    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, customer, setCustomer, buildMessage, sendWhatsApp, clear, lastAdded,
   } = useCart()
   const dialog = useRef<HTMLDivElement>(null)
   const start = useRef<HTMLDivElement>(null)
   const id = useId()
   const [infoOpen, setInfoOpen] = useState(false)
+  const info = usePresence(infoOpen, 350)
+  const drawer = usePresence(open, 550) // kapanış animasyonu bitene kadar çekmece sayfada kalır
   const [preview, setPreview] = useState(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const close = useCallback(() => setOpen(false), [setOpen])
@@ -99,23 +100,22 @@ export default function CartDrawer() {
   const who = [customer.name.trim(), customer.company.trim()].filter(Boolean).join(' · ')
 
   return (
-    <AnimatePresence>
-      {open && (
-        <div ref={dialog} className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Teklif fişi">
-          <motion.div
-            className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+    <>
+      {drawer.mounted && (
+        // group: kapanırken (data-state=closed) perde ve fiş birlikte çekilir; kapanış sırasında tıklama almaz
+        <div
+          ref={dialog}
+          data-state={drawer.state}
+          className="group fixed inset-0 z-50 data-[state=closed]:pointer-events-none"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Teklif fişi"
+        >
+          <div
+            className="absolute inset-0 bg-ink/30 backdrop-blur-[2px] transition-opacity duration-300 group-data-[state=closed]:opacity-0"
             onClick={close}
           />
-          <motion.aside
-            className="absolute inset-y-0 right-0 flex w-[min(480px,100vw)] flex-col bg-paper shadow-[-30px_0_80px_rgba(15,18,21,0.12)]"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.55, ease: EASE_CURTAIN }}
-          >
+          <aside className="absolute inset-y-0 right-0 flex w-[min(480px,100vw)] flex-col bg-paper shadow-[-30px_0_80px_rgba(15,18,21,0.12)] transition-transform duration-550 ease-curtain group-data-[state=closed]:translate-x-full">
             {/* fiş başlığı */}
             <div className="relative flex items-start justify-between gap-4 border-b border-line px-5 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:py-5">
               <div className="min-w-0">
@@ -193,20 +193,15 @@ export default function CartDrawer() {
                 <>
                   <div>
                     <ul className="divide-y divide-line">
-                      <AnimatePresence initial={false}>
-                        {items.map((it, i) => (
-                          <motion.li
-                            key={it.id}
-                            layout="position"
-                            initial={{ opacity: 0, y: -8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-                            className="overflow-hidden px-5 py-3.5 sm:px-6"
-                          >
-                            <SlipItem item={it} index={i} />
-                          </motion.li>
-                        ))}
-                      </AnimatePresence>
+                      {/* yeni eklenen kalem yukarıdan süzülür; kaldırılan kalem Slip.tsx'te kapanarak çıkar */}
+                      {items.map((it, i) => (
+                        <li
+                          key={it.id}
+                          className={`overflow-hidden px-5 py-3.5 sm:px-6 ${lastAdded.keys.includes(itemKey(it)) ? 'anim-drop' : ''}`}
+                        >
+                          <SlipItem item={it} index={i} />
+                        </li>
+                      ))}
                     </ul>
                   </div>
 
@@ -225,16 +220,14 @@ export default function CartDrawer() {
                       </span>
                       <ChevronDown className={`size-4 shrink-0 text-muted transition-transform ${infoOpen ? 'rotate-180' : ''}`} />
                     </button>
-                    <AnimatePresence initial={false}>
-                      {infoOpen && (
-                        <motion.div
+                    {info.mounted && (
+                        // yükseklik animasyonu: grid satırı 0fr ↔ 1fr (içerik ölçülmeden "auto" yüksekliğe açılır)
+                        <div
                           id={`${id}-info`}
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.35, ease: EASE_CURTAIN }}
-                          className="overflow-hidden"
+                          data-state={info.state}
+                          className="grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-350 ease-curtain data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0"
                         >
+                          <div className="min-h-0 overflow-hidden">
                           <div className="grid gap-3 pt-4 sm:grid-cols-2">
                             <div>
                               <label htmlFor={`${id}-name`} className={label}>AD SOYAD</label>
@@ -256,9 +249,9 @@ export default function CartDrawer() {
                             </div>
                           </div>
                           <p className="mt-2 text-[12px] text-muted">Ad ve firma bu cihazda hatırlanır.</p>
-                        </motion.div>
+                          </div>
+                        </div>
                       )}
-                    </AnimatePresence>
                   </div>
 
                   <div className="border-t border-line px-5 py-4 sm:px-6">
@@ -362,9 +355,9 @@ export default function CartDrawer() {
                 )}
               </div>
             )}
-          </motion.aside>
+          </aside>
         </div>
       )}
-    </AnimatePresence>
+    </>
   )
 }

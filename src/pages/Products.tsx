@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'motion/react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ArrowRight, Camera, Plus, Send } from 'lucide-react'
@@ -14,7 +13,7 @@ import { SlipItem, Stamp } from '../cart/Slip'
 import { useCart } from '../cart/CartContext'
 import { scrollToElement } from '../lib/scroll'
 import { usePageMeta } from '../lib/usePageMeta'
-import { EASE_CURTAIN } from '../lib/motion'
+import { usePresence } from '../lib/presence'
 
 const headerOffset = () => (window.innerWidth < 768 ? -80 : -104)
 /** '#torna-uclari' → 'torna-uclari' (geçerli bir grup değilse '') */
@@ -23,6 +22,24 @@ const fromHash = (h: string) => {
   return CATEGORIES.some((c) => c.slug === s) ? s : ''
 }
 const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted md:text-[11px]'
+
+/**
+ * Grup paneli: yüksekliği "auto"ya açılır/kapanır (grid satırı 0fr ↔ 1fr, ölçüm gerekmez).
+ * Kapalıyken içerik sayfadan kalkar (her grupta ayrı form bekletilmez).
+ */
+function Collapse({ open, id, children }: { open: boolean; id: string; children: ReactNode }) {
+  const { mounted, state } = usePresence(open, 450)
+  if (!mounted) return null
+  return (
+    <div
+      id={id}
+      data-state={state}
+      className="grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-450 ease-curtain data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0"
+    >
+      <div className="min-h-0 overflow-hidden">{children}</div>
+    </div>
+  )
+}
 
 /** Masaüstünde sağda sabit duran canlı fiş: eklenen her kalem anında burada görünür. */
 function SlipPanel() {
@@ -209,16 +226,7 @@ export default function Products() {
                     </div>
                   </button>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        id={`${c.slug}-ekle`}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.45, ease: EASE_CURTAIN }}
-                        className="overflow-hidden"
-                      >
+                  <Collapse open={isOpen} id={`${c.slug}-ekle`}>
                         <div className="px-4 pb-4 sm:pl-[calc(168px+2.5rem)] md:px-6 md:pb-6 md:pl-[calc(168px+3rem)]">
                           <div className="rounded-2xl border border-line bg-paper p-4 md:p-5">
                             <QuickAdd category={c.slug} autoFocus={byUser} showOpen />
@@ -231,9 +239,7 @@ export default function Products() {
                             {c.name}: kod rehberi ve seçim ipuçları <ArrowRight className="size-4" />
                           </Link>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  </Collapse>
                 </li>
               )
             })}

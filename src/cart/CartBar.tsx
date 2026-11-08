@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { useCart } from './CartContext'
-import { EASE } from '../lib/motion'
+import { usePresence } from '../lib/presence'
 import { useIntro } from '../lib/introState'
 
 /**
@@ -31,19 +30,16 @@ export default function CartBar() {
   const { phase } = useIntro()
   const typing = useTyping()
   const show = count > 0 && !open && !typing && phase === 'done'
+  const bar = usePresence(show, 600) // alttan kayarak gelir, inerken animasyon bitince kalkar
 
   return (
     <>
       {/* çubuk sayfa sonunu örtmesin */}
       {count > 0 && <div aria-hidden className="h-20 lg:hidden" />}
-      <AnimatePresence>
-        {show && (
-          <motion.div
-            initial={{ y: '120%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '120%' }}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="safe-x safe-b fixed inset-x-0 bottom-0 z-20 pt-3 lg:hidden"
+      {bar.mounted && (
+          <div
+            data-state={bar.state}
+            className="safe-x safe-b fixed inset-x-0 bottom-0 z-20 pt-3 transition-transform duration-600 ease-out-expo data-[state=closed]:translate-y-[120%] lg:hidden"
           >
             <button
               type="button"
@@ -62,9 +58,8 @@ export default function CartBar() {
                 {sentAt ? 'Fişi gör' : 'Gönder'} <ArrowRight className="size-4" />
               </span>
             </button>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   )
 }

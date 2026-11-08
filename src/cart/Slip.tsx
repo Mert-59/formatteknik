@@ -1,22 +1,21 @@
-import { motion } from 'motion/react'
+import gsap from 'gsap'
 import { Minus, Plus, X } from 'lucide-react'
 import { itemKey, useCart, type CartItem } from './CartContext'
 import { p2, stampTime } from './slipUtils'
+import { prefersReducedMotion } from '../lib/scroll'
 
 /** Gönderilen fişe basılan mühür: kızıl mürekkep, hafif dönük, dokulu. */
 export function Stamp({ at, className = '' }: { at: number; className?: string }) {
   return (
-    <motion.div
+    // anim-stamp: büyükten basılır, hafif geri sekip -7° eğik oturur (index.css)
+    <div
       aria-label={`Gönderildi, ${stampTime(at)}`}
       role="img"
-      initial={{ scale: 1.9, opacity: 0, rotate: -16 }}
-      animate={{ scale: 1, opacity: 1, rotate: -7 }}
-      transition={{ type: 'spring', stiffness: 560, damping: 24, mass: 0.8 }}
-      className={`stamp pointer-events-none select-none rounded-[6px] border-2 border-accent px-3 py-1.5 text-center font-mono text-accent-ink ${className}`}
+      className={`stamp anim-stamp pointer-events-none select-none rounded-[6px] border-2 border-accent px-3 py-1.5 text-center font-mono text-accent-ink ${className}`}
     >
       <span className="block text-[15px] font-semibold leading-tight tracking-[0.26em]">GÖNDERİLDİ</span>
       <span className="block text-[9.5px] tracking-[0.14em]">{stampTime(at)}</span>
-    </motion.div>
+    </div>
   )
 }
 
@@ -57,7 +56,12 @@ export function SlipItem({ item, index, editable = true }: { item: CartItem; ind
           </div>
           <button
             type="button"
-            onClick={() => remove(item.id)}
+            onClick={(e) => {
+              // satır yukarı doğru kapanır, sonra fişten çıkar
+              const row = e.currentTarget.closest('li')
+              if (!row || prefersReducedMotion()) return remove(item.id)
+              gsap.to(row, { height: 0, paddingTop: 0, paddingBottom: 0, opacity: 0, duration: 0.3, ease: 'power2.inOut', onComplete: () => remove(item.id) })
+            }}
             className="grid size-9 place-items-center rounded-full text-muted transition-colors hover:text-accent-ink sm:size-8"
             aria-label={`${item.code} kalemini kaldır`}
           >

@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Camera } from 'lucide-react'
-import { motion } from 'motion/react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CATEGORIES, type Category } from '../data/catalog'
@@ -13,7 +12,6 @@ import SectionHead from '../components/SectionHead'
 import QuickAdd from '../cart/QuickAdd'
 import { useCart } from '../cart/CartContext'
 import { usePageMeta } from '../lib/usePageMeta'
-import { EASE } from '../lib/motion'
 import NotFound from './NotFound'
 
 /**
@@ -67,13 +65,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
 
       {/* başlık */}
       <section className="mx-auto max-w-[1440px] px-5 pb-14 pt-28 md:px-10 md:pb-20 md:pt-40">
-        <motion.nav
-          aria-label="Sayfa konumu"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE }}
-          className={`flex items-center gap-3 ${mono}`}
-        >
+        <nav aria-label="Sayfa konumu" className={`anim-fade-up flex items-center gap-3 ${mono}`}>
           <span className="size-1.5 rounded-full bg-accent" />
           <Link to="/urunler" className="hover:text-ink">
             ÜRÜNLERİMİZ
@@ -83,24 +75,19 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
             {p2(index + 1)} — {c.name.toLocaleUpperCase('tr-TR')}
           </span>
           <span className="h-px flex-1 bg-line" />
-        </motion.nav>
+        </nav>
 
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <h1 className="-mt-[0.16em] overflow-hidden pb-[0.06em] pt-[0.16em] font-wide text-[clamp(40px,7vw,104px)] font-semibold leading-[0.92] tracking-[-0.04em]">
-              <motion.span className="block" initial={{ y: '105%' }} animate={{ y: '0%' }} transition={{ duration: 1.1, ease: EASE, delay: 0.1 }}>
+              <span className="anim-line-up block [--anim-delay:0.1s]">
                 {c.name}
                 <span className="text-accent">.</span>
-              </motion.span>
+              </span>
             </h1>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: EASE, delay: 0.35 }}
-              className="mt-6 max-w-xl text-[17px] leading-relaxed text-graphite"
-            >
+            <p className="anim-fade-up mt-6 max-w-xl text-[17px] leading-relaxed text-graphite [--anim-delay:0.35s] [--anim-dur:0.9s] [--anim-y:16px]">
               {c.description}
-            </motion.p>
+            </p>
           </div>
           <div className="hero-plot rounded-3xl bg-mist px-6 py-8 text-ink md:px-10 md:py-12 lg:col-span-5">
             <ToolDrawing kind={c.drawing} className="mx-auto w-full max-w-[420px]" />

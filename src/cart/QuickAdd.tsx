@@ -1,5 +1,4 @@
 import { useEffect, useId, useMemo, useRef, useState, type ClipboardEvent, type FormEvent, type RefObject } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { Check, ChevronDown, ListPlus, Minus, Plus } from 'lucide-react'
 import { useCart } from './CartContext'
 import { parseLines } from './parse'
@@ -278,13 +277,13 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
       </button>
 
       <div id={`${id}-msg`} className="mt-2.5 min-h-5 text-[13px]" aria-live="polite">
-        <AnimatePresence mode="wait" initial={false}>
+        {/* mesaj her değişince yeniden takılır ve hafifçe yukarı süzülerek belirir (index.css .anim-fade-up) */}
           {error ? (
-            <motion.p key="err" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-accent-ink">
+            <p key="err" className="anim-fade-up text-accent-ink [--anim-dur:0.35s] [--anim-y:4px]">
               {error}
-            </motion.p>
+            </p>
           ) : done ? (
-            <motion.p key={done.at} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex flex-wrap items-center gap-x-2 text-graphite">
+            <p key={done.at} className="anim-fade-up [--anim-dur:0.35s] [--anim-y:4px] flex flex-wrap items-center gap-x-2 text-graphite">
               <Check className="size-4 text-accent-ink" />
               <span className="min-w-0 truncate font-mono text-[12px]">{done.text}</span>
               {showOpen && (
@@ -292,9 +291,9 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
                   Fişi aç
                 </button>
               )}
-            </motion.p>
+            </p>
           ) : null}
-        </AnimatePresence>
+
       </div>
     </form>
   )

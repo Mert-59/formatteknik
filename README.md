@@ -1,7 +1,8 @@
 # Format Teknik — formatteknik.com.tr
 
 Çorlu/Tekirdağ merkezli kesici takım, ölçüm ve sarf malzemesi tedarikçisinin web sitesi.
-Vite + React + TypeScript + Tailwind v4. Animasyonlar: GSAP (giriş, kaydırma efektleri) ve Motion (menü, çekmece, sayfa geçişleri).
+Vite + React + TypeScript + Tailwind v4. Animasyonlar: GSAP (3D giriş, kumpas, kaydırmaya bağlı efektler) ve saf CSS
+(açılış animasyonları `index.css` → `.anim-*`; açılıp kapanan çekmece/menü/akordeon `src/lib/presence.ts` → `usePresence`).
 
 ## Komutlar
 

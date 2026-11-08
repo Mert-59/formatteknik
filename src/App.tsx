@@ -1,6 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { MotionConfig, motion } from 'motion/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -71,17 +70,13 @@ function Shell() {
     setPhase('intro')
   }, [location.pathname, navigate])
 
-  const intro = useMemo(() => ({ phase, replay }), [phase, replay])
+  const intro = useMemo(() => ({ phase, run, replay }), [phase, run, replay])
 
   return (
     <IntroContext.Provider value={intro}>
       <Header />
-      <motion.main
-        key={location.pathname}
-        initial={pageFade ? { opacity: 0 } : false}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-      >
+      {/* sayfa değişince yeni sayfa solarak gelir (index.css .anim-fade); ilk açılışta değil — ön-render içeriği hemen görünür */}
+      <main key={location.pathname} className={pageFade ? 'anim-fade' : undefined}>
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/urunler" element={<Products />} />
@@ -90,7 +85,7 @@ function Shell() {
           <Route path="/iletisim" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </motion.main>
+      </main>
       <Footer />
       <CartBar />
       <CartDrawer />
@@ -115,11 +110,9 @@ function Shell() {
 /** Yönlendiriciden bağımsız uygulama: tarayıcıda BrowserRouter, ön-render'da StaticRouter içine konur. */
 export function AppContent() {
   return (
-    <MotionConfig reducedMotion="user">
-      <CartProvider>
-        <Shell />
-      </CartProvider>
-    </MotionConfig>
+    <CartProvider>
+      <Shell />
+    </CartProvider>
   )
 }
 

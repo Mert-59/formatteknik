@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'motion/react'
 import { Menu, MessageCircle, Phone, ReceiptText, X } from 'lucide-react'
 import gsap from 'gsap'
 import { NAV, SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
 import { useModal, useScrollLock } from '../lib/scroll'
-import { EASE, EASE_CURTAIN } from '../lib/motion'
+import { anim, usePresence } from '../lib/presence'
 
 /**
  * Logo yazısı. Telefonda (<640 px) iki satıra dizilir: FORMAT üstte, TEKNİK altta ve FORMAT'ın genişliğine yayılmış.
@@ -64,6 +63,7 @@ export default function Header() {
   // Menü açıldığı sayfaya bağlıdır: sayfa değişince kendiliğinden kapanır.
   const [menuAt, setMenuAt] = useState<string | null>(null)
   const menu = menuAt === pathname
+  const menuPresence = usePresence(menu, 600) // kapanış perdesi bitene kadar menü sayfada kalır
   const shell = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLElement>(null)
   const closeMenu = useCallback(() => setMenuAt(null), [])
@@ -105,11 +105,7 @@ export default function Header() {
                   <>
                     {item.label}
                     {isActive && (
-                      <motion.span
-                        layoutId="nav-dot"
-                        className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-accent"
-                        transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-                      />
+                      <span className="anim-fade absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-accent [--anim-dur:0.35s]" />
                     )}
                   </>
                 )}
@@ -133,25 +129,16 @@ export default function Header() {
         </div>
       </header>
 
-      <AnimatePresence>
-        {menu && (
-          <motion.div
+      {menuPresence.mounted && (
+          // perde gibi yukarıdan aşağı açılır, kapanırken geri toplanır
+          <div
             id="mobil-menu"
-            className="safe-b fixed inset-0 z-30 flex flex-col bg-paper pt-24 lg:hidden"
-            initial={{ clipPath: 'inset(0 0 100% 0)' }}
-            animate={{ clipPath: 'inset(0 0 0% 0)' }}
-            exit={{ clipPath: 'inset(0 0 100% 0)' }}
-            transition={{ duration: 0.6, ease: EASE_CURTAIN }}
+            data-state={menuPresence.state}
+            className="safe-b fixed inset-0 z-30 flex flex-col bg-paper pt-24 transition-[clip-path] duration-600 ease-curtain [clip-path:inset(0_0_0%_0)] data-[state=closed]:[clip-path:inset(0_0_100%_0)] lg:hidden"
           >
             <nav ref={panel} className="safe-x flex flex-col" aria-label="Mobil menü">
               {NAV.map((item, i) => (
-                <motion.div
-                  key={item.to}
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.15 + i * 0.06, duration: 0.6, ease: EASE }}
-                  className="border-b border-line"
-                >
+                <div key={item.to} className="anim-fade-up border-b border-line" style={anim({ delay: 0.15 + i * 0.06, dur: 0.6, y: '40px' })}>
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}
@@ -169,17 +156,12 @@ export default function Header() {
                       </>
                     )}
                   </NavLink>
-                </motion.div>
+                </div>
               ))}
             </nav>
 
             {/* hızlı iletişim — telefonda tek dokunuşla */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45, duration: 0.6 }}
-              className="safe-x mt-auto grid grid-cols-2 gap-2 pt-8"
-            >
+            <div className="anim-fade-up safe-x mt-auto grid grid-cols-2 gap-2 pt-8" style={anim({ delay: 0.45, dur: 0.6, y: '20px' })}>
               <a href={SITE.phoneHref} className="flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 text-[14px] font-medium">
                 <Phone className="size-4" /> Ara
               </a>
@@ -191,10 +173,9 @@ export default function Header() {
               >
                 <MessageCircle className="size-4" /> WhatsApp
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   )
 }

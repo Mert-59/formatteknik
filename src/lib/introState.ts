@@ -2,8 +2,10 @@ import { createContext, useContext } from 'react'
 
 export type IntroPhase = 'intro' | 'revealing' | 'done'
 
-export const IntroContext = createContext<{ phase: IntroPhase; replay: () => void }>({
+/** `run`: giriş kaçıncı kez oynuyor ("Girişi izle" her basışta artar; anasayfa açılış animasyonları buna göre baştan başlar) */
+export const IntroContext = createContext<{ phase: IntroPhase; run: number; replay: () => void }>({
   phase: 'done',
+  run: 0,
   replay: () => {},
 })
 

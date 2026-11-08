@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, type Variants } from 'motion/react'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -8,27 +7,26 @@ import { CATEGORIES } from '../data/catalog'
 import { categoryPath } from '../config/site'
 import { useIntro } from '../lib/introState'
 import { useCart } from '../cart/CartContext'
-import { EASE } from '../lib/motion'
+import { anim } from '../lib/presence'
 import { usePageMeta } from '../lib/usePageMeta'
 import Caliper from '../components/Caliper'
 import ToolDrawing from '../components/ToolDrawing'
 import SectionHead from '../components/SectionHead'
 import BrandWall from '../components/BrandWall'
 
-const container: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.45 } } }
-const rise: Variants = {
-  hidden: { y: 36, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { duration: 1.1, ease: EASE } },
-}
-const line: Variants = {
-  hidden: { y: '110%' },
-  show: { y: '0%', transition: { duration: 1.2, ease: EASE } },
-}
+/*
+ * Açılış sırası (saf CSS, index.css .anim-*): üst satır → iki başlık satırı → metin → kumpas, 80 ms arayla.
+ * Giriş sürerken animasyonlar ilk karede bekler (data-entered="false"), geçişle birlikte oynar.
+ */
+const STAGGER = 0.08
+const START = 0.45
+const rise = (i: number) => anim({ delay: START + i * STAGGER, dur: 1.1, y: '36px' })
+const line = (i: number) => anim({ delay: START + i * STAGGER, dur: 1.2, y: '110%' })
 
 /* ------------------------------------------------------------------ HERO */
 
 function Hero() {
-  const { phase } = useIntro()
+  const { phase, run } = useIntro()
   const { openCart } = useCart()
   const entered = phase !== 'intro'
 
@@ -37,33 +35,33 @@ function Hero() {
       {/* ince teknik ızgara */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(15,18,21,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,18,21,0.045)_1px,transparent_1px)] bg-size-[64px_64px] mask-[radial-gradient(ellipse_70%_60%_at_40%_40%,#000_30%,transparent_80%)]" />
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate={entered ? 'show' : 'hidden'}
+      {/* key: "Girişi izle" ile giriş yeniden oynayınca açılış animasyonları da baştan başlar */}
+      <div
+        key={run}
+        data-entered={entered}
         className="relative mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-5 md:px-10"
       >
-        <motion.div variants={rise} className="flex items-center justify-between font-mono text-[10px] tracking-[0.22em] text-muted md:text-[11px]">
+        <div style={rise(0)} className="anim-fade-up flex items-center justify-between font-mono text-[10px] tracking-[0.22em] text-muted md:text-[11px]">
           <span className="flex items-center gap-2.5">
             <span className="size-1.5 rounded-full bg-accent" /> ÇORLU / TEKİRDAĞ
           </span>
           <span className="max-sm:hidden">KESİCİ TAKIM · ÖLÇÜM · SARF</span>
-        </motion.div>
+        </div>
 
         <div className="relative mt-[clamp(28px,7svh,64px)] flex flex-col gap-8 md:mt-10 md:flex-1 md:justify-end md:gap-10">
           {/* En uzun satır "Çözüm Ortağı." ≈7em: 11vw her genişlikte kapsayıcıya sığar */}
           <h1 className="font-wide text-[clamp(36px,11vw,164px)] font-semibold leading-[0.88] tracking-[-0.045em]">
             <span className="-mb-[0.16em] block overflow-hidden pb-[0.22em]">
-              <motion.span variants={line} className="block">Güvenilir</motion.span>
+              <span style={line(1)} className="anim-line-up block">Güvenilir</span>
             </span>
             <span className="-mb-[0.16em] block overflow-hidden pb-[0.22em]">
-              <motion.span variants={line} className="block">
+              <span style={line(2)} className="anim-line-up block">
                 Çözüm Ortağı<span className="text-accent">.</span>
-              </motion.span>
+              </span>
             </span>
           </h1>
           {/* masaüstünde kısa "Güvenilir" satırının sağındaki boşluğa oturur */}
-          <motion.div variants={rise} className="max-w-sm lg:absolute lg:right-0 lg:top-0 lg:w-[30%]">
+          <div style={rise(3)} className="anim-fade-up max-w-sm lg:absolute lg:right-0 lg:top-0 lg:w-[30%]">
             <p className="text-[16px] leading-relaxed text-graphite">
               Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Havacılık, medikal, otomotiv ve makina sektörlerine.
             </p>
@@ -79,13 +77,13 @@ function Hero() {
                 Ürün grupları
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div variants={rise} className="mb-6 mt-10 md:mb-8 md:mt-12 lg:ml-auto lg:w-[84%]">
+        <div style={rise(4)} className="anim-fade-up mb-6 mt-10 md:mb-8 md:mt-12 lg:ml-auto lg:w-[84%]">
           <Caliper active={entered} />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }
