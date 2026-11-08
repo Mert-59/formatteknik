@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fbfbfa" />
+    <script>
+      // 3D giriş kendiliğinden yalnızca ilk ziyarette oynar (src/lib/introState.ts ile aynı anahtar).
+      // Hareket azaltma, veri tasarrufu ya da zayıf cihazda hiç oynamaz; altbilgiden yine izlenebilir.
+      // Anasayfada giriş koyu zeminde başlar: JS yüklenene kadar açık renk parlama olmasın.
+      window.__ftIntro = (function () {
+        if (location.pathname !== '/') return false
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+        var n = navigator
+        if (n.connection && n.connection.saveData) return false
+        if ((n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) return false
+        try {
+          return !localStorage.getItem('ft-intro-seen-v1')
+        } catch (e) {
+          return true
+        }
+      })()
+      // Giriş oynayacaksa: koyu zemin + ön-render içeriği giriş katmanı gelene kadar gizli (index.css → .ft-intro)
+      if (window.__ftIntro) {
+        document.documentElement.style.background = '#0a0c0f'
+        document.documentElement.classList.add('ft-intro')
+      }
+      // JS çalışıyor: kaydırmayla çizilen teknik çizimler çizilmemiş başlasın (index.css → .js .plot)
+      document.documentElement.classList.add('js')
+    </script>
+    <title>Format Teknik | Çorlu</title>
+    <meta
+      name="description"
+      content="Format Teknik — Çorlu/Tekirdağ. Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Havacılık, medikal, otomotiv ve makina sektörlerine."
+    />
+    <link rel="canonical" href="https://formatteknik.com.tr/" />
+
+    <!-- Paylaşım önizlemesi (WhatsApp, LinkedIn vb. JS çalıştırmaz; bu yüzden burada sabit) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:site_name" content="Format Teknik" />
+    <meta property="og:title" content="Format Teknik | Güvenilir Çözüm Ortağı" />
+    <meta
+      property="og:description"
+      content="Çorlu/Tekirdağ. Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Kodu yazın, teklif fişine ekleyin, WhatsApp'tan gönderin."
+    />
+    <meta property="og:url" content="https://formatteknik.com.tr/" />
+    <!-- Paylaşım görseli: 1200×630, public/og-image.png. Tam adres gerekir (bazı uygulamalar göreli yolu okumaz). -->
+    <meta property="og:image" content="https://formatteknik.com.tr/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Format Teknik — Güvenilir Çözüm Ortağı. Çorlu / Tekirdağ; kesici takım, ölçüm, sarf." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://formatteknik.com.tr/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Format Teknik",
+        "description": "Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri tedarikçisi.",
+        "url": "https://formatteknik.com.tr/",
+        "telephone": "+90 544 601 85 38",
+        "email": "info@formatteknik.com.tr",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Çobançeşme Mah. Bülent Ecevit Bulvarı, Arka İnşaat B Blok No: 207 D",
+          "addressLocality": "Çorlu",
+          "addressRegion": "Tekirdağ",
+          "addressCountry": "TR"
+        },
+        "areaServed": "TR"
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
