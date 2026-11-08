@@ -88,9 +88,12 @@ export default function BrandWall() {
             </span>
           )}
 
-          <span className="absolute bottom-4 right-4 font-mono text-[9px] tracking-[0.18em] text-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {b.logo ? (b.caption ? '' : b.name.toLocaleUpperCase('en')) : 'LOGO YAKINDA'}
-          </span>
+          {/* üzerine gelince marka adı; adı zaten görünen hücrelerde (yazı logo / alt yazı) gösterilmez */}
+          {b.logo && !b.caption && (
+            <span className="absolute bottom-4 right-4 font-mono text-[9px] tracking-[0.18em] text-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {b.name.toLocaleUpperCase('en')}
+            </span>
+          )}
         </div>
       ))}
     </div>

@@ -52,6 +52,22 @@ export default function Contact() {
             <span className="text-[15px] font-medium md:text-[16px]">{SITE.address}</span>
           </Card>
         </div>
+        {(SITE.hours || SITE.replyTime) && (
+          <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-3 text-[14px]">
+            {SITE.hours && (
+              <div>
+                <dt className="font-mono text-[10px] tracking-[0.22em] text-muted">ÇALIŞMA SAATLERİ</dt>
+                <dd className="mt-1 text-graphite">{SITE.hours}</dd>
+              </div>
+            )}
+            {SITE.replyTime && (
+              <div>
+                <dt className="font-mono text-[10px] tracking-[0.22em] text-muted">TEKLİFE DÖNÜŞ</dt>
+                <dd className="mt-1 text-graphite">Genellikle {SITE.replyTime}</dd>
+              </div>
+            )}
+          </dl>
+        )}
       </section>
 
       <section className="mx-auto max-w-[1440px] px-5 pb-28 md:px-10">

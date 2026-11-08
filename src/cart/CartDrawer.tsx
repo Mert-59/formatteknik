@@ -1,7 +1,8 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ChevronDown, Mail, Send, X } from 'lucide-react'
+import { ChevronDown, Mail, Phone, Send, X } from 'lucide-react'
+import { SITE } from '../config/site'
 import { useCart } from './CartContext'
 import QuickAdd from './QuickAdd'
 import { SlipItem, Stamp } from './Slip'
@@ -31,8 +32,9 @@ function Preview({ text }: { text: string }) {
 }
 
 export default function CartDrawer() {
-  const { items, open, setOpen, focusAdd, count, units, orderNo, sentAt, customer, setCustomer, buildMessage, sendWhatsApp, mailHref, clear } =
-    useCart()
+  const {
+    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, sentVia, customer, setCustomer, buildMessage, sendWhatsApp, mailHref, markSent, clear,
+  } = useCart()
   const dialog = useRef<HTMLDivElement>(null)
   const start = useRef<HTMLDivElement>(null)
   const id = useId()
@@ -224,8 +226,20 @@ export default function CartDrawer() {
               <div className="safe-b border-t border-line px-5 pt-4 sm:px-6 sm:pt-5">
                 {sentAt > 0 ? (
                   <div>
+                    {/* gönderdikten sonra: ne olacağını ve acil durumda ne yapılacağını söyle */}
                     <p className="text-[14px] leading-relaxed text-graphite">
-                      Mesajınız WhatsApp’ta hazırlandı. Gönderdiyseniz yeni bir fişe başlayabilirsiniz; fiş, siz temizleyene kadar burada kalır.
+                      Mesajınız {sentVia === 'email' ? 'e-posta programınızda' : 'WhatsApp’ta'} hazırlandı.{' '}
+                      <span className="text-ink">
+                        Gönderdiyseniz fişiniz bize ulaştı; <span className="whitespace-nowrap font-mono text-[13px]">{orderNo}</span> numarasıyla{' '}
+                        {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız.
+                      </span>
+                    </p>
+                    <p className="mt-2 text-[13px] leading-relaxed text-muted">
+                      Acil mi?{' '}
+                      <a href={SITE.phoneHref} className="inline-flex items-center gap-1 font-medium text-ink underline underline-offset-2 hover:text-accent-ink">
+                        <Phone className="size-3.5" /> {SITE.phoneDisplay}
+                      </a>
+                      {SITE.hours && <span className="block">Çalışma saatleri: {SITE.hours}</span>}
                     </p>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <button
@@ -235,14 +249,26 @@ export default function CartDrawer() {
                       >
                         Yeni fiş başlat
                       </button>
-                      <button
-                        type="button"
-                        onClick={sendWhatsApp}
-                        className="h-12 rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
-                      >
-                        Tekrar gönder
-                      </button>
+                      {/* tekrar gönderim, son kullanılan kanaldan */}
+                      {sentVia === 'email' ? (
+                        <a
+                          href={mailHref()}
+                          onClick={() => markSent('email')}
+                          className="grid h-12 place-items-center rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
+                        >
+                          Tekrar gönder
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={sendWhatsApp}
+                          className="h-12 rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
+                        >
+                          Tekrar gönder
+                        </button>
+                      )}
                     </div>
+                    <p className="mt-3 text-center text-[12px] text-muted">Bu fiş, siz yeni fişe başlayana kadar burada kalır.</p>
                   </div>
                 ) : (
                   <>
@@ -255,7 +281,7 @@ export default function CartDrawer() {
                       WhatsApp ile gönder
                     </button>
                     <div className="mt-3 flex items-center justify-between gap-3 text-[13px]">
-                      <a href={mailHref()} className="inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline">
+                      <a href={mailHref()} onClick={() => markSent('email')} className="inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline">
                         <Mail className="size-4" /> E-posta ile gönder
                       </a>
                       <button

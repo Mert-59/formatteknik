@@ -7,8 +7,8 @@ import Footer from './components/Footer'
 import CartDrawer from './cart/CartDrawer'
 import CartBar from './cart/CartBar'
 import { CartProvider } from './cart/CartContext'
-import { IntroContext, type IntroPhase } from './lib/introState'
-import { prefersReducedMotion, scrollToTop, useScrollLock } from './lib/scroll'
+import { IntroContext, markIntroSeen, shouldAutoPlayIntro, type IntroPhase } from './lib/introState'
+import { scrollToTop, useScrollLock } from './lib/scroll'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import About from './pages/About'
@@ -22,10 +22,8 @@ function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Giriş, anasayfaya her gelindiğinde (doğrudan açılış / yenileme) oynar.
-  const [phase, setPhase] = useState<IntroPhase>(() =>
-    location.pathname === '/' && !prefersReducedMotion() ? 'intro' : 'done',
-  )
+  // Giriş kendiliğinden yalnızca ilk ziyarette oynar (karar index.html'de); altbilgiden tekrar izlenebilir.
+  const [phase, setPhase] = useState<IntroPhase>(() => (shouldAutoPlayIntro() ? 'intro' : 'done'))
   const [run, setRun] = useState(0)
 
   useScrollLock(phase !== 'done')
@@ -77,7 +75,14 @@ function Shell() {
       {phase !== 'done' && (
         // Parça inene kadar koyu zemin: anasayfa bir an bile görünmesin
         <Suspense fallback={<div className="fixed inset-0 z-50 bg-night" />}>
-          <Intro key={run} onReveal={() => setPhase('revealing')} onComplete={() => setPhase('done')} />
+          <Intro
+            key={run}
+            onReveal={() => {
+              markIntroSeen() // sonuna kadar izlendi ya da atlandı
+              setPhase('revealing')
+            }}
+            onComplete={() => setPhase('done')}
+          />
         </Suspense>
       )}
     </IntroContext.Provider>

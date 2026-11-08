@@ -6,8 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#fbfbfa" />
     <script>
+      // 3D giriş kendiliğinden yalnızca ilk ziyarette oynar (src/lib/introState.ts ile aynı anahtar).
+      // Hareket azaltma, veri tasarrufu ya da zayıf cihazda hiç oynamaz; altbilgiden yine izlenebilir.
       // Anasayfada giriş koyu zeminde başlar: JS yüklenene kadar açık renk parlama olmasın.
-      window.__ftIntro = location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.__ftIntro = (function () {
+        if (location.pathname !== '/') return false
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+        var n = navigator
+        if (n.connection && n.connection.saveData) return false
+        if ((n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) return false
+        try {
+          return !localStorage.getItem('ft-intro-seen-v1')
+        } catch (e) {
+          return true
+        }
+      })()
       if (window.__ftIntro) document.documentElement.style.background = '#0a0c0f'
     </script>
     <title>Format Teknik | Çorlu</title>
@@ -27,7 +40,14 @@
       content="Çorlu/Tekirdağ. Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Kodu yazın, sepete ekleyin, WhatsApp veya e-postayla gönderin."
     />
     <meta property="og:url" content="https://formatteknik.com.tr/" />
-    <meta name="twitter:card" content="summary" />
+    <!-- Paylaşım görseli: 1200×630, public/og-image.png. Tam adres gerekir (bazı uygulamalar göreli yolu okumaz). -->
+    <meta property="og:image" content="https://formatteknik.com.tr/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Format Teknik — Güvenilir Çözüm Ortağı. Çorlu / Tekirdağ; kesici takım, ölçüm, sarf." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://formatteknik.com.tr/og-image.png" />
 
     <script type="application/ld+json">
       {

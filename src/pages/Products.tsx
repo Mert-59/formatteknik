@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ArrowRight, Plus, Send } from 'lucide-react'
 import { CATEGORIES } from '../data/catalog'
+import { SITE } from '../config/site'
 import ToolDrawing from '../components/ToolDrawing'
 import PageHero from '../components/PageHero'
 import QuickAdd from '../cart/QuickAdd'
@@ -24,7 +25,7 @@ const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted md:text-[11px]'
 
 /** Masaüstünde sağda sabit duran canlı fiş: eklenen her kalem anında burada görünür. */
 function SlipPanel() {
-  const { items, count, units, orderNo, sentAt, sendWhatsApp, openCart } = useCart()
+  const { items, count, units, orderNo, sentAt, sentVia, sendWhatsApp, openCart } = useCart()
   return (
     <div className="rounded-3xl border border-line bg-paper">
       <div className="flex items-center gap-3 border-b border-line px-6 py-4">
@@ -62,13 +63,32 @@ function SlipPanel() {
                 {count} kalem · {units} adet
               </span>
             </p>
-            <button
-              type="button"
-              onClick={sendWhatsApp}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
-            >
-              <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
-            </button>
+            {sentAt > 0 && (
+              <p className="mb-4 text-[13px] leading-relaxed text-graphite">
+                Gönderdiyseniz fişiniz bize ulaştı; {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız. Acil mi?{' '}
+                <a href={SITE.phoneHref} className="whitespace-nowrap font-medium text-ink underline underline-offset-2 hover:text-accent-ink">
+                  {SITE.phoneDisplay}
+                </a>
+              </p>
+            )}
+            {/* e-postayla gönderilmiş fiş WhatsApp'tan tekrar gönderilmez; kanal seçimi çekmecede */}
+            {sentVia === 'email' ? (
+              <button
+                type="button"
+                onClick={() => openCart()}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-accent-ink"
+              >
+                Fişi gör
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={sendWhatsApp}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
+              >
+                <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
+              </button>
+            )}
             <button type="button" onClick={() => openCart()} className="mt-2 flex h-11 w-full items-center justify-center gap-1.5 text-[14px] text-graphite hover:text-ink">
               Fişi düzenle <ArrowRight className="size-4" />
             </button>

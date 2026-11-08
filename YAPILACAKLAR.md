@@ -7,7 +7,8 @@ Son güncelleme: 7 Kasım 2026
 - [ ] **Carmon logosu.** Şu an marka duvarında yalnızca yazı olarak görünüyor.
 - [ ] **Format logosu.** Şu an marka duvarında yalnızca yazı olarak görünüyor.
 - [ ] **Star Tool logosu, daha büyük sürüm.** Elimizdeki dosya 250×23 piksel. Yüksek çözünürlüklü ekranlarda hafif bulanık görünebilir; SVG ya da en az 1000 piksel genişliğinde PNG gerekiyor.
-- [ ] **Paylaşım görseli.** Site linki WhatsApp'ta veya sosyal medyada paylaşıldığında önizleme görseli çıkmıyor. 1200×630 piksellik bir görsel hazırlanmalı ve `index.html` dosyasına `og:image` olarak eklenmeli.
+- [x] **Paylaşım görseli.** `public/og-image.png` (1200×630) hazırlandı ve `index.html`'e eklendi. Kendi görselinizi kullanmak isterseniz aynı adla değiştirmeniz yeterli.
+- [ ] **Çalışma saatleri ve teklife dönüş süresi.** `src/config/site.ts` içindeki `hours` ve `replyTime` alanlarını doldurun (ör. `'Hafta içi 08:30–18:00'`, `'aynı iş günü içinde'`). Boşken sitede gösterilmez; doldurulunca İletişim sayfasında, altbilgide ve fiş gönderildikten sonraki mesajda görünür. Mevcut sitede bu bilgi yoktu, bu yüzden tahminle doldurulmadı.
 
 Logo dosyalarını proje klasörüne bırakmanız yeterli. Arka planı temizlenip `public/brands/` klasörüne işlenmeleri ve `src/data/brands.ts` dosyasına eklenmeleri gerekiyor.
 

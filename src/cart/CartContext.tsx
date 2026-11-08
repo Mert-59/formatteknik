@@ -17,6 +17,9 @@ export type CartItem = {
 
 export type NewItem = { category?: string; code: string; brand?: string; qty: number; note?: string }
 export type Customer = { name: string; company: string; note: string }
+/** Fişin gönderildiği kanal ('' = gönderilmedi) */
+export type SentVia = '' | 'whatsapp' | 'email'
+type Order = { no: string; sentAt: number; via: SentVia }
 
 type CartState = {
   items: CartItem[]
@@ -32,6 +35,8 @@ type CartState = {
   orderNo: string
   /** WhatsApp/e-posta ile gönderildiği an (0 = gönderilmedi) */
   sentAt: number
+  /** Son gönderimin kanalı — "Tekrar gönder" aynı kanaldan gider */
+  sentVia: SentVia
   customer: Customer
   setCustomer: (c: Customer) => void
   setOpen: (open: boolean) => void
@@ -44,7 +49,7 @@ type CartState = {
   buildMessage: (plain?: boolean) => string
   sendWhatsApp: () => void
   mailHref: () => string
-  markSent: () => void
+  markSent: (via: Exclude<SentVia, ''>) => void
 }
 
 const KEY = 'ft-cart-v1'
@@ -100,10 +105,14 @@ function newOrderNo() {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(loadItems)
-  const [order, setOrder] = useState(() => {
-    const o = read(ORDER_KEY, { no: '', sentAt: 0 }, (x) => isObj(x) && typeof x.no === 'string')
+  const [order, setOrder] = useState<Order>(() => {
+    const raw = read<Record<string, unknown>>(ORDER_KEY, { no: '' }, (x) => isObj(x) && typeof x.no === 'string')
+    const sentAt = typeof raw.sentAt === 'number' ? raw.sentAt : 0
+    // Eski sürümde kanal tutulmuyordu: gönderilmiş fiş WhatsApp'tan gitmiş sayılır
+    const via: SentVia = raw.via === 'email' || raw.via === 'whatsapp' ? raw.via : sentAt ? 'whatsapp' : ''
+    const o: Order = { no: raw.no as string, sentAt, via }
     // Eski sürümden kalan dolu sepet: fiş numarası yoksa üret
-    return o.no || !items.length ? o : { no: newOrderNo(), sentAt: 0 }
+    return o.no || !items.length ? o : { no: newOrderNo(), sentAt: 0, via: '' }
   })
   const [customer, setCustomerState] = useState<Customer>(() => ({
     ...read(CUSTOMER_KEY, { name: '', company: '' }, isObj),
@@ -137,7 +146,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return next
     })
     // Yeni kalem eklenince fiş yeniden "gönderilmedi" olur; boş fişe ilk kalemde numara verilir.
-    setOrder((o) => ({ no: o.no || newOrderNo(), sentAt: 0 }))
+    setOrder((o) => ({ no: o.no || newOrderNo(), sentAt: 0, via: '' }))
     setLastAdded({ keys: clean.map(itemKey), at: Date.now() })
   }, [])
 
@@ -151,7 +160,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = useCallback(() => {
     setItems([])
-    setOrder({ no: '', sentAt: 0 })
+    setOrder({ no: '', sentAt: 0, via: '' })
     setCustomerState((c) => ({ ...c, note: '' }))
   }, [])
 
@@ -181,11 +190,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items, customer, order.no],
   )
 
-  const markSent = useCallback(() => setOrder((o) => ({ ...o, sentAt: Date.now() })), [])
+  const markSent = useCallback((via: Exclude<SentVia, ''>) => setOrder((o) => ({ ...o, sentAt: Date.now(), via })), [])
 
   const sendWhatsApp = useCallback(() => {
     window.open(whatsappUrl(buildMessage()), '_blank', 'noopener')
-    markSent()
+    markSent('whatsapp')
   }, [buildMessage, markSent])
 
   // WhatsApp kullanmayan (ör. masaüstündeki satın alma birimi) için aynı mesaj e-postayla
@@ -205,6 +214,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       lastAdded,
       orderNo: order.no,
       sentAt: order.sentAt,
+      sentVia: order.via,
       customer,
       setCustomer,
       setOpen,

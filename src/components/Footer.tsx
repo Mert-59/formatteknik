@@ -19,6 +19,7 @@ export default function Footer() {
             {SITE.email}
           </a>
           <p className="mt-6 max-w-sm text-[14px] leading-relaxed text-muted">{SITE.address}</p>
+          {SITE.hours && <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-muted">{SITE.hours}</p>}
         </div>
         <div className="md:col-span-3">
           <p className="font-mono text-[10px] tracking-[0.22em] text-muted">SAYFALAR</p>
