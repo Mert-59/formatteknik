@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
 import { NAV, SITE } from '../config/site'
+import { InstagramIcon } from './icons'
 import { useIntro } from '../lib/introState'
 import Engrave from './Engrave'
 
@@ -17,6 +19,17 @@ export default function Footer() {
           </a>
           <a href={`mailto:${SITE.email}`} className="mt-2 block text-[16px] text-graphite hover:text-ink">
             {SITE.email}
+          </a>
+          <a
+            href={SITE.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Instagram: ${SITE.instagramHandle} (yeni sekmede açılır)`}
+            className="group mt-2 inline-flex items-center gap-2 text-[16px] text-graphite hover:text-ink"
+          >
+            <InstagramIcon className="size-4" />
+            {SITE.instagramHandle}
+            <ArrowUpRight className="size-4 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
           </a>
           <p className="mt-6 max-w-sm text-[14px] leading-relaxed text-muted">{SITE.address}</p>
           {SITE.hours && <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-muted">{SITE.hours}</p>}

@@ -21,7 +21,7 @@ export const SITE = {
   /** WhatsApp numarası: ülke kodu ile, boşluksuz, + olmadan */
   whatsapp: '905446018538',
   email: 'info@formatteknik.com.tr',
-  /** Instagram — mobil menüde görünür */
+  /** Instagram — mobil menüde, altbilgide ve İletişim sayfasında görünür */
   instagram: 'https://www.instagram.com/formatteknik/',
   instagramHandle: '@formatteknik',
   /**

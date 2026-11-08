@@ -2,17 +2,34 @@ import type { ReactNode } from 'react'
 import { ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import PageHero from '../components/PageHero'
 import MapEmbed from '../components/MapEmbed'
+import { InstagramIcon } from '../components/icons'
 import { SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
 import { usePageMeta } from '../lib/usePageMeta'
 
-function Card({ icon, label, children, href, cta, external }: { icon: ReactNode; label: string; children: ReactNode; href: string; cta: string; external?: boolean }) {
+function Card({
+  icon,
+  label,
+  children,
+  href,
+  cta,
+  external,
+  className = '',
+}: {
+  icon: ReactNode
+  label: string
+  children: ReactNode
+  href: string
+  cta: string
+  external?: boolean
+  className?: string
+}) {
   return (
     <a
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
-      className="group flex flex-col justify-between gap-10 bg-paper p-6 transition-colors duration-500 hover:bg-mist md:p-8"
+      className={`group flex flex-col justify-between gap-10 bg-paper p-6 transition-colors duration-500 hover:bg-mist md:p-8 ${className}`}
     >
       <div className="flex items-center justify-between">
         <span className="grid size-11 place-items-center rounded-full border border-line text-ink">{icon}</span>
@@ -28,7 +45,7 @@ function Card({ icon, label, children, href, cta, external }: { icon: ReactNode;
 }
 
 export default function Contact() {
-  usePageMeta('İletişim', `Format Teknik iletişim: telefon, WhatsApp, e-posta ve adres. ${SITE.address}.`)
+  usePageMeta('İletişim', `Format Teknik iletişim: telefon, WhatsApp, Instagram, e-posta ve adres. ${SITE.address}.`)
   const { openCart, count } = useCart()
   return (
     <>
@@ -39,17 +56,21 @@ export default function Contact() {
       />
 
       <section className="mx-auto max-w-[1440px] px-5 pb-16 md:px-10">
-        <div className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
+        {/* 5 kart: geniş ekranda 3 + 2 (adres iki sütun), tablette 2 + 2 + 1 (adres tam satır) — ızgarada boşluk kalmaz */}
+        <div className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
           <Card icon={<Phone className="size-4" />} label="TELEFON" href={SITE.phoneHref} cta="Hemen arayın">
             {SITE.phoneDisplay}
           </Card>
           <Card icon={<MessageCircle className="size-4" />} label="WHATSAPP" href={whatsappUrl(`Merhaba ${SITE.name}, bilgi almak istiyorum.`)} cta="Mesaj gönderin" external>
             {SITE.phoneDisplay}
           </Card>
+          <Card icon={<InstagramIcon className="size-4" />} label="INSTAGRAM" href={SITE.instagram} cta="Takip edin" external>
+            {SITE.instagramHandle}
+          </Card>
           <Card icon={<Mail className="size-4" />} label="E-POSTA" href={`mailto:${SITE.email}`} cta="E-posta yazın">
             <span className="break-all">{SITE.email}</span>
           </Card>
-          <Card icon={<MapPin className="size-4" />} label="ADRES" href={SITE.mapsUrl} cta="Yol tarifi alın" external>
+          <Card icon={<MapPin className="size-4" />} label="ADRES" href={SITE.mapsUrl} cta="Yol tarifi alın" external className="md:col-span-2">
             <span className="text-[15px] font-medium md:text-[16px]">{SITE.address}</span>
           </Card>
         </div>
