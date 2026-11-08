@@ -4,8 +4,6 @@ import PageHero from '../components/PageHero'
 import SectionHead from '../components/SectionHead'
 import BrandWall from '../components/BrandWall'
 import { usePageMeta } from '../lib/usePageMeta'
-import { BRANDS } from '../data/brands'
-import { CATEGORIES } from '../data/catalog'
 import { COMPANY, SECTORS } from '../data/company'
 
 const RANGE = [
@@ -16,51 +14,6 @@ const RANGE = [
 ]
 
 const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted'
-
-/**
- * Rakamlar şeridi. Marka ve ürün grubu sayısı sitedeki listelerden sayılır (her zaman görünür);
- * kuruluş yılı ve teslimat yalnızca data/company.ts'de doluysa eklenir.
- */
-function Facts() {
-  const facts = [
-    COMPANY.foundedYear > 0 && { value: String(COMPANY.foundedYear), label: 'KURULUŞ' },
-    { value: String(BRANDS.length), label: 'MARKA' },
-    { value: String(CATEGORIES.length), label: 'ÜRÜN GRUBU' },
-    { value: String(SECTORS.length), label: 'SEKTÖR' },
-  ].filter(Boolean) as { value: string; label: string }[]
-  const delivery = COMPANY.deliveryTime || COMPANY.deliveryArea
-
-  return (
-    <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10">
-      {/* sütun sayısı rakam sayısına uyar: ızgarada boş (gri) hücre kalmaz */}
-      <dl
-        className={`grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line ${facts.length === 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}
-      >
-        {facts.map((f, i) => (
-          <div
-            key={f.label}
-            // telefonda (2 sütun) tek sayıda rakam varsa sonuncusu tüm satırı kaplar
-            className={`bg-paper p-6 md:p-8 ${facts.length % 2 && i === facts.length - 1 ? 'max-md:col-span-2' : ''}`}
-          >
-            <dt className={mono}>{f.label}</dt>
-            <dd className="mt-4 font-wide text-[clamp(36px,4.4vw,64px)] font-semibold leading-none tracking-[-0.04em] tabular-nums">{f.value}</dd>
-          </div>
-        ))}
-        {delivery && (
-          // teslimat: tüm satırı kaplar (metin olduğu için rakam hücresine sığmaz)
-          <div className="col-span-full bg-paper p-6 md:p-8">
-            <dt className={mono}>TESLİMAT</dt>
-            <dd className="mt-3 text-[18px] font-semibold leading-snug md:text-[22px]">
-              {COMPANY.deliveryTime}
-              {COMPANY.deliveryTime && COMPANY.deliveryArea && <span className="text-muted"> · </span>}
-              {COMPANY.deliveryArea && <span className={COMPANY.deliveryTime ? 'font-normal text-graphite' : ''}>{COMPANY.deliveryArea}</span>}
-            </dd>
-          </div>
-        )}
-      </dl>
-    </section>
-  )
-}
 
 export default function About() {
   usePageMeta(
@@ -97,8 +50,6 @@ export default function About() {
           </p>
         </div>
       </section>
-
-      <Facts />
 
       {/* sektörler */}
       <section className="border-t border-line">

@@ -15,16 +15,15 @@ Son güncelleme: 8 Kasım 2026
 
 Boş bırakılan alan sitede **hiç gösterilmez**; doldurdukça ilgili bölüm kendiliğinden belirir. Bölüm numaraları da kendiliğinden sıralanır.
 
-- [ ] **Kuruluş yılı** → `foundedYear: 2015` gibi. Rakamlar şeridinde "KURULUŞ" olarak çıkar.
-- [ ] **Teslimat süresi** → `deliveryTime: 'Stoktaki ürünlerde aynı gün'` gibi.
-- [ ] **Teslimat bölgesi** → `deliveryArea: 'Çorlu, Çerkezköy, Ergene OSB ve Tekirdağ geneli'` gibi. Süre ve bölgeden biri doluysa rakamların altında "TESLİMAT" satırı çıkar.
 - [ ] **Fotoğraflar** (depo, ofis, ekip) → dosyaları `public/kurumsal/` klasörüne koyun, `photos` listesine ekleyin:
       `{ src: '/kurumsal/depo.jpg', alt: 'Çorlu deposunda kesici uç rafları', caption: 'Depomuz' }`
       Yatay, en az 1600 piksel genişlikte fotoğraf önerilir. 3 ya da daha fazla fotoğrafta ilki büyük gösterilir.
 - [ ] **Referans firmalar** (yalnızca izin alınanlar) → `references` listesine:
       `{ name: 'Firma Adı', sector: 'Otomotiv' }` — logo varsa `logo: '/kurumsal/referanslar/firma.svg'` ekleyin.
 
-"Rakamlar" şeridindeki marka (10), ürün grubu (9) ve sektör (4) sayıları sitedeki listelerden kendiliğinden sayılır; elle girilmez.
+Not: `foundedYear` (kuruluş yılı), `deliveryTime` ve `deliveryArea` (teslimat) alanları Kurumsal sayfasındaki rakamlar şeridinde
+gösteriliyordu; şerit 8 Kasım 2026'da kaldırıldı. Bu alanlar şu an sitede **hiçbir yerde görünmez** — doldurmak isterseniz nerede
+gösterileceğine birlikte karar verelim.
 Sektör açıklamaları da `src/data/company.ts` içinde (`SECTORS`); dilediğiniz gibi düzenleyebilirsiniz.
 
 Logo dosyalarını proje klasörüne bırakmanız yeterli. Arka planı temizlenip `public/brands/` klasörüne işlenmeleri ve `src/data/brands.ts` dosyasına eklenmeleri gerekiyor.
