@@ -6,6 +6,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './cart/CartDrawer'
 import CartBar from './cart/CartBar'
+import PrintSlip from './cart/PrintSlip'
 import { CartProvider } from './cart/CartContext'
 import { IntroContext, markIntroSeen, shouldAutoPlayIntro, type IntroPhase } from './lib/introState'
 import { scrollToTop, useScrollLock } from './lib/scroll'
@@ -72,6 +73,7 @@ function Shell() {
       <Footer />
       <CartBar />
       <CartDrawer />
+      <PrintSlip />
       {phase !== 'done' && (
         // Parça inene kadar koyu zemin: anasayfa bir an bile görünmesin
         <Suspense fallback={<div className="fixed inset-0 z-50 bg-night" />}>

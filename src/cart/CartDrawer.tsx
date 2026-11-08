@@ -1,9 +1,10 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ChevronDown, Mail, Phone, Send, X } from 'lucide-react'
-import { SITE } from '../config/site'
+import { Camera, Check, ChevronDown, Copy, Phone, Printer, Send, X } from 'lucide-react'
+import { SITE, photoWhatsappUrl } from '../config/site'
 import { useCart } from './CartContext'
+import { copyText, isLongMessage, printSlip } from './slipUtils'
 import QuickAdd from './QuickAdd'
 import { SlipItem, Stamp } from './Slip'
 import { useModal, useScrollLock } from '../lib/scroll'
@@ -31,9 +32,49 @@ function Preview({ text }: { text: string }) {
   )
 }
 
+/** Fişi A4 olarak yazdırır; yazdırma penceresinden "PDF olarak kaydet" de seçilebilir. */
+function PrintButton({ orderNo }: { orderNo: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => printSlip(orderNo)}
+      className="inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline"
+    >
+      <Printer className="size-4" /> Yazdır / PDF
+    </button>
+  )
+}
+
+/** Fiş mesajını panoya kopyalar; kısa süre "Kopyalandı" gösterir. Kopyalanamazsa önizlemeyi açar (elle seçilsin). */
+function CopyButton({ text, onFail }: { text: string; onFail: () => void }) {
+  const [state, setState] = useState<'idle' | 'ok' | 'fail'>('idle')
+  useEffect(() => {
+    if (state === 'idle') return
+    const t = window.setTimeout(() => setState('idle'), state === 'ok' ? 2000 : 4000)
+    return () => window.clearTimeout(t)
+  }, [state])
+
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        const ok = await copyText(text)
+        setState(ok ? 'ok' : 'fail')
+        if (!ok) onFail()
+      }}
+      className={`inline-flex shrink-0 items-center gap-1.5 border-l border-line pl-4 text-[13px] transition-colors ${
+        state === 'ok' ? 'text-accent-ink' : 'text-graphite hover:text-ink'
+      }`}
+    >
+      {state === 'ok' ? <Check className="size-4" /> : <Copy className="size-4" />}
+      <span aria-live="polite">{state === 'ok' ? 'Kopyalandı' : state === 'fail' ? 'Seçip kopyalayın' : 'Kopyala'}</span>
+    </button>
+  )
+}
+
 export default function CartDrawer() {
   const {
-    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, sentVia, customer, setCustomer, buildMessage, sendWhatsApp, mailHref, markSent, clear,
+    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, customer, setCustomer, buildMessage, sendWhatsApp, clear,
   } = useCart()
   const dialog = useRef<HTMLDivElement>(null)
   const start = useRef<HTMLDivElement>(null)
@@ -42,6 +83,7 @@ export default function CartDrawer() {
   const [preview, setPreview] = useState(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const close = useCallback(() => setOpen(false), [setOpen])
+  const message = buildMessage()
 
   useScrollLock(open)
   // Açılışta odak: fiş boşsa ya da "kodla sipariş" istendiyse kod alanı; değilse kapat düğmesi.
@@ -123,6 +165,26 @@ export default function CartDrawer() {
                       </li>
                     ))}
                   </ol>
+
+                  {/* kodu bilmeyen için: fotoğrafı WhatsApp'tan gönder */}
+                  <div className="mt-6 rounded-xl border border-line p-4">
+                    <p className="text-[14px] font-medium text-ink">Kodu bilmiyor musunuz?</p>
+                    <p className="mt-1 text-[13px] leading-relaxed text-graphite">
+                      Takımın ya da kutusunun fotoğrafını WhatsApp’tan gönderin; doğru ürünü biz bulalım.
+                    </p>
+                    <a
+                      href={photoWhatsappUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex h-10 items-center gap-2 rounded-full border border-ink/15 px-4 text-[13px] font-medium transition-colors hover:border-ink"
+                    >
+                      <Camera className="size-4" /> Fotoğrafla sor
+                    </a>
+                    <p className="mt-2.5 text-[12px] leading-relaxed text-muted">
+                      İpucu: Takımı bir kumpas ya da cetvelin yanında, varsa etiketiyle birlikte çekin.
+                    </p>
+                  </div>
+
                   <Link to="/urunler" onClick={close} className="mt-6 inline-block text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
                     Ürün gruplarına göz atın
                   </Link>
@@ -200,21 +262,25 @@ export default function CartDrawer() {
                   </div>
 
                   <div className="border-t border-line px-5 py-4 sm:px-6">
-                    <button
-                      type="button"
-                      onClick={() => setPreview((p) => !p)}
-                      aria-expanded={preview}
-                      className="flex w-full items-center justify-between text-left"
-                    >
-                      <span className={mono}>GÖNDERİLECEK MESAJ</span>
-                      <span className="flex items-center gap-1 text-[13px] text-graphite">
-                        {preview ? 'Gizle' : 'Gör'}
-                        <ChevronDown className={`size-4 text-muted transition-transform ${preview ? 'rotate-180' : ''}`} />
-                      </span>
-                    </button>
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setPreview((p) => !p)}
+                        aria-expanded={preview}
+                        className="flex min-w-0 flex-1 items-center justify-between text-left"
+                      >
+                        <span className={mono}>GÖNDERİLECEK MESAJ</span>
+                        <span className="flex items-center gap-1 text-[13px] text-graphite">
+                          {preview ? 'Gizle' : 'Gör'}
+                          <ChevronDown className={`size-4 text-muted transition-transform ${preview ? 'rotate-180' : ''}`} />
+                        </span>
+                      </button>
+                      {/* WhatsApp açılmazsa yedek yol: metni kopyalayıp istediği yere yapıştırır */}
+                      <CopyButton text={message} onFail={() => setPreview(true)} />
+                    </div>
                     {preview && (
                       <div className="mt-3">
-                        <Preview text={buildMessage()} />
+                        <Preview text={message} />
                       </div>
                     )}
                   </div>
@@ -228,7 +294,7 @@ export default function CartDrawer() {
                   <div>
                     {/* gönderdikten sonra: ne olacağını ve acil durumda ne yapılacağını söyle */}
                     <p className="text-[14px] leading-relaxed text-graphite">
-                      Mesajınız {sentVia === 'email' ? 'e-posta programınızda' : 'WhatsApp’ta'} hazırlandı.{' '}
+                      Mesajınız WhatsApp’ta hazırlandı.{' '}
                       <span className="text-ink">
                         Gönderdiyseniz fişiniz bize ulaştı; <span className="whitespace-nowrap font-mono text-[13px]">{orderNo}</span> numarasıyla{' '}
                         {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız.
@@ -241,6 +307,11 @@ export default function CartDrawer() {
                       </a>
                       {SITE.hours && <span className="block">Çalışma saatleri: {SITE.hours}</span>}
                     </p>
+                    {/* sohbet şu an açık: fotoğrafı/teknik resmi hemen ekleyebilir */}
+                    <p className="mt-2 flex gap-1.5 text-[13px] leading-relaxed text-muted">
+                      <Camera className="mt-[3px] size-3.5 shrink-0" />
+                      Fotoğraf ya da teknik resim eklemek isterseniz aynı WhatsApp sohbetine gönderebilirsiniz.
+                    </p>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <button
                         type="button"
@@ -249,29 +320,26 @@ export default function CartDrawer() {
                       >
                         Yeni fiş başlat
                       </button>
-                      {/* tekrar gönderim, son kullanılan kanaldan */}
-                      {sentVia === 'email' ? (
-                        <a
-                          href={mailHref()}
-                          onClick={() => markSent('email')}
-                          className="grid h-12 place-items-center rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
-                        >
-                          Tekrar gönder
-                        </a>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={sendWhatsApp}
-                          className="h-12 rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
-                        >
-                          Tekrar gönder
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={sendWhatsApp}
+                        className="h-12 rounded-full border border-ink/15 text-[14px] font-medium transition-colors hover:border-ink"
+                      >
+                        Tekrar gönder
+                      </button>
                     </div>
-                    <p className="mt-3 text-center text-[12px] text-muted">Bu fiş, siz yeni fişe başlayana kadar burada kalır.</p>
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px]">
+                      <PrintButton orderNo={orderNo} />
+                      <span className="text-[12px] text-muted">Fiş, yeni fişe başlayana kadar burada kalır.</span>
+                    </div>
                   </div>
                 ) : (
                   <>
+                    {isLongMessage(items.length, message) && (
+                      <p className="mb-3 rounded-lg bg-mist px-3.5 py-2.5 text-[13px] leading-relaxed text-graphite">
+                        Fişiniz uzun. Mesaj WhatsApp’ta eksik görünürse “Kopyala” ile yapıştırabilir ya da PDF’i sohbete ekleyebilirsiniz.
+                      </p>
+                    )}
                     <button
                       type="button"
                       onClick={sendWhatsApp}
@@ -281,9 +349,7 @@ export default function CartDrawer() {
                       WhatsApp ile gönder
                     </button>
                     <div className="mt-3 flex items-center justify-between gap-3 text-[13px]">
-                      <a href={mailHref()} onClick={() => markSent('email')} className="inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline">
-                        <Mail className="size-4" /> E-posta ile gönder
-                      </a>
+                      <PrintButton orderNo={orderNo} />
                       <button
                         type="button"
                         onClick={() => (confirmClear ? (clear(), setConfirmClear(false)) : setConfirmClear(true))}

@@ -1,12 +1,7 @@
 import { motion } from 'motion/react'
 import { Minus, Plus, X } from 'lucide-react'
 import { itemKey, useCart, type CartItem } from './CartContext'
-
-const p2 = (n: number) => String(n).padStart(2, '0')
-const stampTime =(at: number) => {
-  const d = new Date(at)
-  return `${p2(d.getDate())}.${p2(d.getMonth() + 1)}.${p2(d.getFullYear() % 100)} · ${p2(d.getHours())}:${p2(d.getMinutes())}`
-}
+import { p2, stampTime } from './slipUtils'
 
 /** Gönderilen fişe basılan mühür: kızıl mürekkep, hafif dönük, dokulu. */
 export function Stamp({ at, className = '' }: { at: number; className?: string }) {

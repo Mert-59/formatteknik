@@ -127,6 +127,33 @@ body {
   .slip-flash { animation: none; opacity: 0; }
 }
 
+/* Teklif fişi yazdırma / PDF (cart/PrintSlip.tsx): ekranda gizli; yalnızca "Yazdır / PDF" ile basılır */
+.print-slip {
+  display: none;
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+  html.printing-slip,
+  html.printing-slip body {
+    /* çekmece açıkken kaydırma kilidi (overflow: hidden) çıktıyı ilk sayfada kesmesin */
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  html.printing-slip body > :not(.print-slip) {
+    display: none !important;
+  }
+  html.printing-slip .print-slip {
+    display: block;
+  }
+  .print-stamp {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;

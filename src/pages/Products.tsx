@@ -3,9 +3,9 @@ import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { ArrowRight, Plus, Send } from 'lucide-react'
+import { ArrowRight, Camera, Plus, Send } from 'lucide-react'
 import { CATEGORIES } from '../data/catalog'
-import { SITE } from '../config/site'
+import { SITE, photoWhatsappUrl } from '../config/site'
 import ToolDrawing from '../components/ToolDrawing'
 import PageHero from '../components/PageHero'
 import QuickAdd from '../cart/QuickAdd'
@@ -25,7 +25,7 @@ const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted md:text-[11px]'
 
 /** Masaüstünde sağda sabit duran canlı fiş: eklenen her kalem anında burada görünür. */
 function SlipPanel() {
-  const { items, count, units, orderNo, sentAt, sentVia, sendWhatsApp, openCart } = useCart()
+  const { items, count, units, orderNo, sentAt, sendWhatsApp, openCart } = useCart()
   return (
     <div className="rounded-3xl border border-line bg-paper">
       <div className="flex items-center gap-3 border-b border-line px-6 py-4">
@@ -71,24 +71,13 @@ function SlipPanel() {
                 </a>
               </p>
             )}
-            {/* e-postayla gönderilmiş fiş WhatsApp'tan tekrar gönderilmez; kanal seçimi çekmecede */}
-            {sentVia === 'email' ? (
-              <button
-                type="button"
-                onClick={() => openCart()}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-accent-ink"
-              >
-                Fişi gör
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={sendWhatsApp}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
-              >
-                <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={sendWhatsApp}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
+            >
+              <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
+            </button>
             <button type="button" onClick={() => openCart()} className="mt-2 flex h-11 w-full items-center justify-center gap-1.5 text-[14px] text-graphite hover:text-ink">
               Fişi düzenle <ArrowRight className="size-4" />
             </button>
@@ -102,11 +91,11 @@ function SlipPanel() {
 export default function Products() {
   usePageMeta(
     'Ürünlerimiz',
-    'Torna uçları, frezeler, kılavuz, karbür ve HSS matkaplar, ölçü aletleri, shrink-fit tutucular ve pensler. Kodu yazın, teklif fişine ekleyin, WhatsApp veya e-postayla gönderin.',
+    'Torna uçları, frezeler, kılavuz, karbür ve HSS matkaplar, ölçü aletleri, shrink-fit tutucular ve pensler. Kodu yazın, teklif fişine ekleyin, WhatsApp’tan gönderin.',
   )
   const root = useRef<HTMLDivElement>(null)
   const { hash } = useLocation()
-  const { openCart } = useCart()
+  const { openCart, count, orderNo } = useCart()
   // /urunler#torna-uclari → o grup açık gelir (adres sonradan değişirse de)
   const [openSlug, setOpenSlug] = useState(() => fromHash(hash))
   const [seenHash, setSeenHash] = useState(hash)
@@ -160,9 +149,21 @@ export default function Products() {
             <span className={mono}>
               <span className="text-ink">{String(CATEGORIES.length).padStart(2, '0')}</span> GRUP
             </span>
-            <button type="button" onClick={() => openCart({ focus: true })} className="inline-flex items-center gap-1.5 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline">
-              Grubunu bilmiyorum, kodla ekle <ArrowRight className="size-4" />
-            </button>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-graphite">
+              <button type="button" onClick={() => openCart({ focus: true })} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                Grubunu bilmiyorum, kodla ekle <ArrowRight className="size-4" />
+              </button>
+              {/* kodu da bilmeyen için: fotoğrafı WhatsApp'tan gönder */}
+              <a
+                href={photoWhatsappUrl(count ? orderNo : '')}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Takımın ya da kutusunun fotoğrafını WhatsApp’tan gönderin"
+                className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline"
+              >
+                <Camera className="size-4" /> Kodu bilmiyorum, fotoğrafla sor
+              </a>
+            </div>
           </div>
 
           <ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line">

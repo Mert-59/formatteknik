@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import PageHero from '../components/PageHero'
+import MapEmbed from '../components/MapEmbed'
 import { SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
 import { usePageMeta } from '../lib/usePageMeta'
@@ -68,6 +69,11 @@ export default function Contact() {
             )}
           </dl>
         )}
+      </section>
+
+      {/* harita — ziyaretçi isteyince yüklenir (bkz. MapEmbed) */}
+      <section className="mx-auto max-w-[1440px] px-5 pb-16 md:px-10" aria-label="Konum">
+        <MapEmbed />
       </section>
 
       <section className="mx-auto max-w-[1440px] px-5 pb-28 md:px-10">

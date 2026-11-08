@@ -8,11 +8,23 @@ import { useCart } from '../cart/CartContext'
 import { useModal, useScrollLock } from '../lib/scroll'
 import { EASE, EASE_CURTAIN } from '../lib/motion'
 
+/**
+ * Logo yazısı. Telefonda (<640 px) iki satıra dizilir: FORMAT üstte, TEKNİK altta ve FORMAT'ın genişliğine yayılmış.
+ * Böylece başlıkta "Teklif Fişi" düğmesi yazısıyla birlikte tam görünür (tek satırda sığmıyordu).
+ */
 export function Wordmark({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex items-baseline gap-[0.35em] leading-none ${className}`}>
+    <span className={`inline-flex items-baseline gap-[0.35em] leading-none max-sm:flex-col max-sm:items-stretch max-sm:gap-[0.32em] ${className}`}>
       <span className="font-wide font-bold tracking-[-0.01em]">FORMAT</span>
-      <span className="font-mono text-[0.78em] font-medium tracking-[0.2em] text-graphite">TEKNİK</span>
+      <span className="font-mono text-[0.78em] font-medium tracking-[0.2em] text-graphite max-sm:flex max-sm:justify-between max-sm:text-[0.6em] max-sm:tracking-normal">
+        {/* telefonda harfler FORMAT genişliğine eşit aralıkla yayılır */}
+        <span className="sm:hidden contents">
+          {[...'TEKNİK'].map((ch, i) => (
+            <span key={i}>{ch}</span>
+          ))}
+        </span>
+        <span className="max-sm:hidden">TEKNİK</span>
+      </span>
     </span>
   )
 }
@@ -32,8 +44,9 @@ function CartButton({ onClick }: { onClick: () => void }) {
       className="group relative flex h-11 items-center gap-2.5 rounded-full max-sm:pl-3.5 md:h-10 border border-ink/15 bg-paper pl-4 pr-1.5 text-[13px] font-medium transition-colors hover:border-ink"
       aria-label={`Teklif fişi, ${count} kalem`}
     >
-      <ReceiptText className="size-4" strokeWidth={1.6} />
-      <span className="max-sm:hidden">Teklif Fişi</span>
+      {/* çok dar ekranda (<360 px) simge kalkar, yazı ve sayı kalır */}
+      <ReceiptText className="size-4 shrink-0 max-[359px]:hidden" strokeWidth={1.6} />
+      <span className="whitespace-nowrap">Teklif Fişi</span>
       <span
         ref={badge}
         className={`grid h-7 min-w-7 place-items-center rounded-full px-1.5 font-mono text-[11px] tabular-nums transition-colors ${count ? 'bg-accent-ink text-white' : 'bg-mist text-muted'}`}

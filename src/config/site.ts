@@ -1,3 +1,6 @@
+/** Haritada aranan adres (yol tarifi bağlantısı ve gömülü harita aynı noktayı göstersin) */
+const MAP_QUERY = 'Çobançeşme Mah. Bülent Ecevit Bulvarı No: 207 D Çorlu Tekirdağ'
+
 /** Firma bilgileri — tek yerden yönetilir. (Kaynak: mevcut formatteknik.com.tr) */
 export const SITE = {
   name: 'Format Teknik',
@@ -5,9 +8,14 @@ export const SITE = {
   url: 'https://formatteknik.com.tr',
   city: 'Çorlu / Tekirdağ',
   address: 'Çobançeşme Mah. Bülent Ecevit Bulvarı, Arka İnşaat B Blok No: 207 D, Çorlu / Tekirdağ',
-  mapsUrl:
-    'https://www.google.com/maps/search/?api=1&query=' +
-    encodeURIComponent('Çobançeşme Mah. Bülent Ecevit Bulvarı No: 207 D Çorlu Tekirdağ'),
+  /** "Yol tarifi al" — Google Haritalar'da açılır */
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(MAP_QUERY),
+  /**
+   * İletişim sayfasındaki gömülü harita (API anahtarı gerekmez). Ziyaretçi "Haritayı göster"e basınca yüklenir.
+   * Google İşletme profiliniz varsa: Google Haritalar'da işletmenizi açın → Paylaş → "Harita yerleştir" →
+   * çıkan kodun içindeki src="…" adresini buraya yapıştırın; işaret tam yerinizi ve firma adını gösterir.
+   */
+  mapsEmbedUrl: ('https://www.google.com/maps?q=' + encodeURIComponent(MAP_QUERY) + '&hl=tr&z=16&output=embed') as string,
   phoneDisplay: '+90 544 601 85 38',
   phoneHref: 'tel:+905446018538',
   /** WhatsApp numarası: ülke kodu ile, boşluksuz, + olmadan */
@@ -33,3 +41,10 @@ export const NAV = [
 ] as const
 
 export const whatsappUrl = (text: string) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`
+
+/**
+ * "Fotoğrafla sor": WhatsApp'ı hazır metinle açar; fotoğrafı müşteri sohbete kendisi ekler
+ * (wa.me bağlantıları dosya taşıyamaz). Fişte kalem varsa fiş numarası da yazılır.
+ */
+export const photoWhatsappUrl = (orderNo?: string) =>
+  whatsappUrl(`Merhaba ${SITE.name}, kodunu bilmediğim bir takım için fotoğraf gönderiyorum.${orderNo ? ` (Fiş ${orderNo})` : ''}`)
