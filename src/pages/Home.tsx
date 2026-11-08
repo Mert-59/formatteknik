@@ -49,14 +49,14 @@ function Hero() {
         </div>
 
         <div className="relative mt-[clamp(28px,7svh,64px)] flex flex-col gap-8 md:mt-10 md:flex-1 md:justify-end md:gap-10">
-          {/* En uzun satır "Çözüm Ortağı." ≈7em: 11vw her genişlikte kapsayıcıya sığar */}
+          {/* En uzun satır "Çözüm Ortağı" ≈7em: 11vw her genişlikte kapsayıcıya sığar */}
           <h1 className="font-wide text-[clamp(36px,11vw,164px)] font-semibold leading-[0.88] tracking-[-0.045em]">
             <span className="-mb-[0.16em] block overflow-hidden pb-[0.22em]">
               <span style={line(1)} className="anim-line-up block">Güvenilir</span>
             </span>
             <span className="-mb-[0.16em] block overflow-hidden pb-[0.22em]">
               <span style={line(2)} className="anim-line-up block">
-                Çözüm Ortağı<span className="text-accent">.</span>
+                Çözüm Ortağı
               </span>
             </span>
           </h1>

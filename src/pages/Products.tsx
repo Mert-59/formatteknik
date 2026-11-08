@@ -160,7 +160,7 @@ export default function Products() {
     <div ref={root}>
       <PageHero
         label="ÜRÜNLERİMİZ"
-        title={<>Ürün grupları<span className="text-accent">.</span></>}
+        title={<>Ürün grupları</>}
         text="Bir grubu açın, kodu ya da tarifi yazın, Enter’a basın. Fişiniz hazır olunca tek dokunuşla WhatsApp’tan gönderin."
       />
 

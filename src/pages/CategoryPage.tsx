@@ -82,7 +82,6 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
             <h1 className="-mt-[0.16em] overflow-hidden pb-[0.06em] pt-[0.16em] font-wide text-[clamp(40px,7vw,104px)] font-semibold leading-[0.92] tracking-[-0.04em]">
               <span className="anim-line-up block [--anim-delay:0.1s]">
                 {c.name}
-                <span className="text-accent">.</span>
               </span>
             </h1>
             <p className="anim-fade-up mt-6 max-w-xl text-[17px] leading-relaxed text-graphite [--anim-delay:0.35s] [--anim-dur:0.9s] [--anim-y:16px]">

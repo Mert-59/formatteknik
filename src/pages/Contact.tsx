@@ -34,7 +34,7 @@ export default function Contact() {
     <>
       <PageHero
         label="İLETİŞİM"
-        title={<>Bize ulaşın<span className="text-accent">.</span></>}
+        title={<>Bize ulaşın</>}
         text="Teklif, sipariş ya da doğru takımı seçmek için bize telefonla, WhatsApp’tan veya e-postayla ulaşabilirsiniz."
       />
 

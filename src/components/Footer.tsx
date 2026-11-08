@@ -34,7 +34,7 @@ export default function Footer() {
         <div className="md:col-span-4">
           <p className="font-mono text-[10px] tracking-[0.22em] text-muted">HİKÂYE</p>
           <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-muted">
-            Bu sitenin girişi, Türkiye haritasından Çorlu’ya uçar. İzlemek ister misiniz?
+            Bu sitenin girişi, Türkiye haritasından Çorlu’ya varır. İzlemek ister misiniz?
           </p>
           <button
             type="button"
