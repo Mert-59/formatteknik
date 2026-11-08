@@ -31,9 +31,7 @@ export type Catalog = {
 
 export const CATALOGS: Record<string, Catalog[]> = {
   'torna-uclari': [
-    // GEÇİCİ OLARAK KAPALI (8 Kasım 2026): PDF sıkıştırılıyor (82 MB orijinal git geçmişine girmesin diye).
-    // Sıkıştırılmış dosya public/kataloglar/mitsubishi-tornalama.pdf olarak eklenince aşağıdaki satırı açın.
-    // { id: 'mitsubishi-tornalama', title: 'Tornalama Takımları', brand: 'Mitsubishi Materials', pages: 656, lang: 'Türkçe' },
+    { id: 'mitsubishi-tornalama', title: 'Tornalama Takımları', brand: 'Mitsubishi Materials', pages: 656, lang: 'Türkçe' },
   ],
   'takma-uclu-freze': [
     { id: 'mitsubishi-takma-uclu-freze', title: 'Takma Uçlu Frezeleme Takımları', brand: 'Mitsubishi Materials', pages: 386, lang: 'Türkçe' },
