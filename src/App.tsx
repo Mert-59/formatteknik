@@ -7,7 +7,7 @@ import CartDrawer from './cart/CartDrawer'
 import CartBar from './cart/CartBar'
 import PrintSlip from './cart/PrintSlip'
 import { CartProvider } from './cart/CartContext'
-import { IntroContext, markIntroSeen, shouldAutoPlayIntro, type IntroPhase } from './lib/introState'
+import { IntroContext, markIntroSeen, shouldAutoPlayIntro, touchVisit, type IntroPhase } from './lib/introState'
 import { scrollToTop, useScrollLock } from './lib/scroll'
 import Home from './pages/Home'
 import Products from './pages/Products'
@@ -25,7 +25,7 @@ function Shell() {
   const navigate = useNavigate()
 
   /*
-   * Giriş kendiliğinden yalnızca ilk ziyarette oynar (karar index.html'deki betikte); altbilgiden tekrar izlenebilir.
+   * Giriş kendiliğinden her 3 ziyarette bir oynar (karar index.html'deki betikte); altbilgiden tekrar izlenebilir.
    * Ön-render'daki HTML girişsiz ('done') çizilir; tarayıcıda karar, ekrana çizilmeden hemen önce uygulanır.
    * O ana kadar index.html'deki betik sayfayı koyu zemin + `ft-intro` sınıfıyla gizli tutar (bkz. index.css).
    */
@@ -56,6 +56,9 @@ function Shell() {
   useEffect(() => {
     if (!location.hash) scrollToTop()
   }, [location.pathname, location.hash])
+
+  // Site içi sayfa geçişi = etkinlik: ziyaretin "son etkinlik" zamanı güncellenir (giriş sıklığı, 30 dk kuralı)
+  useEffect(() => touchVisit(), [location.pathname])
 
   useEffect(() => {
     if (phase !== 'done') return

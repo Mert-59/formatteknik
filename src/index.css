@@ -155,7 +155,7 @@ body {
   }
 }
 
-/* Ön-render: giriş oynayacak ilk ziyarette sayfa, giriş katmanı ekrana gelene kadar gizli (index.html betiği ekler, App.tsx kaldırır) */
+/* Ön-render: girişin oynayacağı ziyarette sayfa, giriş katmanı ekrana gelene kadar gizli (index.html betiği ekler, App.tsx kaldırır) */
 html.ft-intro #root {
   visibility: hidden;
 }
