@@ -108,7 +108,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin === self.location.origin) {
     if (request.mode === 'navigate') return event.respondWith(page(request))
     if (url.pathname.endsWith('.pdf')) return // kataloglar: doğrudan ağdan
-    if (PRECACHED.has(url.pathname) || /^\/(assets|brands|icons|kataloglar\/kapak)\//.test(url.pathname)) {
+    if (PRECACHED.has(url.pathname) || /^\/(assets|brands|icons|logo|kataloglar\/kapak)\//.test(url.pathname)) {
       return event.respondWith(cacheFirst(request, RUNTIME))
     }
     return

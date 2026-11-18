@@ -12,7 +12,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
 
 const DIRS = ['assets', 'brands', 'icons']
-const FILES = ['favicon.svg', 'manifest.webmanifest']
+const FILES = ['favicon.svg', 'manifest.webmanifest', 'logo/format-teknik.webp'] // logo: Kurumsal sayfası (PNG yedeği gerektiğinde iner)
 
 async function walk(dir) {
   const out = []

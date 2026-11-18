@@ -54,5 +54,10 @@ export function printSlip(orderNo: string) {
   root.classList.add('printing-slip')
   if (orderNo) document.title = orderNo
   window.addEventListener('afterprint', done)
-  window.print()
+  // Çıktıdaki logo henüz yüklenmediyse beklenir (en fazla 1,5 sn): boş kutuyla basılmasın
+  const pending = [...document.querySelectorAll<HTMLImageElement>('.print-slip img')]
+    .filter((img) => !img.complete)
+    .map((img) => img.decode().catch(() => {}))
+  if (!pending.length) return window.print()
+  Promise.race([Promise.all(pending), new Promise((r) => setTimeout(r, 1500))]).then(() => window.print())
 }

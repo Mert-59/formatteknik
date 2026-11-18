@@ -3,6 +3,7 @@ import { SITE } from '../config/site'
 import { useCart } from './CartContext'
 import { p2, stampTime } from './slipUtils'
 import { useIsClient } from '../lib/client'
+import Logo from '../components/Logo'
 
 /**
  * Teklif fişinin yazdırma / PDF görünümü (A4).
@@ -33,11 +34,9 @@ export default function PrintSlip() {
       {/* başlık */}
       <header className="flex items-start justify-between gap-6 border-b-2 border-black pb-4">
         <div>
-          <p className="text-[20pt] leading-none">
-            <span className="font-wide font-bold tracking-[-0.01em]">FORMAT</span>{' '}
-            <span className="font-mono text-[15pt] font-medium tracking-[0.2em] text-[#3a4048]">TEKNİK</span>
-          </p>
-          <p className="mt-2.5 max-w-[78mm] text-[9pt] text-[#3a4048]">{SITE.address}</p>
+          {/* resmî belge: firma logosu (yazdırmadan önce yüklenmesi beklenir — slipUtils.printSlip) */}
+          <Logo className="w-[34mm]" />
+          <p className="mt-3 max-w-[78mm] text-[9pt] text-[#3a4048]">{SITE.address}</p>
           <p className="mt-0.5 text-[9pt] text-[#3a4048]">
             {SITE.phoneDisplay} · {SITE.email}
           </p>

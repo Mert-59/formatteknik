@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import PageHero from '../components/PageHero'
 import SectionHead from '../components/SectionHead'
 import BrandWall from '../components/BrandWall'
+import Logo from '../components/Logo'
 import { usePageMeta } from '../lib/usePageMeta'
 import { COMPANY, SECTORS } from '../data/company'
 
@@ -40,6 +41,8 @@ export default function About() {
           </p>
         </div>
         <div className="space-y-5 text-[16px] leading-relaxed text-graphite lg:col-span-6 lg:col-start-7">
+          {/* firmanın kendi logosu: tanıtım metniyle birlikte */}
+          <Logo className="mb-4 w-[min(260px,70%)]" />
           <p>
             Havacılık, medikal, otomotiv ve makina sektörlerinde çalışan işletmelere; doğru takımı doğru zamanda ulaştırmayı
             hedefliyoruz.
