@@ -1,10 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { SITE, whatsappUrl } from '../config/site'
 
 /**
  * Teklif fişi (sepet). Sunucu yok: her şey tarayıcıda saklanır,
- * WhatsApp mesajı olarak gönderilir.
+ * WhatsApp mesajı olarak gönderilir. Site hiçbir veriyi kendisi tutmaz ya da bir yere göndermez.
+ *
+ * Gönderim akışı: "WhatsApp ile gönder" → WhatsApp açılır (openedAt) → müşteri "Evet, gönderdim" der (sentAt).
+ * Site mesajın gerçekten gidip gitmediğini bilemez; bu yüzden "gönderildi" mührü ve geçmiş kaydı müşterinin onayıyla olur.
+ * Gönderilmiş (ya da WhatsApp'ı açılmış) bir fiş değişirse yeni numara alır; mesajda önceki numara yazılır.
  */
 export type CartItem = {
   id: string
@@ -17,7 +21,18 @@ export type CartItem = {
 
 export type NewItem = { category?: string; code: string; brand?: string; qty: number; note?: string }
 export type Customer = { name: string; company: string; note: string }
-type Order = { no: string; sentAt: number }
+/** Fişin önceki bir fişle ilişkisi: güncel hâli ya da tekrarı — WhatsApp mesajında yazılır. */
+export type OrderRef = { kind: 'update' | 'repeat'; no: string }
+type Order = {
+  no: string
+  /** müşterinin "gönderdim" dediği an (0 = onaylanmadı) */
+  sentAt: number
+  /** WhatsApp'ın açıldığı an; onay bekleniyor (0 = açılmadı) */
+  openedAt: number
+  ref?: OrderRef
+}
+/** Gönderilmiş bir fiş — yalnızca bu cihazda saklanır (ft-history-v1). */
+export type PastSlip = { no: string; sentAt: number; items: Required<NewItem>[] }
 
 type CartState = {
   items: CartItem[]
@@ -31,9 +46,14 @@ type CartState = {
   /** son eklenen kalemler (satırda kısa vurgu için) — bkz. itemKey */
   lastAdded: { keys: string[]; at: number }
   orderNo: string
-  /** WhatsApp ile gönderildiği an (0 = gönderilmedi) */
+  /** müşterinin gönderdiğini onayladığı an (0 = onaylanmadı) */
   sentAt: number
+  /** WhatsApp açıldı, "gönderdiniz mi?" onayı bekleniyor (0 = hayır) */
+  openedAt: number
+  orderRef?: OrderRef
   customer: Customer
+  /** gönderilmiş fişler, en yenisi başta */
+  history: PastSlip[]
   setCustomer: (c: Customer) => void
   setOpen: (open: boolean) => void
   openCart: (opts?: { focus?: boolean }) => void
@@ -43,12 +63,23 @@ type CartState = {
   remove: (id: string) => void
   clear: () => void
   buildMessage: () => string
+  /** WhatsApp'ı hazır mesajla açar */
   sendWhatsApp: () => void
+  /** "Evet, gönderdim": mühür basılır, fiş geçmişe kaydedilir */
+  confirmSent: () => void
+  /** "Henüz göndermedim": onay sorusu kalkar */
+  dismissSent: () => void
+  /** Geçmişteki bir fişin kalemlerini fişe ekler */
+  repeat: (slip: PastSlip) => void
+  clearHistory: () => void
 }
 
 const KEY = 'ft-cart-v1'
 const ORDER_KEY = 'ft-order-v1'
 const CUSTOMER_KEY = 'ft-customer-v1'
+const HISTORY_KEY = 'ft-history-v1'
+/** Cihazda saklanan en fazla geçmiş fiş */
+const HISTORY_MAX = 20
 const Ctx = createContext<CartState | null>(null)
 
 const clampQty = (n: number) => Math.max(1, Math.min(9999, Math.round(n) || 1))
@@ -75,19 +106,22 @@ function write(key: string, value: unknown) {
 }
 
 const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null
+const str = (x: unknown) => (typeof x === 'string' ? x : '')
+const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? x : 0)
+
+/** Kayıttan gelen kalem; kodu olmayan atlanır. */
+const toItem = (x: unknown): Required<NewItem> | null =>
+  isObj(x) && typeof x.code === 'string' && x.code.trim()
+    ? { category: str(x.category), code: x.code, brand: str(x.brand), qty: clampQty(Number(x.qty)), note: str(x.note) }
+    : null
 
 function loadItems(): CartItem[] {
-  const list = read<unknown[]>(KEY, [], Array.isArray)
-  return list
-    .filter((x): x is Record<string, unknown> => isObj(x) && typeof x.code === 'string')
-    .map((x) => ({
-      id: typeof x.id === 'string' ? x.id : uid(),
-      category: typeof x.category === 'string' ? x.category : '',
-      code: x.code as string,
-      brand: typeof x.brand === 'string' ? x.brand : '',
-      qty: clampQty(Number(x.qty)),
-      note: typeof x.note === 'string' ? x.note : '',
-    }))
+  return read<unknown[]>(KEY, [], Array.isArray)
+    .map((x) => {
+      const it = toItem(x)
+      return it && { ...it, id: isObj(x) && typeof x.id === 'string' ? x.id : uid() }
+    })
+    .filter((x): x is CartItem => x !== null)
 }
 
 /** FT-YYAAGG-NNNN — fişin kimliği; mesajda ve çekmecede görünür. */
@@ -97,17 +131,40 @@ function newOrderNo() {
   return `FT-${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}-${String(Math.floor(1000 + Math.random() * 9000))}`
 }
 
+const EMPTY_ORDER: Order = { no: '', sentAt: 0, openedAt: 0 }
+
 function loadOrder(hasItems: boolean): Order {
-  const raw = read<Record<string, unknown>>(ORDER_KEY, { no: '' }, (x) => isObj(x) && typeof x.no === 'string')
-  const o: Order = { no: raw.no as string, sentAt: typeof raw.sentAt === 'number' ? raw.sentAt : 0 }
+  const raw = read<Record<string, unknown>>(ORDER_KEY, {}, isObj)
+  const r = isObj(raw.ref) ? raw.ref : {}
+  const ref: OrderRef | undefined =
+    (r.kind === 'update' || r.kind === 'repeat') && typeof r.no === 'string' ? { kind: r.kind, no: r.no } : undefined
+  const o: Order = { no: str(raw.no), sentAt: num(raw.sentAt), openedAt: num(raw.openedAt), ref }
   // Eski sürümden kalan dolu sepet: fiş numarası yoksa üret
-  return o.no || !hasItems ? o : { no: newOrderNo(), sentAt: 0 }
+  return o.no || !hasItems ? o : { ...EMPTY_ORDER, no: newOrderNo() }
 }
 
 function loadCustomer(): Customer {
   const c = read<Record<string, unknown>>(CUSTOMER_KEY, {}, isObj)
-  return { name: typeof c.name === 'string' ? c.name : '', company: typeof c.company === 'string' ? c.company : '', note: '' }
+  return { name: str(c.name), company: str(c.company), note: '' }
 }
+
+function loadHistory(): PastSlip[] {
+  return read<unknown[]>(HISTORY_KEY, [], Array.isArray)
+    .map((x): PastSlip | null => {
+      if (!isObj(x) || typeof x.no !== 'string' || !Array.isArray(x.items)) return null
+      const items = x.items.map(toItem).filter((i): i is Required<NewItem> => i !== null)
+      return items.length ? { no: x.no, sentAt: num(x.sentAt), items } : null
+    })
+    .filter((x): x is PastSlip => x !== null)
+    .slice(0, HISTORY_MAX)
+}
+
+/**
+ * Fiş değişti. Daha önce gönderildiyse (ya da WhatsApp'ı açıldıysa) yeni numara alır ve mesajda eski numara
+ * "güncel hâli" olarak yazılır: firmaya aynı numarayla iki farklı fiş gitmez. Gönderilmemiş fişin numarası kalır.
+ */
+const changed = (o: Order): Order =>
+  o.sentAt || o.openedAt ? { no: newOrderNo(), sentAt: 0, openedAt: 0, ref: { kind: 'update', no: o.no } } : { ...o, no: o.no || newOrderNo() }
 
 export function CartProvider({ children }: { children: ReactNode }) {
   /*
@@ -117,11 +174,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
    */
   const [ready, setReady] = useState(false)
   const [items, setItems] = useState<CartItem[]>([])
-  const [order, setOrder] = useState<Order>({ no: '', sentAt: 0 })
+  const [order, setOrder] = useState<Order>(EMPTY_ORDER)
   const [customer, setCustomerState] = useState<Customer>({ name: '', company: '', note: '' })
+  const [history, setHistory] = useState<PastSlip[]>([])
   const [open, setOpen] = useState(false)
   const [focusAdd, setFocusAdd] = useState(false)
   const [lastAdded, setLastAdded] = useState<{ keys: string[]; at: number }>({ keys: [], at: 0 })
+  // Geri çağrılarda güncel kalem listesi (ör. son kalem kaldırılınca fiş sıfırlansın)
+  const itemsRef = useRef(items)
+  useEffect(() => {
+    itemsRef.current = items
+  }, [items])
 
   useLayoutEffect(() => {
     // Bilinçli: tarayıcı deposundan (localStorage) okuma; ön-render HTML'i ile uyuşmazlık olmasın diye çizimden önce.
@@ -130,6 +193,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(saved)
     setOrder(loadOrder(saved.length > 0))
     setCustomerState(loadCustomer())
+    setHistory(loadHistory())
     setReady(true)
   }, [])
 
@@ -143,6 +207,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (ready) write(CUSTOMER_KEY, { name: customer.name, company: customer.company })
   }, [ready, customer.name, customer.company])
+  useEffect(() => {
+    if (ready) write(HISTORY_KEY, history)
+  }, [ready, history])
 
   const setCustomer = useCallback((c: Customer) => setCustomerState(c), [])
 
@@ -162,8 +229,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return next
     })
-    // Yeni kalem eklenince fiş yeniden "gönderilmedi" olur; boş fişe ilk kalemde numara verilir.
-    setOrder((o) => ({ no: o.no || newOrderNo(), sentAt: 0 }))
+    setOrder(changed) // boş fişe ilk kalemde numara verilir
     setLastAdded({ keys: clean.map(itemKey), at: Date.now() })
   }, [])
 
@@ -171,15 +237,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const setQty = useCallback((id: string, qty: number) => {
     setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: clampQty(qty) } : p)))
+    setOrder(changed)
   }, [])
-
-  const remove = useCallback((id: string) => setItems((prev) => prev.filter((p) => p.id !== id)), [])
 
   const clear = useCallback(() => {
     setItems([])
-    setOrder({ no: '', sentAt: 0 })
+    setOrder(EMPTY_ORDER)
     setCustomerState((c) => ({ ...c, note: '' }))
   }, [])
+
+  const remove = useCallback(
+    (id: string) => {
+      // son kalem de gidince fiş baştan başlar (numarasız, boş)
+      if (itemsRef.current.every((p) => p.id === id)) return clear()
+      setItems((prev) => prev.filter((p) => p.id !== id))
+      setOrder(changed)
+    },
+    [clear],
+  )
 
   const openCart = useCallback((opts?: { focus?: boolean }) => {
     setFocusAdd(!!opts?.focus)
@@ -189,7 +264,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   /** WhatsApp mesajı; *kalın* yazım WhatsApp biçimidir. */
   const buildMessage = useCallback(
     () => {
-      const lines = [`Merhaba ${SITE.name},`, `Web sitenizden teklif talebim — Fiş ${order.no}`, '']
+      const lines = [`Merhaba ${SITE.name},`, `Web sitenizden teklif talebim — Fiş ${order.no}`]
+      if (order.ref?.kind === 'update') lines.push(`(${order.ref.no} numaralı fişin güncel hâlidir)`)
+      if (order.ref?.kind === 'repeat') lines.push(`(${order.ref.no} numaralı fişin tekrarı)`)
+      lines.push('')
       items.forEach((it, i) => {
         lines.push(`${i + 1}) *${it.code}* × ${it.qty}`)
         const meta = [it.category, it.brand && `Marka: ${it.brand}`].filter(Boolean).join(' · ')
@@ -204,13 +282,40 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (who.length) lines.push('', ...who)
       return lines.join('\n').trim()
     },
-    [items, customer, order.no],
+    [items, customer, order.no, order.ref],
   )
 
   const sendWhatsApp = useCallback(() => {
     window.open(whatsappUrl(buildMessage()), '_blank', 'noopener')
-    setOrder((o) => ({ ...o, sentAt: Date.now() }))
+    // Onaylanmış fiş "tekrar gönder"ilince yeniden sorulmaz
+    setOrder((o) => (o.sentAt ? o : { ...o, openedAt: Date.now() }))
   }, [buildMessage])
+
+  const confirmSent = useCallback(() => {
+    const at = order.openedAt || Date.now()
+    setOrder((o) => ({ ...o, sentAt: at, openedAt: 0 }))
+    // Geçmişe yazılır (aynı numara varsa güncellenir), en yenisi başta
+    const slip: PastSlip = {
+      no: order.no,
+      sentAt: at,
+      items: items.map(({ category, code, brand, qty, note }) => ({ category, code, brand, qty, note })),
+    }
+    setHistory((h) => [slip, ...h.filter((s) => s.no !== slip.no)].slice(0, HISTORY_MAX))
+  }, [order.no, order.openedAt, items])
+
+  const dismissSent = useCallback(() => setOrder((o) => ({ ...o, openedAt: 0 })), [])
+
+  const repeat = useCallback(
+    (slip: PastSlip) => {
+      const wasEmpty = itemsRef.current.length === 0
+      addMany(slip.items)
+      // boş fişe tekrarlanınca mesajda hangi fişin tekrarı olduğu yazılır
+      if (wasEmpty) setOrder((o) => ({ ...o, ref: { kind: 'repeat', no: slip.no } }))
+    },
+    [addMany],
+  )
+
+  const clearHistory = useCallback(() => setHistory([]), [])
 
   const value = useMemo<CartState>(
     () => ({
@@ -222,7 +327,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       lastAdded,
       orderNo: order.no,
       sentAt: order.sentAt,
+      openedAt: order.openedAt,
+      orderRef: order.ref,
       customer,
+      history,
       setCustomer,
       setOpen,
       openCart,
@@ -233,8 +341,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clear,
       buildMessage,
       sendWhatsApp,
+      confirmSent,
+      dismissSent,
+      repeat,
+      clearHistory,
     }),
-    [items, open, focusAdd, lastAdded, order, customer, setCustomer, openCart, add, addMany, setQty, remove, clear, buildMessage, sendWhatsApp],
+    [
+      items, open, focusAdd, lastAdded, order, customer, history, setCustomer, openCart, add, addMany, setQty, remove, clear,
+      buildMessage, sendWhatsApp, confirmSent, dismissSent, repeat, clearHistory,
+    ],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

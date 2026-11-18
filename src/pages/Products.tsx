@@ -10,7 +10,8 @@ import { useIsClient } from '../lib/client'
 import ToolDrawing from '../components/ToolDrawing'
 import PageHero from '../components/PageHero'
 import QuickAdd from '../cart/QuickAdd'
-import { SlipItem, Stamp } from '../cart/Slip'
+import { SendConfirm, SlipItem, Stamp } from '../cart/Slip'
+import RecentSlips from '../cart/History'
 import { useCart } from '../cart/CartContext'
 import { scrollToElement } from '../lib/scroll'
 import { usePageMeta } from '../lib/usePageMeta'
@@ -44,7 +45,7 @@ function Collapse({ open, id, children }: { open: boolean; id: string; children:
 
 /** Masaüstünde sağda sabit duran canlı fiş: eklenen her kalem anında burada görünür. */
 function SlipPanel() {
-  const { items, count, units, orderNo, sentAt, sendWhatsApp, openCart } = useCart()
+  const { items, count, units, orderNo, sentAt, openedAt, sendWhatsApp, openCart } = useCart()
   return (
     <div className="rounded-3xl border border-line bg-paper">
       <div className="flex items-center gap-3 border-b border-line px-6 py-4">
@@ -62,6 +63,8 @@ function SlipPanel() {
           <button type="button" onClick={() => openCart({ focus: true })} className="mt-5 text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
             Grubunu bilmiyorum, kodla ekleyeceğim
           </button>
+          {/* düzenli alımda: geçen fişi tek dokunuşla tekrarla (geçmiş yoksa çizilmez) */}
+          <RecentSlips limit={2} className="mt-7" />
         </div>
       ) : (
         <>
@@ -84,19 +87,24 @@ function SlipPanel() {
             </p>
             {sentAt > 0 && (
               <p className="mb-4 text-[13px] leading-relaxed text-graphite">
-                Gönderdiyseniz fişiniz bize ulaştı; {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız. Acil mi?{' '}
+                Fişiniz bize ulaştı; {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız. Acil mi?{' '}
                 <a href={SITE.phoneHref} className="whitespace-nowrap font-medium text-ink underline underline-offset-2 hover:text-accent-ink">
                   {SITE.phoneDisplay}
                 </a>
               </p>
             )}
-            <button
-              type="button"
-              onClick={sendWhatsApp}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
-            >
-              <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
-            </button>
+            {openedAt > 0 && !sentAt ? (
+              // WhatsApp açıldı: gönderdi mi? (site bunu kendisi bilemez)
+              <SendConfirm />
+            ) : (
+              <button
+                type="button"
+                onClick={sendWhatsApp}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-paper transition-colors hover:bg-whatsapp"
+              >
+                <Send className="size-4" /> {sentAt ? 'Tekrar gönder' : 'WhatsApp ile gönder'}
+              </button>
+            )}
             <button type="button" onClick={() => openCart()} className="mt-2 flex h-11 w-full items-center justify-center gap-1.5 text-[14px] text-graphite hover:text-ink">
               Fişi düzenle <ArrowRight className="size-4" />
             </button>

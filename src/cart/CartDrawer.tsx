@@ -5,7 +5,8 @@ import { SITE, photoWhatsappUrl } from '../config/site'
 import { itemKey, useCart } from './CartContext'
 import { copyText, isLongMessage, printSlip } from './slipUtils'
 import QuickAdd from './QuickAdd'
-import { SlipItem, Stamp } from './Slip'
+import { SendConfirm, SlipItem, Stamp } from './Slip'
+import RecentSlips from './History'
 import { useModal, useScrollLock } from '../lib/scroll'
 import { usePresence } from '../lib/presence'
 
@@ -73,7 +74,7 @@ function CopyButton({ text, onFail }: { text: string; onFail: () => void }) {
 
 export default function CartDrawer() {
   const {
-    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, customer, setCustomer, buildMessage, sendWhatsApp, clear, lastAdded,
+    items, open, setOpen, focusAdd, count, units, orderNo, sentAt, openedAt, customer, setCustomer, buildMessage, sendWhatsApp, clear, lastAdded,
   } = useCart()
   const dialog = useRef<HTMLDivElement>(null)
   const start = useRef<HTMLDivElement>(null)
@@ -152,6 +153,8 @@ export default function CartDrawer() {
 
               {items.length === 0 ? (
                 <div className="px-5 py-7 sm:px-6">
+                  {/* düzenli alımda: geçen fişi tek dokunuşla yeniden doldur (geçmiş yoksa çizilmez) */}
+                  <RecentSlips className="mb-8" />
                   <p className={mono}>NASIL ÇALIŞIR</p>
                   <ol className="mt-4 space-y-3 text-[14px] leading-relaxed text-graphite">
                     {[
@@ -277,6 +280,9 @@ export default function CartDrawer() {
                       </div>
                     )}
                   </div>
+
+                  {/* dolu fişe de eski bir fişin kalemleri eklenebilir (geçmiş yoksa çizilmez) */}
+                  <RecentSlips collapsible className="border-t border-line px-5 py-4 sm:px-6" />
                 </>
               )}
             </div>
@@ -286,12 +292,9 @@ export default function CartDrawer() {
                 {sentAt > 0 ? (
                   <div>
                     {/* gönderdikten sonra: ne olacağını ve acil durumda ne yapılacağını söyle */}
-                    <p className="text-[14px] leading-relaxed text-graphite">
-                      Mesajınız WhatsApp’ta hazırlandı.{' '}
-                      <span className="text-ink">
-                        Gönderdiyseniz fişiniz bize ulaştı; <span className="whitespace-nowrap font-mono text-[13px]">{orderNo}</span> numarasıyla{' '}
-                        {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız.
-                      </span>
+                    <p className="text-[14px] leading-relaxed text-ink">
+                      Fişiniz bize ulaştı; <span className="whitespace-nowrap font-mono text-[13px]">{orderNo}</span> numarasıyla{' '}
+                      {SITE.replyTime || 'en kısa sürede'} dönüş yapacağız.
                     </p>
                     <p className="mt-2 text-[13px] leading-relaxed text-muted">
                       Acil mi?{' '}
@@ -323,7 +326,15 @@ export default function CartDrawer() {
                     </div>
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px]">
                       <PrintButton orderNo={orderNo} />
-                      <span className="text-[12px] text-muted">Fiş, yeni fişe başlayana kadar burada kalır.</span>
+                      <span className="text-[12px] text-muted">Son fişlerinize kaydedildi; değiştirirseniz yeni numara alır.</span>
+                    </div>
+                  </div>
+                ) : openedAt > 0 ? (
+                  // WhatsApp açıldı: gönderdi mi? (site bunu kendisi bilemez)
+                  <div className="pb-1">
+                    <SendConfirm />
+                    <div className="mt-3 flex items-center justify-between gap-3 text-[13px]">
+                      <PrintButton orderNo={orderNo} />
                     </div>
                   </div>
                 ) : (

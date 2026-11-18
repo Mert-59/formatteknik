@@ -26,7 +26,7 @@ function useTyping() {
 }
 
 export default function CartBar() {
-  const { count, units, open, orderNo, sentAt, openCart } = useCart()
+  const { count, units, open, orderNo, sentAt, openedAt, openCart } = useCart()
   const { phase } = useIntro()
   const typing = useTyping()
   const show = count > 0 && !open && !typing && phase === 'done'
@@ -48,14 +48,14 @@ export default function CartBar() {
             >
               <span className="min-w-0 text-left">
                 <span className="block truncate whitespace-nowrap font-mono text-[9.5px] tracking-[0.14em] text-paper/55">
-                  {sentAt ? 'GÖNDERİLDİ' : 'TEKLİF FİŞİ'} · {orderNo}
+                  {sentAt ? 'GÖNDERİLDİ' : openedAt ? 'ONAYINIZ BEKLENİYOR' : 'TEKLİF FİŞİ'} · {orderNo}
                 </span>
                 <span className="block text-[14px] font-medium">
                   {count} kalem <span className="text-paper/60">· {units} adet</span>
                 </span>
               </span>
               <span className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-paper px-4 text-[13px] font-medium text-ink">
-                {sentAt ? 'Fişi gör' : 'Gönder'} <ArrowRight className="size-4" />
+                {sentAt ? 'Fişi gör' : openedAt ? 'Onayla' : 'Gönder'} <ArrowRight className="size-4" />
               </span>
             </button>
           </div>
