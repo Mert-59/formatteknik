@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import { Minus, Plus, X } from 'lucide-react'
+import { Check, Minus, Plus, X } from 'lucide-react'
 import { itemKey, useCart, type CartItem } from './CartContext'
 import { p2, stampTime } from './slipUtils'
 import { prefersReducedMotion } from '../lib/scroll'
@@ -15,6 +15,41 @@ export function Stamp({ at, className = '' }: { at: number; className?: string }
     >
       <span className="block text-[15px] font-semibold leading-tight tracking-[0.26em]">GÖNDERİLDİ</span>
       <span className="block text-[9.5px] tracking-[0.14em]">{stampTime(at)}</span>
+    </div>
+  )
+}
+
+/**
+ * WhatsApp açıldıktan sonra: "Mesajı gönderdiniz mi?" Site mesajın gidip gitmediğini bilemez;
+ * mühür ve geçmiş kaydı müşterinin onayıyla olur (bkz. CartContext → confirmSent).
+ */
+export function SendConfirm({ className = '' }: { className?: string }) {
+  const { confirmSent, dismissSent, sendWhatsApp } = useCart()
+  return (
+    <div role="status" className={`anim-fade-up rounded-2xl border border-ink/15 bg-mist p-4 [--anim-dur:0.4s] [--anim-y:8px] ${className}`}>
+      <p className="text-[15px] font-medium text-ink">WhatsApp açıldı. Mesajı gönderdiniz mi?</p>
+      <p className="mt-1 text-[13px] leading-relaxed text-graphite">
+        Onaylayınca fiş “gönderildi” olarak işaretlenir ve bu cihazdaki son fişlerinize kaydedilir.
+      </p>
+      <div className="mt-3.5 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={confirmSent}
+          className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-ink text-[14px] font-medium text-paper transition-colors hover:bg-accent-ink"
+        >
+          <Check className="size-4" /> Evet, gönderdim
+        </button>
+        <button
+          type="button"
+          onClick={sendWhatsApp}
+          className="h-12 rounded-full border border-ink/15 bg-paper text-[14px] font-medium transition-colors hover:border-ink"
+        >
+          WhatsApp’ı tekrar aç
+        </button>
+      </div>
+      <button type="button" onClick={dismissSent} className="mt-2.5 text-[13px] text-muted underline-offset-4 hover:text-ink hover:underline">
+        Henüz göndermedim
+      </button>
     </div>
   )
 }
