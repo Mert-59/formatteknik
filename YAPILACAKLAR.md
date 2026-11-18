@@ -1,6 +1,6 @@
 # Yapılacaklar
 
-Son güncelleme: 8 Kasım 2026
+Son güncelleme: 18 Kasım 2026
 
 ## Sizden beklenen içerik
 
@@ -61,5 +61,20 @@ Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya b
 
 - [ ] **Firma bilgilerini son kez kontrol edin.** Telefon, WhatsApp numarası, e-posta ve adres `src/config/site.ts` dosyasında.
 - [ ] **Gerçek telefonda deneme siparişi verin.** Fişe birkaç kalem ekleyip WhatsApp ile gönderin. Mesaj doğru numaraya, düzgün biçimde gitmeli.
-- [ ] **Barındırma hizmetini seçin ve yönlendirme ayarını ekleyin.** Bu ayar olmazsa `/urunler` gibi sayfalar yenilendiğinde 404 hatası verir. Netlify, Vercel ve cPanel için gereken ayar `README.md` dosyasında "Yayına alma" başlığı altında anlatılıyor.
+- [ ] **Barındırma hizmetini seçin.** Vercel, Netlify ve cPanel (Apache) için ayarlar hazır, yönlendirmeler de üçünde çalışır (`README.md` → "Yayına alma").
+      cPanel'de `dist/` içindeki gizli `.htaccess` dosyası mutlaka yüklenmeli; yoksa eski site adresleri 404 verir.
+- [ ] **DNS:** hem `formatteknik.com.tr` hem `www.formatteknik.com.tr` yeni sunucuyu göstermeli. Sitenin tek adresi `https://www.formatteknik.com.tr`; diğeri buraya yönlenir.
 - [ ] **`npm run build` çalıştırın.** Oluşan `dist/` klasörü yayına alınacak klasördür.
+- [ ] **Yayından önce:** `npm run preview` açıkken `npm run check:redirects` — eski 38 adresin hepsi ✓ olmalı.
+
+## Yayın günü
+
+- [ ] **Yayından hemen sonra:** `npm run check:redirects -- https://www.formatteknik.com.tr` — eski adresler ve `www` / `https` yönlendirmesi yayındaki sitede denenir. ✗ çıkarsa eski siteye dönmeden önce birlikte bakalım.
+- [ ] **Google Search Console** (search.google.com/search-console; site sahibinin Google hesabıyla):
+  1. `https://www.formatteknik.com.tr` mülkü yoksa ekleyin ve doğrulayın (alan adı mülkü — DNS TXT kaydıyla — en kapsamlısıdır).
+  2. **Site haritaları** → eski `/tr/sitemap.xml` kaydı varsa kaldırın, `sitemap.xml` ekleyin.
+  3. **URL denetimi** → anasayfa ve `/urunler` için "Dizine eklenmesini iste".
+  4. İlk 4 hafta, haftada bir **Sayfalar** raporunda "Bulunamadı (404)" listesine bakın. Orada eski bir adres görünürse
+     `vercel.json` → `redirects`'e bir satır eklenir; derleme `.htaccess`'i kendiliğinden günceller.
+- [ ] **Google İşletme Profili** varsa: web sitesi adresini `https://www.formatteknik.com.tr` olarak güncelleyin.
+- [ ] **Yüklemeden önce eski sitenin tam yedeğini alın** (cPanel → Yedekleme ya da barındırıcınızın paneli): bir sorun çıkarsa dakikalar içinde geri dönülebilsin.

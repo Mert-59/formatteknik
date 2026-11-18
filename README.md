@@ -11,7 +11,9 @@ npm install
 npm run dev      # geliştirme sunucusu
 npm run build    # tip denetimi + üretim derlemesi + ön-render → dist/
 npm run lint     # oxlint
-npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404.html) → http://localhost:4173
+npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404.html, yönlendirmeler) → http://localhost:4173
+npm run check:redirects                                 # eski site adreslerini önizlemede dener (preview açıkken)
+npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki sitede (yayından hemen sonra)
 ```
 
 ## İçerik nereden yönetilir
@@ -23,7 +25,7 @@ npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404
 | Ürün grubu sayfalarının içeriği (`/urunler/<grup>`: genel bakış, sayfa açıklaması, markalar) | `src/data/guides.ts` |
 | Kurumsal sayfa bilgileri (kuruluş, teslimat, fotoğraflar, referanslar) | `src/data/company.ts` |
 | PDF kataloglar (grup sayfalarında ve `/kataloglar`'da) — dosyalar `public/kataloglar/`, kapaklar `public/kataloglar/kapak/` | `src/data/catalogs.ts` |
-| Eski siteden yönlendirmeler (`/tr/...`, eski PDF adresleri) | `vercel.json` → `redirects` |
+| Eski siteden yönlendirmeler (`/tr/...`, eski PDF adresleri) — tek liste, tüm barındırıcılar için | `vercel.json` → `redirects` |
 | Markalar ve logoları (`public/brands/`) | `src/data/brands.ts` |
 | Sayfa başlıkları / açıklamaları | her sayfadaki `usePageMeta(...)` |
 | Paylaşım önizlemesi, yapılandırılmış veri | `index.html` |
@@ -58,9 +60,22 @@ npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404
 Gereken ayarlar projede hazır:
 
 - **Vercel:** proje kökündeki `vercel.json` (`cleanUrls: true`). `404.html` kendiliğinden kullanılır.
-- **Netlify:** ek ayar gerekmez; `urunler.html`'i `/urunler` adresinde ve `404.html`'i kendiliğinden sunar.
-- **Apache (cPanel):** `public/.htaccess` derlemede `dist/`'e kopyalanır; `dist/` içeriğiyle birlikte yükleyin
+- **Netlify:** ek ayar gerekmez; `urunler.html`'i `/urunler` adresinde ve `404.html`'i kendiliğinden sunar. Yönlendirmeler derlemede üretilen `dist/_redirects` dosyasındadır.
+- **Apache (cPanel):** `public/.htaccess` şablonu derlemede yönlendirmelerle birlikte `dist/.htaccess` olarak yazılır; `dist/` içeriğiyle birlikte yükleyin
   (gizli dosya olduğu için FTP programında "gizli dosyaları göster" açık olmalı).
+
+### Alan adı ve eski site adresleri
+
+- **Tek adres: `https://www.formatteknik.com.tr`** (www'li). Eski site ve Google kaydı bu adreste; `www`'siz ve
+  `http://` adresler kalıcı olarak buraya yönlenir. Adres `src/config/site.ts` → `url`'de; `index.html`'de başka bir
+  adres kalırsa derleme hata verir. DNS'te hem `formatteknik.com.tr` hem `www.formatteknik.com.tr` yeni sunucuyu
+  göstermeli (Vercel'de iki alan adı da projeye eklenir).
+- **Yönlendirmeler tek listede: `vercel.json` → `redirects`.** Vercel bu listeyi doğrudan okur; Apache için
+  `dist/.htaccess`, Netlify için `dist/_redirects` derlemede bu listeden üretilir (`scripts/redirects.mjs`).
+  `.htaccess`'e elle yönlendirme yazmayın. Hedefi sitede olmayan bir yönlendirme derlemeyi durdurur.
+- Eski sitenin 27 sayfası ve 11 PDF'i (`scripts/old-urls.txt`, 18 Kasım 2026'da alındı) birer özel kuralla yeni
+  sayfalara gider; listede olmayan eski adresler genel kurallarla ürünlere ya da anasayfaya düşer.
+  `npm run check:redirects` hepsini dener.
 
 Eski "her adreste index.html döndür" (SPA) yönlendirmesine artık gerek yok; eklenirse sayfalar yine çalışır
 (tarayıcı doğru sayfayı kendisi çizer) ama o adreslerde ön-render'ın SEO faydası kaybolur.

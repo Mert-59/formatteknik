@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://formatteknik.com.tr/sitemap.xml
+Sitemap: https://www.formatteknik.com.tr/sitemap.xml

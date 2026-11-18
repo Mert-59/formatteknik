@@ -7,12 +7,14 @@
  * 4) Çıktı: dist/index.html, urunler.html, urunler/<grup>.html (9 ürün grubu), kurumsal.html, iletisim.html, 404.html
  *    (barındırıcı /urunler adresinde urunler.html'i sunar — ayarlar README.md "Yayına alma" bölümünde).
  * 5) dist/sitemap.xml bu sayfalardan üretilir.
+ * 6) Yönlendirmeler (vercel.json) denetlenir; dist/.htaccess ve dist/_redirects yazılır.
  *
  * Şablonda beklenen etiketlerden biri bulunamazsa derleme hata verir (sessizce yanlış HTML üretmesin).
  */
 import { copyFile, mkdir, readFile, writeFile, rm, stat } from 'node:fs/promises'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
+import { hostRulesApache, hostRulesNetlify, loadRedirects, toHtaccess, toNetlify } from './redirects.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -20,6 +22,12 @@ const ssrDir = join(root, 'dist-ssr')
 
 const { render, NAV, SITE, CATEGORY_PATHS, EXTRA_PATHS, CATALOG_FILES } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href)
 const template = await readFile(join(dist, 'index.html'), 'utf8')
+
+// Alan adı denetimi: index.html'deki tüm site adresleri SITE.url ile başlamalı (www'li ve www'siz karışmasın).
+const wrongOrigin = [...template.matchAll(/https?:\/\/(?:www\.)?formatteknik\.com\.tr/g)].map((m) => m[0]).filter((u) => u !== SITE.url)
+if (wrongOrigin.length) {
+  throw new Error(`[prerender] index.html içinde SITE.url (${SITE.url}) dışında site adresi var: ${[...new Set(wrongOrigin)].join(', ')}`)
+}
 
 // Katalog denetimi: src/data/catalogs.ts'teki her PDF ve kapak dist/'te olmalı; yoksa sitede kırık bağlantı olur.
 const missing = []
@@ -93,6 +101,45 @@ const sitemap =
   indexable.map((u) => `  <url><loc>${u}</loc></url>`).join('\n') +
   '\n</urlset>\n'
 await writeFile(join(dist, 'sitemap.xml'), sitemap)
+
+/*
+ * Yönlendirmeler (kaynak: vercel.json, bkz. scripts/redirects.mjs):
+ * 1) her hedef sitede var olmalı (sayfa ya da dosya) — eski adres kırık bir sayfaya gitmesin;
+ * 2) Vercel'deki alan adı kuralı SITE.url'e gitmeli;
+ * 3) Apache için dist/.htaccess, Netlify için dist/_redirects yazılır.
+ */
+const redirects = await loadRedirects(root)
+const pageUrls = new Set(pages.filter((p) => p.route !== '404').map((p) => p.url))
+const badTargets = []
+for (const r of redirects.path) {
+  if (r.destination.includes(':')) continue // değişkenli hedef: denetlenemez
+  const target = r.destination.split(/[?#]/)[0]
+  const exists = pageUrls.has(target) || (await stat(join(dist, target.slice(1))).catch(() => null))?.isFile()
+  if (!exists) badTargets.push(`${r.source} → ${r.destination}`)
+}
+if (badTargets.length) throw new Error(`[prerender] Yönlendirme hedefi sitede yok (vercel.json):\n  ${badTargets.join('\n  ')}`)
+for (const r of redirects.host) {
+  if (!r.destination.startsWith(SITE.url + '/')) throw new Error(`[prerender] vercel.json alan adı kuralı SITE.url'e (${SITE.url}) gitmiyor: ${r.destination}`)
+}
+
+const htaccessPath = join(dist, '.htaccess')
+const htaccess = replaceOnce(
+  await readFile(htaccessPath, 'utf8'),
+  /^# @YONLENDIRMELER@$/m,
+  [
+    ...hostRulesApache(SITE.url),
+    '',
+    `# Eski site adresleri (${redirects.path.length} kural) — vercel.json'dan üretildi, burada düzenlemeyin`,
+    ...toHtaccess(redirects.path),
+  ].join('\n'),
+  '@YONLENDIRMELER@ (public/.htaccess)',
+)
+await writeFile(htaccessPath, htaccess)
+await writeFile(
+  join(dist, '_redirects'),
+  ['# Netlify — vercel.json\'dan üretildi (scripts/redirects.mjs); burada düzenlemeyin', ...hostRulesNetlify(SITE.url), ...toNetlify(redirects.path), ''].join('\n'),
+)
+console.log(`  ✓ yönlendirmeler: ${redirects.path.length} kural, hedeflerin hepsi sitede var → .htaccess, _redirects`)
 
 await rm(ssrDir, { recursive: true, force: true })
 console.log(`[prerender] ${pages.length} sayfa üretildi; sitemap.xml: ${indexable.length} adres.`)

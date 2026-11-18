@@ -3,12 +3,15 @@
  *  - /urunler → urunler.html (barındırıcılardaki "temiz adres" davranışı)
  *  - /urunler.html → /urunler'e kalıcı yönlendirme
  *  - bulunamayan adres → 404.html, durum kodu 404
+ *  - eski site adresleri → vercel.json'daki yönlendirmeler (yayındaki gibi; bkz. scripts/redirects.mjs).
+ *    vercel.json değişince sunucuyu yeniden başlatın. Alan adı (www) kuralı yerelde uygulanmaz.
  * Kullanım: npm run preview  (ya da: node scripts/serve.mjs 4173)
  */
 import { createServer } from 'node:http'
 import { readFile, stat } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { loadRedirects, matchRedirect } from './redirects.mjs'
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url))
 const port = Number(process.argv[2] || process.env.PORT || 4173)
@@ -19,10 +22,19 @@ const types = {
   '.pdf': 'application/pdf', // kataloglar: tarayıcı indirmek yerine görüntülesin
 }
 
+const { path: redirects } = await loadRedirects(fileURLToPath(new URL('..', import.meta.url)))
+
 const isFile = async (p) => (await stat(p).catch(() => null))?.isFile() ?? false
 
 createServer(async (req, res) => {
-  const path = decodeURIComponent(new URL(req.url, 'http://x').pathname)
+  const url = new URL(req.url, 'http://x')
+  const path = decodeURIComponent(url.pathname)
+  // Vercel kalıcı yönlendirmede 308 döner (Apache 301); arama motorları ikisini de kalıcı sayar
+  const hit = matchRedirect(redirects, path)
+  if (hit) {
+    res.writeHead(hit.rule.permanent === false ? 307 : 308, { Location: hit.location + url.search }).end()
+    return
+  }
   if (path.endsWith('.html') && path !== '/index.html' && path !== '/404.html') {
     res.writeHead(301, { Location: path.slice(0, -5) || '/' }).end()
     return

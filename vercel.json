@@ -10,18 +10,38 @@
     }
   ],
   "redirects": [
+    { "source": "/:path*", "has": [{ "type": "host", "value": "formatteknik.com.tr" }], "destination": "https://www.formatteknik.com.tr/:path*", "permanent": true },
+
     { "source": "/tr", "destination": "/", "permanent": true },
     { "source": "/tr/urunler", "destination": "/urunler", "permanent": true },
     { "source": "/tr/kataloglar", "destination": "/kataloglar", "permanent": true },
     { "source": "/tr/iletisim", "destination": "/iletisim", "permanent": true },
+    { "source": "/tr/icerik-kurumsal/32", "destination": "/kurumsal", "permanent": true },
+    { "source": "/tr/video-galeri-video-galeri/4", "destination": "/", "permanent": true },
+
+    { "source": "/tr/kategori-torna-uclari/57", "destination": "/urunler/torna-uclari", "permanent": true },
+    { "source": "/tr/urun-mitsubishi-torna/9", "destination": "/urunler/torna-uclari", "permanent": true },
+    { "source": "/tr/kategori-takma-uclu-freze/58", "destination": "/urunler/takma-uclu-freze", "permanent": true },
     { "source": "/tr/kategori-kilavuz/59", "destination": "/urunler/kilavuz", "permanent": true },
-    { "source": "/tr/kategori-karbur-freze/64", "destination": "/urunler/karbur-freze", "permanent": true },
-    { "source": "/tr/kategori-format-ozel-takim-freze-katalog/66", "destination": "/urunler/karbur-freze", "permanent": true },
-    { "source": "/tr/kategori-hss-matkap/20", "destination": "/urunler/hss-matkap", "permanent": true },
-    { "source": "/tr/kategori-shrink-fit-holder/55", "destination": "/urunler/shrink-fit-holder", "permanent": true },
-    { "source": "/tr/kategori-mts-katalog/69", "destination": "/urunler/shrink-fit-holder", "permanent": true },
+    { "source": "/tr/kategori-carmon-kilavuz-katalog/60", "destination": "/urunler/kilavuz", "permanent": true },
+    { "source": "/tr/kategori-sanowa-kilavuz-eco-katalog/21", "destination": "/urunler/kilavuz", "permanent": true },
+    { "source": "/tr/kategori-karbur-matkap/19", "destination": "/urunler/karbur-matkap", "permanent": true },
     { "source": "/tr/kategori-format-karbur-matkap-katalog/62", "destination": "/urunler/karbur-matkap", "permanent": true },
     { "source": "/tr/kategori-osg-karbur-matkap-katalog/63", "destination": "/urunler/karbur-matkap", "permanent": true },
+    { "source": "/tr/kategori-karbur-freze/64", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-format-ozel-takim-freze-katalog/66", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-mitsubishi-frezeleme/71", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-havacilik-karnasch/72", "destination": "/urunler/karbur-freze", "permanent": true },
+    { "source": "/tr/kategori-olcu-aletleri/7", "destination": "/urunler/olcu-aletleri", "permanent": true },
+    { "source": "/tr/kategori-hss-matkap/20", "destination": "/urunler/hss-matkap", "permanent": true },
+    { "source": "/tr/kategori-izar-katalog/67", "destination": "/urunler/hss-matkap", "permanent": true },
+    { "source": "/tr/kategori-shrink-fit-holder/55", "destination": "/urunler/shrink-fit-holder", "permanent": true },
+    { "source": "/tr/kategori-mts-katalog/69", "destination": "/urunler/shrink-fit-holder", "permanent": true },
+    { "source": "/tr/kategori-pens-kayar-otomat/54", "destination": "/urunler/pens-kayar-otomat", "permanent": true },
+    { "source": "/tr/kategori-capak-alma-morrisflex/73", "destination": "/urunler", "permanent": true },
+    { "source": "/tr/kategori-format/74", "destination": "/urunler", "permanent": true },
+    { "source": "/tr/kategori-format-katalog/68", "destination": "/kataloglar", "permanent": true },
+
     { "source": "/uploads/files/mitsubishi-tornalama.pdf", "destination": "/kataloglar/mitsubishi-tornalama.pdf", "permanent": true },
     { "source": "/uploads/files/mitsubishi-takma-uclu-frezeler.pdf", "destination": "/kataloglar/mitsubishi-takma-uclu-freze.pdf", "permanent": true },
     { "source": "/uploads/files/mitsubishi-matkap.pdf", "destination": "/kataloglar/mitsubishi-karbur-matkap.pdf", "permanent": true },
@@ -32,6 +52,11 @@
     { "source": "/uploads/files/202512/upload_694a9180df0e1.pdf", "destination": "/kataloglar/mitsubishi-frezeleme.pdf", "permanent": true },
     { "source": "/uploads/files/202512/upload_694e6468624f0.pdf", "destination": "/kataloglar/izar-hss-matkap.pdf", "permanent": true },
     { "source": "/uploads/files/202509/upload_68bfca8f4eda4.pdf", "destination": "/kataloglar/format-hss-matkap.pdf", "permanent": true },
-    { "source": "/uploads/files/202503/upload_67d1d57d74b91.pdf", "destination": "/kataloglar/pens-kayar-otomat.pdf", "permanent": true }
+    { "source": "/uploads/files/202503/upload_67d1d57d74b91.pdf", "destination": "/kataloglar/pens-kayar-otomat.pdf", "permanent": true },
+
+    { "source": "/tr/:page/:id", "destination": "/urunler", "permanent": true },
+    { "source": "/tr/:path*", "destination": "/", "permanent": true },
+    { "source": "/en/:path*", "destination": "/", "permanent": true },
+    { "source": "/uploads/:path*", "destination": "/kataloglar", "permanent": true }
   ]
 }

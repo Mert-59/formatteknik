@@ -4,8 +4,8 @@ const MAP_QUERY = 'Çobançeşme Mah. Bülent Ecevit Bulvarı No: 207 D Çorlu T
 /** Firma bilgileri — tek yerden yönetilir. (Kaynak: mevcut formatteknik.com.tr) */
 export const SITE = {
   name: 'Format Teknik',
-  /** Yayın adresi (sonda / yok) — canonical, sitemap ve index.html ile aynı olmalı */
-  url: 'https://formatteknik.com.tr',
+  /** Yayın adresi (sonda / yok) — canonical, sitemap ve index.html ile aynı olmalı. www'li: eski site ve Google kaydı bu adreste (18 Kasım 2026 kararı). Derleme, index.html'de farklı bir adres görürse hata verir. */
+  url: 'https://www.formatteknik.com.tr',
   city: 'Çorlu / Tekirdağ',
   address: 'Çobançeşme Mah. Bülent Ecevit Bulvarı, Arka İnşaat B Blok No: 207 D, Çorlu / Tekirdağ',
   /** "Yol tarifi al" — Google Haritalar'da açılır */

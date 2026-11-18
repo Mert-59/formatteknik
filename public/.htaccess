@@ -1,5 +1,9 @@
 # Format Teknik — Apache / cPanel ayarı (diğer barındırıcılarda yok sayılır)
 # Her sayfa ayrı bir HTML dosyasıdır: /urunler adresi urunler.html'i sunar (bkz. README.md "Yayına alma").
+#
+# BU DOSYA ŞABLONDUR. Derlemede dist/.htaccess'e kopyalanır ve aşağıdaki "@YONLENDIRMELER@" satırının yerine
+# alan adı (www + https) ve eski site yönlendirmeleri yazılır — kaynak: vercel.json → "redirects"
+# (bkz. scripts/redirects.mjs). Yönlendirmeleri burada değil, vercel.json'da düzenleyin.
 
 Options -MultiViews
 DirectoryIndex index.html
@@ -9,6 +13,8 @@ ErrorDocument 404 /404.html
 DirectorySlash Off
 
 RewriteEngine On
+
+# @YONLENDIRMELER@
 
 # /urunler.html → /urunler (tek adres, arama motorları için)
 RewriteCond %{THE_REQUEST} \s/([^.?\s]+)\.html[\s?] [NC]

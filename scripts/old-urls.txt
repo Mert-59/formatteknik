@@ -1,0 +1,45 @@
+# Eski sitenin (www.formatteknik.com.tr) adresleri — 18 Kasım 2026'da alındı, değiştirmeyin.
+# Kaynak: eski sitenin /tr/sitemap.xml'i (27 sayfa) ve sayfalardaki PDF bağlantıları (11 dosya).
+# scripts/check-redirects.mjs her birinin vercel.json'daki ÖZEL bir kuralla yeni bir sayfaya gittiğini denetler.
+
+# Sayfalar
+/tr
+/tr/icerik-kurumsal/32
+/tr/iletisim
+/tr/kategori-capak-alma-morrisflex/73
+/tr/kategori-carmon-kilavuz-katalog/60
+/tr/kategori-format/74
+/tr/kategori-format-karbur-matkap-katalog/62
+/tr/kategori-format-katalog/68
+/tr/kategori-format-ozel-takim-freze-katalog/66
+/tr/kategori-havacilik-karnasch/72
+/tr/kategori-hss-matkap/20
+/tr/kategori-izar-katalog/67
+/tr/kategori-karbur-freze/64
+/tr/kategori-karbur-matkap/19
+/tr/kategori-kilavuz/59
+/tr/kategori-mitsubishi-frezeleme/71
+/tr/kategori-mts-katalog/69
+/tr/kategori-olcu-aletleri/7
+/tr/kategori-osg-karbur-matkap-katalog/63
+/tr/kategori-pens-kayar-otomat/54
+/tr/kategori-sanowa-kilavuz-eco-katalog/21
+/tr/kategori-shrink-fit-holder/55
+/tr/kategori-takma-uclu-freze/58
+/tr/kategori-torna-uclari/57
+/tr/urunler
+/tr/urun-mitsubishi-torna/9
+/tr/video-galeri-video-galeri/4
+
+# PDF kataloglar
+/uploads/files/202503/upload_67d1d57d74b91.pdf
+/uploads/files/202503/upload_67d1d99e1add3.pdf
+/uploads/files/202509/upload_68b9a20dd9a6b.pdf
+/uploads/files/202509/upload_68bfca8f4eda4.pdf
+/uploads/files/202512/upload_694a9180df0e1.pdf
+/uploads/files/202512/upload_694e43279773f.pdf
+/uploads/files/202512/upload_694e6468624f0.pdf
+/uploads/files/mitsubishi-matkap.pdf
+/uploads/files/mitsubishi-takma-uclu-frezeler.pdf
+/uploads/files/mitsubishi-tornalama.pdf
+/uploads/files/mitutoyo-katalog.pdf
