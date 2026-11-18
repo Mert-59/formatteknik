@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sıkıştırılmamış asıl kataloglar (yüzlerce MB) — sitedeki sıkıştırılmış hâlleri public/kataloglar/ içinde
+/Kataloglar/

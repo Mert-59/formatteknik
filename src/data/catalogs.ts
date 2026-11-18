@@ -2,6 +2,9 @@
  * PDF kataloglar — ürün grubu sayfalarında ve /kataloglar sayfasında gösterilir.
  *
  * Kaynak: eski sitedeki (formatteknik.com.tr/tr/urunler) kataloglar, 8 Kasım 2026.
+ * 18 Kasım 2026 güncellemesi (proje klasöründeki Kataloglar/ — sıkıştırılmamış asıllar, git'e girmez):
+ * Carmon (Multi Purpose Taps 2024–2025) ve Format HSS (yeni baskı) değişti, Mitsubishi diş uçları (MMT) eklendi.
+ * Klasördeki Mitsubishi ×4, Mitutoyo ve Format kılavuz sitedekilerle aynı içerikte (sayfa sayfa karşılaştırıldı).
  * Büyük dosyalar ekran okuması için Ghostscript ile sıkıştırıldı (/ebook, görseller 150 dpi);
  * metin ve çizimler vektörel kaldı.
  *
@@ -32,6 +35,7 @@ export type Catalog = {
 export const CATALOGS: Record<string, Catalog[]> = {
   'torna-uclari': [
     { id: 'mitsubishi-tornalama', title: 'Tornalama Takımları', brand: 'Mitsubishi Materials', pages: 656, lang: 'Türkçe' },
+    { id: 'mitsubishi-dis-uclari', title: 'MMT Vida Açma Serisi — Diş Tornalama Uçları', brand: 'Mitsubishi Materials', pages: 48, lang: 'Türkçe' },
   ],
   'takma-uclu-freze': [
     { id: 'mitsubishi-takma-uclu-freze', title: 'Takma Uçlu Frezeleme Takımları', brand: 'Mitsubishi Materials', pages: 386, lang: 'Türkçe' },
@@ -39,7 +43,7 @@ export const CATALOGS: Record<string, Catalog[]> = {
   kilavuz: [
     { id: 'format-kilavuz', title: 'Makine Kılavuzları — DIN 371 / 376', brand: 'Format', pages: 33, lang: 'Türkçe' },
     { id: 'sanowa-kilavuz-eco', title: 'Kılavuz Kampanya Kataloğu 2025 (Eco)', brand: 'SANOWA', pages: 8, lang: 'İngilizce' },
-    { id: 'carmon-kilavuz', title: 'Synchro Kılavuzlar — Yeni Ürünler 2024', brand: 'Carmon', pages: 12, lang: 'İtalyanca / İngilizce' },
+    { id: 'carmon-kilavuz', title: 'Çok Amaçlı Kılavuzlar — Katalog 2024–2025', brand: 'Carmon', pages: 20, lang: 'İtalyanca / İngilizce' },
   ],
   'karbur-matkap': [
     { id: 'mitsubishi-karbur-matkap', title: 'Delme Takımları Genel Kataloğu 2025–2027', brand: 'Mitsubishi Materials', pages: 259, lang: 'Türkçe' },
@@ -51,7 +55,7 @@ export const CATALOGS: Record<string, Catalog[]> = {
     { id: 'mitutoyo-olcu-aletleri', title: 'Genel Katalog 2019', brand: 'Mitutoyo', pages: 631, lang: 'Fransızca' },
   ],
   'hss-matkap': [
-    { id: 'format-hss-matkap', title: 'Taşlanmış HSS Matkaplar — DIN 338', brand: 'Format', pages: 15, lang: 'Türkçe' },
+    { id: 'format-hss-matkap', title: 'Taşlanmış HSS Matkaplar — DIN 338', brand: 'Format', pages: 13, lang: 'Türkçe' },
     { id: 'izar-hss-matkap', title: 'Taşlanmış Ekstra Uzun Matkap — DIN 1869', brand: 'IZAR', pages: 1, lang: 'Türkçe', note: 'Tek sayfalık ürün föyü' },
   ],
   'pens-kayar-otomat': [

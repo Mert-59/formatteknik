@@ -20,7 +20,7 @@ export type Guide = {
 export const GUIDES: Record<string, Guide> = {
   'torna-uclari': {
     metaDescription:
-      'Torna uçları: dış çap, iç çap, kanal ve diş tornalama için takma uçlar. PDF katalog; kodu yazın, teklif fişine ekleyin. Format Teknik, Çorlu.',
+      'Torna uçları: dış çap, iç çap, kanal ve diş tornalama için takma uçlar. PDF kataloglar; kodu yazın, teklif fişine ekleyin. Format Teknik, Çorlu.',
     overview: [
       'Torna uçları; dış çap, iç çap, alın, kanal ve diş tornalama operasyonlarında takım tutucuya bağlanan, değiştirilebilir kesici uçlardır. Köşesi aşınan uç döndürülerek yeni bir kesme köşesiyle kullanılmaya devam eder.',
       'Doğru uç; işlenen malzemeye, operasyona (kaba, orta, hassas) ve tezgâhın rijitliğine göre seçilir. Şekil ve ölçüler ISO 1832 standardındaki koda göre tüm üreticilerde aynıdır; talaş kırıcı geometrisi ve kalite (kaplama) ise üreticiye özeldir.',
