@@ -8,6 +8,7 @@
  *    (barındırıcı /urunler adresinde urunler.html'i sunar — ayarlar README.md "Yayına alma" bölümünde).
  * 5) dist/sitemap.xml bu sayfalardan üretilir.
  * 6) Yönlendirmeler (vercel.json) denetlenir; dist/.htaccess ve dist/_redirects yazılır.
+ * 7) Uygulama (PWA): dist/sw.js önceden indirilecek dosya listesiyle doldurulur (scripts/pwa.mjs).
  *
  * Şablonda beklenen etiketlerden biri bulunamazsa derleme hata verir (sessizce yanlış HTML üretmesin).
  */
@@ -15,6 +16,7 @@ import { copyFile, mkdir, readFile, writeFile, rm, stat } from 'node:fs/promises
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 import { hostRulesApache, hostRulesNetlify, loadRedirects, toHtaccess, toNetlify } from './redirects.mjs'
+import { buildServiceWorker } from './pwa.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -140,6 +142,10 @@ await writeFile(
   ['# Netlify — vercel.json\'dan üretildi (scripts/redirects.mjs); burada düzenlemeyin', ...hostRulesNetlify(SITE.url), ...toNetlify(redirects.path), ''].join('\n'),
 )
 console.log(`  ✓ yönlendirmeler: ${redirects.path.length} kural, hedeflerin hepsi sitede var → .htaccess, _redirects`)
+
+// Uygulama (PWA): dist/sw.js'e önceden indirilecek dosyalar ve sürüm yazılır (bkz. scripts/pwa.mjs)
+const sw = await buildServiceWorker(dist, pages.filter((p) => p.route !== '404'))
+console.log(`  ✓ uygulama: sw.js sürüm ${sw.version}, ${sw.count} dosya önceden indirilir (${(sw.bytes / 1048576).toFixed(1)} MB, PDF'ler hariç)`)
 
 await rm(ssrDir, { recursive: true, force: true })
 console.log(`[prerender] ${pages.length} sayfa üretildi; sitemap.xml: ${indexable.length} adres.`)

@@ -66,6 +66,10 @@ Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya b
 - [ ] **DNS:** hem `formatteknik.com.tr` hem `www.formatteknik.com.tr` yeni sunucuyu göstermeli. Sitenin tek adresi `https://www.formatteknik.com.tr`; diğeri buraya yönlenir.
 - [ ] **`npm run build` çalıştırın.** Oluşan `dist/` klasörü yayına alınacak klasördür.
 - [ ] **Yayından önce:** `npm run preview` açıkken `npm run check:redirects` — eski 38 adresin hepsi ✓ olmalı.
+- [ ] **Uygulama (ana ekrana ekleme) — gerçek telefonlarda** (yayından sonra, https adresinde; bilgisayardan taklit edilemez):
+  - Android / Chrome: menüde "Uygulamayı yükle" çıkmalı; simge Format Teknik logosu olmalı; açılınca adres çubuğu olmamalı.
+  - iPhone / Safari: Paylaş → "Ana Ekrana Ekle"; simge ve ad "Format Teknik" olmalı.
+  - Uygulamayı bir kez açtıktan sonra uçak modunda tekrar açın: sayfalar ve teklif fişi çalışmalı (PDF'ler internet ister).
 
 ## Yayın günü
 

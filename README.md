@@ -48,10 +48,21 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
 - `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp mesajı olarak gönderilir. Sunucu gerekmez.
   - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
   - `parse.ts` — "Liste yapıştır": her satır bir kalem; `x10`, `10 adet`, `; 10` veya Excel sekmesi adet olarak okunur.
-  - `CartDrawer.tsx` — fiş çekmecesi: fiş no (`FT-YYAAGG-NNNN`), mesaj önizleme, gönderince "GÖNDERİLDİ" mührü.
+  - `CartDrawer.tsx` — fiş çekmecesi: fiş no (`FT-YYAAGG-NNNN`), mesaj önizleme. WhatsApp açılınca "Mesajı gönderdiniz mi?"
+    sorulur; "GÖNDERİLDİ" mührü müşterinin onayıyla basılır. Gönderilmiş fiş değişirse yeni numara alır.
+  - `History.tsx` — son fişler (en fazla 20) ve "Tekrarla".
   - `CartBar.tsx` — telefonda fişte kalem varken alttaki çubuk.
-  - Ad ve firma cihazda hatırlanır (`ft-customer-v1`); fiş no ve gönderim zamanı `ft-order-v1`'de tutulur.
+  - Hepsi yalnızca cihazda: ad/firma `ft-customer-v1`, fiş `ft-cart-v1` + `ft-order-v1`, son fişler `ft-history-v1`.
 - `src/lib/scroll.ts` — kaydırma kilidi ve modal odak yönetimi (sepet, mobil menü).
+- **Uygulama (PWA)** — site telefona "ana ekrana eklenebilir"; açılış akışı web sitesiyle aynıdır (anasayfa + giriş).
+  - `public/manifest.webmanifest` — ad, renkler, simgeler, kısayollar. Simgeler `public/icons/`, `Formatlogo.pdf`'ten üretildi
+    (logo değişirse simgeler yeniden üretilmeli).
+  - `public/sw.js` — service worker şablonu; `npm run build` önceden indirilecek dosya listesini ve sürümü yazar
+    (`scripts/pwa.mjs`). Sayfalar, kod, stil, logolar (~2 MB) cihaza iner; **PDF kataloglar inmez**, ağdan açılır.
+    İnternet yokken site ve teklif fişi çalışır. Yeni sürüm bir sonraki sayfa açılışında kendiliğinden gelir.
+  - `src/lib/install.ts` + `src/components/InstallInvite.tsx` — "Ana ekrana ekle" daveti: fiş gönderimi onaylanınca bir kez;
+    "şimdi değil" kalıcıdır, altbilgideki bağlantı kalır. iPhone'da "Paylaş → Ana Ekrana Ekle" tarifi gösterilir.
+  - `sw.js` tarayıcıda saklanmamalı: Vercel (`vercel.json`), Apache (`.htaccess`), Netlify (`public/_headers`) ayarları hazır.
 
 ## Yayına alma
 

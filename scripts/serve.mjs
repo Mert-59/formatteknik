@@ -20,6 +20,7 @@ const types = {
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.json': 'application/json',
   '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
   '.pdf': 'application/pdf', // kataloglar: tarayıcı indirmek yerine görüntülesin
+  '.webmanifest': 'application/manifest+json',
 }
 
 const { path: redirects } = await loadRedirects(fileURLToPath(new URL('..', import.meta.url)))

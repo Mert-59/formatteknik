@@ -12,6 +12,14 @@ ErrorDocument 404 /404.html
 # Apache'nin "/urunler → /urunler/" otomatik yönlendirmesi kapalı olmalı.
 DirectorySlash Off
 
+# Uygulama (PWA): sw.js tarayıcıda saklanmasın (güncellemeler gecikmesin); manifest doğru türde sunulsun
+AddType application/manifest+json .webmanifest
+<IfModule mod_headers.c>
+  <Files "sw.js">
+    Header set Cache-Control "no-cache"
+  </Files>
+</IfModule>
+
 RewriteEngine On
 
 # @YONLENDIRMELER@

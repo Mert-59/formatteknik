@@ -17,6 +17,23 @@ export const useIsClient = () =>
     () => false,
   )
 
+const subscribeOnline = (onChange: () => void) => {
+  window.addEventListener('online', onChange)
+  window.addEventListener('offline', onChange)
+  return () => {
+    window.removeEventListener('online', onChange)
+    window.removeEventListener('offline', onChange)
+  }
+}
+
+/** İnternet bağlantısı var mı (tarayıcının bildiği kadarıyla). Sunucuda ve devralmada true. */
+export const useOnline = () =>
+  useSyncExternalStore(
+    subscribeOnline,
+    () => navigator.onLine,
+    () => true,
+  )
+
 /** CSS medya sorgusu. Sunucuda `serverValue` (varsayılan: masaüstü varsayımı, false). */
 export function useMediaQuery(query: string, serverValue = false) {
   const subscribe = useCallback(

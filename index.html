@@ -5,6 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#fbfbfa" />
+    <!-- Uygulama olarak kurulum (PWA): public/manifest.webmanifest; simgeler public/icons/ (Formatlogo.pdf'ten üretildi) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Format Teknik" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <script>
       // 3D giriş, anasayfa her açıldığında kendiliğinden oynar (yenileme dahil; site içi menüyle anasayfaya dönmek sayfayı yüklemez).
       // Hareket azaltma, veri tasarrufu ya da zayıf cihazda oynamaz; altbilgideki "Girişi izle" her zaman çalışır.
@@ -64,6 +69,7 @@
         "description": "Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri tedarikçisi.",
         "url": "https://www.formatteknik.com.tr/",
         "image": "https://www.formatteknik.com.tr/og-image.png",
+        "logo": "https://www.formatteknik.com.tr/icons/icon-512.png",
         "telephone": "+90 544 601 85 38",
         "email": "info@formatteknik.com.tr",
         "address": {
@@ -87,11 +93,13 @@
       }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- crossorigin: uygulama çevrimdışıyken de yazı tipleri önbellekten gelebilsin (bkz. public/sw.js) -->
     <link
       href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
+      crossorigin
     />
   </head>
   <body>

@@ -1,12 +1,14 @@
 import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Camera, Check, ChevronDown, Copy, Phone, Printer, Send, X } from 'lucide-react'
+import { Camera, Check, ChevronDown, Copy, Phone, Printer, Send, WifiOff, X } from 'lucide-react'
 import { SITE, photoWhatsappUrl } from '../config/site'
 import { itemKey, useCart } from './CartContext'
 import { copyText, isLongMessage, printSlip } from './slipUtils'
 import QuickAdd from './QuickAdd'
 import { SendConfirm, SlipItem, Stamp } from './Slip'
 import RecentSlips from './History'
+import InstallInvite from '../components/InstallInvite'
+import { useOnline } from '../lib/client'
 import { useModal, useScrollLock } from '../lib/scroll'
 import { usePresence } from '../lib/presence'
 
@@ -85,6 +87,7 @@ export default function CartDrawer() {
   const [preview, setPreview] = useState(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const close = useCallback(() => setOpen(false), [setOpen])
+  const online = useOnline()
   const message = buildMessage()
 
   useScrollLock(open)
@@ -328,6 +331,8 @@ export default function CartDrawer() {
                       <PrintButton orderNo={orderNo} />
                       <span className="text-[12px] text-muted">Son fişlerinize kaydedildi; değiştirirseniz yeni numara alır.</span>
                     </div>
+                    {/* tam yerinde: "bir dahaki siparişte tek dokunuş" (kurulamıyorsa / kuruluysa / kapatıldıysa çizilmez) */}
+                    <InstallInvite className="mt-4" />
                   </div>
                 ) : openedAt > 0 ? (
                   // WhatsApp açıldı: gönderdi mi? (site bunu kendisi bilemez)
@@ -339,6 +344,12 @@ export default function CartDrawer() {
                   </div>
                 ) : (
                   <>
+                    {!online && (
+                      <p role="status" className="mb-3 flex gap-2 rounded-lg bg-mist px-3.5 py-2.5 text-[13px] leading-relaxed text-graphite">
+                        <WifiOff className="mt-[3px] size-3.5 shrink-0" />
+                        İnternet bağlantınız yok. Fişiniz bu cihazda kayıtlı; bağlantı gelince gönderebilirsiniz.
+                      </p>
+                    )}
                     {isLongMessage(items.length, message) && (
                       <p className="mb-3 rounded-lg bg-mist px-3.5 py-2.5 text-[13px] leading-relaxed text-graphite">
                         Fişiniz uzun. Mesaj WhatsApp’ta eksik görünürse “Kopyala” ile yapıştırabilir ya da PDF’i sohbete ekleyebilirsiniz.

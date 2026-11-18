@@ -27,3 +27,14 @@ if (prerendered) {
   el.textContent = ''
   createRoot(el).render(app)
 }
+
+/*
+ * Uygulama (PWA): service worker yalnızca derlenmiş sitede kaydedilir (geliştirme sunucusunda önbellek karışmasın).
+ * Sayfa tamamen yüklendikten sonra: sitenin kendi açılışıyla (giriş, görseller) bant genişliği için yarışmasın.
+ * Bkz. public/sw.js, scripts/pwa.mjs.
+ */
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  const register = () => navigator.serviceWorker.register('/sw.js').catch(() => {})
+  if (document.readyState === 'complete') register()
+  else window.addEventListener('load', register, { once: true })
+}

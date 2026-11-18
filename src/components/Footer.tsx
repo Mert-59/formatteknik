@@ -4,6 +4,7 @@ import { NAV, SITE } from '../config/site'
 import { InstagramIcon } from './icons'
 import { useIntro } from '../lib/introState'
 import Engrave from './Engrave'
+import { InstallLink } from './InstallInvite'
 
 const YEAR = new Date().getFullYear()
 
@@ -77,6 +78,8 @@ export default function Footer() {
           >
             ↺ GİRİŞİ İZLE
           </button>
+          {/* kurulabiliyorsa (ve henüz kurulmadıysa): uygulama olarak ana ekrana ekle */}
+          <InstallLink />
         </div>
       </div>
 
