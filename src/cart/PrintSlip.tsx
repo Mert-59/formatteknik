@@ -1,9 +1,10 @@
 import { createPortal } from 'react-dom'
 import { SITE } from '../config/site'
 import { useCart } from './CartContext'
-import { p2, stampTime } from './slipUtils'
+import { p2 } from './slipUtils'
 import { useIsClient } from '../lib/client'
 import Logo from '../components/Logo'
+import { Stamp } from './Slip'
 
 /**
  * Teklif fişinin yazdırma / PDF görünümü (A4).
@@ -43,12 +44,8 @@ export default function PrintSlip() {
         </div>
         {/* gönderildiyse mühür: başlıktaki boşlukta durur, hiçbir yazının üstüne binmez */}
         <div className="flex flex-1 justify-center self-center">
-          {sentAt > 0 && (
-            <div className="print-stamp rotate-[-7deg] rounded-[5px] border-2 border-[#c2330f] px-3 py-1 text-center font-mono text-[#c2330f]">
-              <span className="block text-[12pt] font-semibold leading-tight tracking-[0.26em]">GÖNDERİLDİ</span>
-              <span className="block text-[7.5pt] tracking-[0.14em]">{stampTime(sentAt)}</span>
-            </div>
-          )}
+          {/* ekrandaki kaşenin aynısı; baskıda animasyonsuz ve dokusuz (düz mürekkep daha net basılır) */}
+          {sentAt > 0 && <Stamp at={sentAt} animate={false} textured={false} className="print-stamp size-[30mm]" />}
         </div>
         <div className="shrink-0 text-right">
           <p className="whitespace-nowrap font-wide text-[15pt] font-semibold tracking-[-0.01em]">TEKLİF TALEBİ</p>

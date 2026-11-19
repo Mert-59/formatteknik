@@ -76,7 +76,7 @@ function SlipPanel() {
                 </li>
               ))}
             </ul>
-            {sentAt > 0 && <Stamp at={sentAt} className="absolute left-1/2 top-3 -translate-x-1/2" />}
+            {sentAt > 0 && <Stamp at={sentAt} className="absolute left-1/2 top-3 size-[92px] -translate-x-1/2" />}
           </div>
           <div className="border-t border-line p-5">
             <p className="mb-4 flex justify-between text-[14px]">

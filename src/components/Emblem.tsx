@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
 import { GEAR, SPINDLE, TOOL, TOOL_SCALE, TOOL_TOP } from './emblem-paths'
 
 /**
@@ -16,13 +16,35 @@ export default function Emblem({ spin = false, className = '' }: { spin?: boolea
   return (
     <svg viewBox="-50 -50 100 100" aria-hidden focusable="false" fill="currentColor" className={className}>
       {/* fill-box + center: dişli kendi merkezinde (0,0) döner */}
-      <path ref={gear} d={GEAR} fillRule="evenodd" style={{ transformBox: 'fill-box', transformOrigin: 'center' }} />
+      <EmblemMark gearRef={gear} gearStyle={{ transformBox: 'fill-box', transformOrigin: 'center' }} />
+    </svg>
+  )
+}
+
+/**
+ * Amblemin çizimi, başka bir SVG'nin içinde kullanmak için (ör. teklif fişindeki kaşe — cart/Slip.tsx).
+ * Koordinatlar: merkez (0,0), dış yarıçap 48 — yerleştiren `translate(...) scale(...)` ile konumlar.
+ * Dişli `gearRef` ile ayrıca döndürülebilir; iş mili ve freze sabit kalır.
+ * `mono`: freze de currentColor (tek renk baskı, ör. kaşe mürekkebi).
+ */
+export function EmblemMark({
+  gearRef,
+  gearStyle,
+  mono = false,
+}: {
+  gearRef?: RefObject<SVGPathElement | null>
+  gearStyle?: CSSProperties
+  mono?: boolean
+}) {
+  return (
+    <g fill="currentColor" stroke="none">
+      <path ref={gearRef} d={GEAR} fillRule="evenodd" style={gearStyle} />
       {/* küçük boyut düzeltmesi: takım grubu iş milinin tepesinden büyütülür (halkaya asılı kalır) */}
       <g transform={`translate(0 ${TOOL_TOP}) scale(${TOOL_SCALE}) translate(0 ${-TOOL_TOP})`}>
         <path d={SPINDLE} fillRule="evenodd" />
-        <path d={TOOL} fillRule="evenodd" className="fill-accent" />
+        <path d={TOOL} fillRule="evenodd" className={mono ? undefined : 'fill-accent'} />
       </g>
-    </svg>
+    </g>
   )
 }
 

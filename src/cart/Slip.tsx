@@ -1,21 +1,65 @@
+import { useId } from 'react'
 import gsap from 'gsap'
 import { Check, Minus, Plus, X } from 'lucide-react'
 import { itemKey, useCart, type CartItem } from './CartContext'
 import { p2, stampTime } from './slipUtils'
 import { prefersReducedMotion } from '../lib/scroll'
+import { EmblemMark } from '../components/Emblem'
 
-/** Gönderilen fişe basılan mühür: kızıl mürekkep, hafif dönük, dokulu. */
-export function Stamp({ at, className = '' }: { at: number; className?: string }) {
+/**
+ * Gönderilen fişe basılan kaşe: firma kaşesi düzeninde yuvarlak — dış halkada "FORMAT TEKNİK" ve
+ * "KESİCİ TAKIMLAR" (logodaki gibi), ortada amblem, kaşeyi kesen şeritte "GÖNDERİLDİ", altta tarih ve saat.
+ * Tek renk kızıl mürekkep, -7° eğik, dokulu (index.css .stamp). Boyutu çağıran verir (className: size-…).
+ *  - animate: büyükten "basılır" (index.css .anim-stamp); yazdırmada kapalı
+ *  - textured: mürekkep dokusu; yazdırmada kapalı (baskıda düz mürekkep daha net)
+ */
+export function Stamp({ at, className = '', animate = true, textured = true }: { at: number; className?: string; animate?: boolean; textured?: boolean }) {
+  const id = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+  const [date, time] = stampTime(at).split(' · ')
+  const ring = 37.6 // halka yazısının yarıçapı (iki çemberin ortası)
   return (
-    // anim-stamp: büyükten basılır, hafif geri sekip -7° eğik oturur (index.css)
-    <div
-      aria-label={`Gönderildi, ${stampTime(at)}`}
+    <svg
+      viewBox="-50 -50 100 100"
       role="img"
-      className={`stamp anim-stamp pointer-events-none select-none rounded-[6px] border-2 border-accent px-3 py-1.5 text-center font-mono text-accent-ink ${className}`}
+      aria-label={`Gönderildi, ${stampTime(at)}`}
+      fill="none"
+      stroke="currentColor"
+      className={`pointer-events-none select-none text-accent-ink ${textured ? 'stamp' : ''} ${animate ? 'anim-stamp' : '-rotate-7'} ${className}`}
     >
-      <span className="block text-[15px] font-semibold leading-tight tracking-[0.26em]">GÖNDERİLDİ</span>
-      <span className="block text-[9.5px] tracking-[0.14em]">{stampTime(at)}</span>
-    </div>
+      <defs>
+        {/* üst yazı soldan sağa saat yönünde; alt yazı soldan sağa saat yönünün tersine (harfler dik okunur) */}
+        <path id={`${id}-top`} d={`M${-ring} 0A${ring} ${ring} 0 0 1 ${ring} 0`} />
+        <path id={`${id}-bottom`} d={`M${-ring - 5.2} 0A${ring + 5.2} ${ring + 5.2} 0 0 0 ${ring + 5.2} 0`} />
+      </defs>
+      <circle r={47.6} strokeWidth={2.2} />
+      <circle r={44} strokeWidth={0.8} />
+      <circle r={31} strokeWidth={0.8} />
+      <g fill="currentColor" stroke="none" className="font-mono" fontWeight={600} fontSize={7.2} letterSpacing={1.5}>
+        <text>
+          <textPath href={`#${id}-top`} startOffset="50%" textAnchor="middle">
+            FORMAT TEKNİK
+          </textPath>
+        </text>
+        <text>
+          <textPath href={`#${id}-bottom`} startOffset="50%" textAnchor="middle">
+            KESİCİ TAKIMLAR
+          </textPath>
+        </text>
+      </g>
+      {/* amblem: tek renk */}
+      <g transform="translate(0 -18.5) scale(0.23)">
+        <EmblemMark mono />
+      </g>
+      {/* kaşeyi enlemesine kesen şerit: altındaki çemberleri örter */}
+      <rect x={-49.5} y={-7.6} width={99} height={15.2} fill="var(--color-paper)" strokeWidth={1.1} />
+      <text y={3.4} textAnchor="middle" fill="currentColor" stroke="none" className="font-mono" fontWeight={700} fontSize={9.6} letterSpacing={1.6}>
+        GÖNDERİLDİ
+      </text>
+      <g fill="currentColor" stroke="none" className="font-mono" textAnchor="middle" fontSize={6.2} letterSpacing={0.8}>
+        <text y={16.5}>{date}</text>
+        <text y={24}>{time}</text>
+      </g>
+    </svg>
   )
 }
 

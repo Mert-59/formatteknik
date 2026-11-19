@@ -137,7 +137,7 @@ export default function CartDrawer() {
                 </p>
               </div>
               {/* mühür başlığın üstüne basılır; yer kaplamaz */}
-              {sentAt > 0 && items.length > 0 && <Stamp at={sentAt} className="absolute right-[3.75rem] top-1/2 -translate-y-1/2 max-sm:scale-90 sm:right-20" />}
+              {sentAt > 0 && items.length > 0 && <Stamp at={sentAt} className="absolute right-[3.75rem] top-1/2 size-[78px] -translate-y-1/2 sm:right-20 sm:size-[88px]" />}
               <button
                 type="button"
                 onClick={close}
