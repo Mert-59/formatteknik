@@ -219,7 +219,7 @@ export default function Intro({ onReveal, onComplete }: Props) {
         <button
           type="button"
           onClick={() => skipRef.current()}
-          className="hud group absolute bottom-5 right-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.22em] text-fog transition-colors hover:text-snow focus-visible:text-snow focus-visible:outline-none md:bottom-8 md:right-8"
+          className="hud group absolute bottom-2 right-2 flex items-center gap-3 p-3 font-mono text-[11px] tracking-[0.22em] text-fog transition-colors hover:text-snow focus-visible:text-snow focus-visible:outline-none md:bottom-5 md:right-5"
         >
           GİRİŞİ ATLA
           <span className="inline-block h-px w-8 bg-current transition-all group-hover:w-12" />

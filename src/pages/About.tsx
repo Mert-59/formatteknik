@@ -16,6 +16,14 @@ const RANGE = [
 
 const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted'
 
+/*
+ * Sektör ve ürün yelpazesi hücreleri. Telefonda (<640 px) sıkı liste: numara solda, başlık ve metin sağda.
+ * Daha geniş ekranda kart: numara üstte, başlık aşağıda.
+ */
+const CELL = 'grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3 bg-paper px-5 py-4 sm:block sm:p-6 md:p-8'
+const CELL_NO = 'row-span-2 pt-[0.45em] font-mono text-[10px] tracking-[0.2em] text-muted'
+const CELL_TITLE = 'font-wide text-[18px] font-semibold tracking-[-0.02em] sm:mt-10 sm:text-[22px]'
+
 export default function About() {
   usePageMeta(
     'Kurumsal',
@@ -56,14 +64,14 @@ export default function About() {
 
       {/* sektörler */}
       <section className="border-t border-line">
-        <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10">
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
           <SectionHead index={next()} label="SEKTÖRLER" title={<>Hizmet verdiğimiz sektörler.</>} />
           <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {SECTORS.map((s, i) => (
-              <div key={s.name} className="bg-paper p-6 md:p-8">
-                <span className="font-mono text-[10px] tracking-[0.2em] text-muted">S-{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="mt-10 font-wide text-[22px] font-semibold tracking-[-0.02em]">{s.name}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-muted">{s.text}</p>
+              <div key={s.name} className={CELL}>
+                <span className={CELL_NO}>S-{String(i + 1).padStart(2, '0')}</span>
+                <h3 className={CELL_TITLE}>{s.name}</h3>
+                <p className="mt-1 text-[14px] leading-relaxed text-muted sm:mt-2">{s.text}</p>
               </div>
             ))}
           </div>
@@ -71,14 +79,14 @@ export default function About() {
       </section>
 
       <section className="border-t border-line">
-        <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10">
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
           <SectionHead index={next()} label="ÜRÜN YELPAZESİ" title={<>Neler sunuyoruz?</>} />
           <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {RANGE.map((r, i) => (
-              <div key={r.t} className="bg-paper p-6 md:p-8">
-                <span className="font-mono text-[10px] tracking-[0.2em] text-muted">0{i + 1}</span>
-                <h3 className="mt-10 font-wide text-[22px] font-semibold tracking-[-0.02em]">{r.t}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-muted">{r.d}</p>
+              <div key={r.t} className={CELL}>
+                <span className={CELL_NO}>0{i + 1}</span>
+                <h3 className={CELL_TITLE}>{r.t}</h3>
+                <p className="mt-1 text-[14px] leading-relaxed text-muted sm:mt-2">{r.d}</p>
               </div>
             ))}
           </div>
@@ -88,7 +96,7 @@ export default function About() {
       {/* fotoğraflar — data/company.ts'de fotoğraf yoksa hiç görünmez */}
       {COMPANY.photos.length > 0 && (
         <section className="border-t border-line">
-          <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10">
+          <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
             <SectionHead index={next()} label="FOTOĞRAFLAR" title={<>Depomuz ve ekibimiz.</>} />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {COMPANY.photos.map((p, i) => (
@@ -111,7 +119,7 @@ export default function About() {
       {/* referanslar — liste boşsa hiç görünmez */}
       {COMPANY.references.length > 0 && (
         <section className="border-t border-line">
-          <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10">
+          <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
             <SectionHead index={next()} label="REFERANSLAR" title={<>Birlikte çalıştığımız firmalar.</>} />
             {/* esnek satırlar: son satırdaki hücreler genişleyerek boşluğu doldurur, kaç firma olursa olsun gri hücre kalmaz */}
             <ul className="flex flex-wrap gap-px overflow-hidden rounded-2xl border border-line bg-line">

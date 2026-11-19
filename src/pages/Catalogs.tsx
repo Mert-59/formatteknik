@@ -59,7 +59,7 @@ export default function Catalogs() {
                 <p className="mt-2 max-w-xs text-[14px] leading-relaxed text-muted">{c.short}</p>
                 <Link
                   to={categoryPath(c.slug)}
-                  className="group mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-graphite underline-offset-4 hover:text-ink hover:underline"
+                  className="tap group mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-graphite underline-offset-4 hover:text-ink hover:underline"
                 >
                   Grup sayfası <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </Link>

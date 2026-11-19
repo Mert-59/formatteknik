@@ -53,7 +53,7 @@ const meta = (attr, key) => new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^
 const pages = [
   ...NAV.map((n) => n.to),
   ...CATEGORY_PATHS, // /urunler/torna-uclari → urunler/torna-uclari.html
-  ...EXTRA_PATHS, // /kataloglar → kataloglar.html
+  ...EXTRA_PATHS, // menüde olmayan diğer sayfalar (şu an yok)
 ].map((url) => ({ url, route: url, file: url === '/' ? 'index.html' : `${url.slice(1)}.html` }))
 // bilinmeyen her adres için: barındırıcılar 404.html'i "bulunamadı" sayfası olarak sunar
 pages.push({ url: '/__404__', route: '404', file: '404.html' })

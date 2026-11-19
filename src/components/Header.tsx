@@ -135,7 +135,7 @@ export default function Header() {
           <div
             id="mobil-menu"
             data-state={menuPresence.state}
-            className="safe-b fixed inset-0 z-30 flex flex-col bg-paper pt-24 transition-[clip-path] duration-600 ease-curtain [clip-path:inset(0_0_0%_0)] data-[state=closed]:[clip-path:inset(0_0_100%_0)] lg:hidden"
+            className="safe-b fixed inset-0 z-30 flex flex-col overflow-y-auto overscroll-contain bg-paper pt-24 transition-[clip-path] duration-600 ease-curtain [clip-path:inset(0_0_0%_0)] data-[state=closed]:[clip-path:inset(0_0_100%_0)] lg:hidden"
           >
             <nav ref={panel} className="safe-x flex flex-col" aria-label="Mobil menü">
               {NAV.map((item, i) => (

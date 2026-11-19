@@ -91,7 +91,7 @@ export default function CartDrawer() {
   const message = buildMessage()
 
   useScrollLock(open)
-  // Açılışta odak: fiş boşsa ya da "kodla sipariş" istendiyse kod alanı; değilse kapat düğmesi.
+  // Açılışta odak: fiş boşsa ya da "kodla teklif" istendiyse kod alanı; değilse kapat düğmesi.
   useModal(dialog, open, close, start)
   const startAtAdd = focusAdd || items.length === 0
 
@@ -191,7 +191,7 @@ export default function CartDrawer() {
                     </p>
                   </div>
 
-                  <Link to="/urunler" onClick={close} className="mt-6 inline-block text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
+                  <Link to="/urunler" onClick={close} className="tap mt-6 inline-block text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
                     Ürün gruplarına göz atın
                   </Link>
                 </div>
@@ -331,7 +331,7 @@ export default function CartDrawer() {
                       <PrintButton orderNo={orderNo} />
                       <span className="text-[12px] text-muted">Son fişlerinize kaydedildi; değiştirirseniz yeni numara alır.</span>
                     </div>
-                    {/* tam yerinde: "bir dahaki siparişte tek dokunuş" (kurulamıyorsa / kuruluysa / kapatıldıysa çizilmez) */}
+                    {/* tam yerinde: "bir dahaki teklif talebinde tek dokunuş" (kurulamıyorsa / kuruluysa / kapatıldıysa çizilmez) */}
                     <InstallInvite className="mt-4" />
                   </div>
                 ) : openedAt > 0 ? (

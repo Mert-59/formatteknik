@@ -17,7 +17,7 @@ export { NAV, SITE }
 /** Ön-render edilecek ürün grubu sayfaları: /urunler/<grup> */
 export const CATEGORY_PATHS = CATEGORIES.map((c) => categoryPath(c.slug))
 /** Menüde olmayan diğer sayfalar */
-export const EXTRA_PATHS = ['/kataloglar']
+export const EXTRA_PATHS: string[] = [] // /kataloglar artık menüde (NAV)
 /** Derleme denetimi: sitede bağlantısı olan her katalog dosyası (scripts/prerender.mjs varlığını kontrol eder) */
 export const CATALOG_FILES = ALL_CATALOGS.flatMap((c) => [catalogPdf(c), catalogCover(c)])
 

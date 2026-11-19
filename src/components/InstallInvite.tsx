@@ -13,7 +13,7 @@ function IosSteps({ className = '' }: { className?: string }) {
 }
 
 /**
- * Fiş gönderildikten sonra, bir kez: "Bir dahaki siparişte tek dokunuş — ana ekrana ekleyin".
+ * Fiş gönderildikten sonra, bir kez: "Bir dahaki teklif talebinde tek dokunuş — ana ekrana ekleyin".
  * Kurulamıyorsa, zaten kuruluysa ya da kullanıcı "şimdi değil" dediyse hiç çizilmez (bkz. lib/install.ts).
  */
 export default function InstallInvite({ className = '' }: { className?: string }) {
@@ -26,7 +26,7 @@ export default function InstallInvite({ className = '' }: { className?: string }
       <div className="flex items-center gap-3">
         <img src="/icons/icon-192.png" alt="" width={44} height={44} className="size-11 shrink-0 rounded-[10px] border border-line" />
         <p className="min-w-0 flex-1 text-[13px] leading-snug text-graphite">
-          <span className="block font-medium text-ink">Bir dahaki siparişte tek dokunuş</span>
+          <span className="block font-medium text-ink">Bir dahaki teklif talebinde tek dokunuş</span>
           Format Teknik’i ana ekranınıza ekleyin.
         </p>
         <button
@@ -52,12 +52,13 @@ export function InstallLink() {
   const [steps, setSteps] = useState(false)
   if (!mode) return null
   return (
-    <div className="mt-3">
+    // telefonda altbilgide "Girişi izle" ile aynı satırda; iPhone tarifi açılınca alt satıra tam genişlikte iner
+    <div className={`md:mt-3 ${steps ? 'basis-full' : ''}`}>
       <button
         type="button"
         onClick={() => (mode === 'prompt' ? install() : setSteps((s) => !s))}
         aria-expanded={mode === 'ios' ? steps : undefined}
-        className="inline-flex items-center gap-3 rounded-full border border-ink/15 px-4 py-2.5 font-mono text-[11px] tracking-[0.16em] transition-colors hover:border-ink"
+        className="inline-flex h-11 items-center gap-3 rounded-full border border-ink/15 px-4 font-mono text-[11px] tracking-[0.16em] transition-colors hover:border-ink md:h-auto md:py-2.5"
       >
         ↓ ANA EKRANA EKLE
       </button>

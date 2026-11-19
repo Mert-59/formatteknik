@@ -60,7 +60,7 @@ function SlipPanel() {
           <p className="text-[15px] leading-relaxed text-graphite">
             Fişiniz boş. Soldan bir ürün grubunu açın, kodu yazıp <span className="font-medium text-ink">Enter</span>’a basın.
           </p>
-          <button type="button" onClick={() => openCart({ focus: true })} className="mt-5 text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
+          <button type="button" onClick={() => openCart({ focus: true })} className="tap mt-5 text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
             Grubunu bilmiyorum, kodla ekleyeceğim
           </button>
           {/* düzenli alımda: geçen fişi tek dokunuşla tekrarla (geçmiş yoksa çizilmez) */}
@@ -179,8 +179,8 @@ export default function Products() {
             <span className={mono}>
               <span className="text-ink">{String(CATEGORIES.length).padStart(2, '0')}</span> GRUP
             </span>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-graphite">
-              <button type="button" onClick={() => openCart({ focus: true })} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-4 text-[14px] text-graphite md:gap-y-2">
+              <button type="button" onClick={() => openCart({ focus: true })} className="tap inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
                 Grubunu bilmiyorum, kodla ekle <ArrowRight className="size-4" />
               </button>
               {/* kodu da bilmeyen için: fotoğrafı WhatsApp'tan gönder */}
@@ -189,11 +189,11 @@ export default function Products() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Takımın ya da kutusunun fotoğrafını WhatsApp’tan gönderin"
-                className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline"
+                className="tap inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline"
               >
                 <Camera className="size-4" /> Kodu bilmiyorum, fotoğrafla sor
               </a>
-              <Link to="/kataloglar" className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+              <Link to="/kataloglar" className="tap inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
                 <FileText className="size-4" /> Kataloglar (PDF)
               </Link>
             </div>
@@ -245,12 +245,12 @@ export default function Products() {
                           </div>
                           {/* grubun kendi sayfası */}
                           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] font-medium text-graphite">
-                            <Link to={categoryPath(c.slug)} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                            <Link to={categoryPath(c.slug)} className="tap inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
                               {c.name} sayfası <ArrowRight className="size-4" />
                             </Link>
                             {/* grubun PDF kataloğu varsa: grup sayfasındaki katalog bölümüne */}
                             {(CATALOGS[c.slug]?.length ?? 0) > 0 && (
-                              <Link to={`${categoryPath(c.slug)}#katalog`} className="inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
+                              <Link to={`${categoryPath(c.slug)}#katalog`} className="tap inline-flex items-center gap-1.5 underline-offset-4 hover:text-ink hover:underline">
                                 <FileText className="size-4" /> {CATALOGS[c.slug].length > 1 ? `${CATALOGS[c.slug].length} PDF katalog` : 'PDF katalog'}
                               </Link>
                             )}

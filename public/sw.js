@@ -10,7 +10,7 @@
  *    anasayfanın HTML'i: uygulama tek pakettir, adres hangi sayfaysa React onu çizer.
  *  - Kod, stil, görseller: önce önbellek (dosya adları içeriğe göre değişir, eskimez).
  *  - PDF kataloglar: hiç dokunulmaz, doğrudan ağdan (153 MB — telefona kendiliğinden inmesin).
- *  - Google yazı tipleri: önbellekte varsa hemen, arkada tazelenir.
+ *  - Yazı tipleri: sitenin kendi dosyaları (dist/assets), önceden indirilir; Google'a istek gitmez.
  * Hiçbir veri bir sunucuya gönderilmez; yalnızca sitenin kendi dosyaları cihazda önbelleğe alınır.
  */
 const VERSION = '@VERSION@'
@@ -18,7 +18,9 @@ const PRECACHE = [/* @PRECACHE@ */]
 
 const PAGES = 'ft-sayfa-' + VERSION
 const RUNTIME = 'ft-runtime-v1' // önceden indirilmeyen görseller (katalog kapakları vb.)
-const FONTS = 'ft-fonts-v1'
+// Artık kullanılmayan önbellekler — etkinleşince silinir. ft-fonts-v1: Google yazı tipleri (19 Kasım 2026'dan beri
+// yazı tipleri sitenin kendi dosyaları).
+const OLD_CACHES = ['ft-fonts-v1']
 const PRECACHED = new Set(PRECACHE)
 const NETWORK_TIMEOUT = 4000
 
@@ -41,6 +43,7 @@ self.addEventListener('activate', (event) => {
       // Daha eskiler silinir. (caches.keys() oluşturulma sırasıyla döner.)
       const old = (await caches.keys()).filter((k) => k.startsWith('ft-sayfa-') && k !== PAGES)
       await Promise.all(old.slice(0, -1).map((k) => caches.delete(k)))
+      await Promise.all(OLD_CACHES.map((k) => caches.delete(k)))
       await self.clients.claim()
     })(),
   )
@@ -88,18 +91,6 @@ async function cacheFirst(request, cacheName) {
   return response
 }
 
-async function staleWhileRevalidate(request, cacheName) {
-  const cache = await caches.open(cacheName)
-  const hit = await cache.match(request)
-  const fresh = fetch(request)
-    .then((response) => {
-      if (response.ok) cache.put(request, response.clone())
-      return response
-    })
-    .catch(() => hit)
-  return hit || fresh
-}
-
 self.addEventListener('fetch', (event) => {
   const { request } = event
   if (request.method !== 'GET') return
@@ -113,7 +104,4 @@ self.addEventListener('fetch', (event) => {
     }
     return
   }
-
-  if (url.hostname === 'fonts.googleapis.com') return event.respondWith(staleWhileRevalidate(request, FONTS))
-  if (url.hostname === 'fonts.gstatic.com') return event.respondWith(cacheFirst(request, FONTS))
 })

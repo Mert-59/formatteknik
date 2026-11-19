@@ -39,6 +39,7 @@ export const SITE = {
 export const NAV = [
   { to: '/', label: 'Anasayfa' },
   { to: '/urunler', label: 'Ürünlerimiz' },
+  { to: '/kataloglar', label: 'Kataloglar' },
   { to: '/kurumsal', label: 'Kurumsal' },
   { to: '/iletisim', label: 'İletişim' },
 ] as const

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css"; /* yazı tipleri sitenin kendi sunucusundan (bkz. fonts.css) */
 
 @theme {
   /* Site — açık tema: saf beyaz yerine çizim kâğıdının hafif sıcaklığı */
@@ -134,6 +135,27 @@ body {
 }
 .safe-b {
   padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+
+/*
+ * .tap — küçük metin bağlantıları/düğmeleri için dokunma alanı: telefonda ve dokunmatik ekranda
+ * görünmez bir katman tıklama alanını en az 36 px yüksekliğe (ve yanlara 6 px) genişletir; görünüm ve yerleşim değişmez.
+ * 36 px: 24 px eşiğinin rahat üstü; alt alta dizilen bağlantıların alanları çakışmaz.
+ * Not: konumu `relative` yapar — absolute/fixed öğelerde kullanmayın (onlarda dolgu verin).
+ */
+@media (max-width: 767px), (pointer: coarse) {
+  .tap {
+    position: relative;
+  }
+  .tap::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: 50%;
+    height: max(100%, 36px);
+    transform: translateY(-50%);
+  }
 }
 
 /* Altbilgideki dev yazı: "FORMAT TEKNİK" ≈10.3em, kapsayıcıya tam sığar */

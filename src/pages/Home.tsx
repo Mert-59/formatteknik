@@ -71,7 +71,7 @@ function Hero() {
                 onClick={() => openCart({ focus: true })}
                 className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-accent-ink"
               >
-                Kodla sipariş verin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                Kodla teklif isteyin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </button>
               <Link to="/urunler" className="inline-flex items-center rounded-full border border-ink/15 px-5 py-3 text-[14px] font-medium transition-colors hover:border-ink">
                 Ürün grupları
@@ -166,7 +166,7 @@ function Brands() {
 const STEPS = [
   { t: 'Kodu yazın', d: 'Ürün kodunu ya da ölçü ve kullanım amacını yazın. Elinizde liste varsa tek seferde yapıştırın.' },
   { t: 'Fişe ekleyin', d: 'Enter’a basın, sıradakine geçin. Ürün grubu ve marka isteğe bağlı.' },
-  { t: 'WhatsApp’tan gönderin', d: 'Fişiniz numaralı, düzenli bir mesaj olarak hazırlanır; tek dokunuşla bize ulaşır.' },
+  { t: 'WhatsApp’tan gönderin', d: 'Fişiniz numaralı, düzenli bir mesaj olarak hazırlanır; tek dokunuşla bize ulaşır. Fiyat ve teslim süresiyle dönüş yaparız.' },
 ]
 
 function HowToOrder() {
@@ -183,7 +183,7 @@ function HowToOrder() {
   return (
     <section>
       <div ref={root} className="mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-32">
-        <SectionHead index="03" label="TEKLİF FİŞİ" title={<>Üç adımda sipariş.</>} aside={<>Üyelik yok, form yok. Fişiniz bu cihazda saklanır; hazır olduğunda gönderirsiniz.</>} />
+        <SectionHead index="03" label="TEKLİF FİŞİ" title={<>Üç adımda teklif.</>} aside={<>Üyelik yok, form yok. Fişiniz bu cihazda saklanır; hazır olduğunda gönderirsiniz.</>} />
         <div className="relative grid gap-10 md:grid-cols-3 md:gap-6">
           <div className="step-line absolute left-0 right-0 top-[27px] hidden h-px origin-left bg-ink/25 md:block" />
           <div className="step-line-v absolute bottom-10 left-[27px] top-0 w-px origin-top bg-ink/25 md:hidden" />

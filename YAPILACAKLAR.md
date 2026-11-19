@@ -1,12 +1,12 @@
 # Yapılacaklar
 
-Son güncelleme: 18 Kasım 2026
+Son güncelleme: 19 Kasım 2026
 
 ## Sizden beklenen içerik
 
-- [ ] **Carmon logosu.** Şu an marka duvarında yalnızca yazı olarak görünüyor.
-- [ ] **Format logosu.** Şu an marka duvarında yalnızca yazı olarak görünüyor.
-- [ ] **Star Tool logosu, daha büyük sürüm.** Elimizdeki dosya 250×23 piksel. Yüksek çözünürlüklü ekranlarda hafif bulanık görünebilir; SVG ya da en az 1000 piksel genişliğinde PNG gerekiyor.
+- [x] **Carmon logosu.** 19 Kasım 2026: eklendi (arka planı temizlendi → `public/brands/carmon.png`). Elimizdeki dosya küçük (170 px); daha büyük ya da SVG sürüm gelirse değiştirilebilir.
+- [x] **Format logosu.** 19 Kasım 2026: eklendi (`public/brands/format.png`, şeffaf, 576 px — gönderilen JPG'den daha net olduğu için bu kullanıldı).
+- [x] **Star Tool logosu.** 19 Kasım 2026: mevcut dosya (250×23 piksel) olduğu gibi kalıyor.
 - [x] **Paylaşım görseli.** `public/og-image.png` (1200×630) hazırlandı ve `index.html`'e eklendi. Kendi görselinizi kullanmak isterseniz aynı adla değiştirmeniz yeterli.
 - [x] **Çalışma saatleri.** `src/config/site.ts` → `hours` dolduruldu (`Hafta içi 09.00-18.00`).
 - [ ] **Teklife dönüş süresi.** `src/config/site.ts` → `replyTime` (ör. `'aynı iş günü içinde'`). Boşken fiş gönderildikten sonra "en kısa sürede dönüş yapacağız" yazar; doldurulunca bu süre yazılır ve İletişim sayfasında da görünür.
@@ -20,6 +20,9 @@ Boş bırakılan alan sitede **hiç gösterilmez**; doldurdukça ilgili bölüm 
       Yatay, en az 1600 piksel genişlikte fotoğraf önerilir. 3 ya da daha fazla fotoğrafta ilki büyük gösterilir.
 - [ ] **Referans firmalar** (yalnızca izin alınanlar) → `references` listesine:
       `{ name: 'Firma Adı', sector: 'Otomotiv' }` — logo varsa `logo: '/kurumsal/referanslar/firma.svg'` ekleyin.
+
+- [x] **Kuruluş yılı:** 2024 (`foundedYear`, 19 Kasım 2026).
+- [x] **Fotoğraflar:** 19 Kasım 2026 itibarıyla fotoğraf yok; bölüm gizli kalıyor.
 
 Not: `foundedYear` (kuruluş yılı), `deliveryTime` ve `deliveryArea` (teslimat) alanları Kurumsal sayfasındaki rakamlar şeridinde
 gösteriliyordu; şerit 8 Kasım 2026'da kaldırıldı. Bu alanlar şu an sitede **hiçbir yerde görünmez** — doldurmak isterseniz nerede
@@ -69,40 +72,40 @@ Sitenin 8 sayfası masaüstü ve telefonda incelendi. Teknik denetim temiz (kons
 Öncelik sırası en altta. **(siz)** = sizden bilgi/içerik gerekiyor; diğerleri sitede yapılabilir.
 
 ### Tüm sayfalar
-- [ ] **1. Kataloglar üst menüye (ve mobil menüye) eklensin.** Şu an yalnızca altbilgide ve ürünler sayfasında bağlantı olarak var.
-- [ ] **2. Altbilgi telefonda sıkıştırılsın.** ~1,5 ekran; iletişim bilgisi, sayfa listesi, "Girişi izle" ve büyük yazı her sayfada tekrarlanıyor.
-- [ ] **3. Telefonda dokunma alanları büyütülsün.** Altbilgi bağlantıları 16 px, metin içi bağlantılar 20 px yüksek; en az 24 px olmalı.
+- [x] **1. Kataloglar üst menüye (ve mobil menüye) eklensin.** Şu an yalnızca altbilgide ve ürünler sayfasında bağlantı olarak var.
+- [x] **2. Altbilgi telefonda sıkıştırılsın.** ~1,5 ekran; iletişim bilgisi, sayfa listesi, "Girişi izle" ve büyük yazı her sayfada tekrarlanıyor.
+- [x] **3. Telefonda dokunma alanları büyütülsün.** Altbilgi bağlantıları 16 px, metin içi bağlantılar 20 px yüksek; en az 24 px olmalı.
 - [ ] **4. Telefonda hızlı iletişim:** fişte kalem yokken ekranda sabit WhatsApp / Ara düğmesi yok.
 
 ### Anasayfa
 - [ ] **5. Telefonda açılış ekranının alt üçte biri boş.** Doğrudan kod yazma alanı; dönen müşteriye "Son fişiniz: FT-… · Tekrarla".
 - [ ] **6. Güven unsurları (siz):** fotoğraf, kuruluş yılı, teslimat bilgisi, referanslar (bkz. "Kurumsal sayfa bilgileri").
 - [ ] **7. Kataloglar anasayfada hiç geçmiyor.** "12 katalog · 2.217 sayfa" gibi kısa bir şerit.
-- [ ] **8. Dil tutarlılığı:** "Kodla sipariş verin", "Üç adımda sipariş" — süreç bir teklif talebi; "teklif" demek beklentiyi doğru kurar.
-- [ ] **9. Marka duvarı (siz):** Carmon ve Format yalnızca yazı, Star Tool logosu okunmuyor (bkz. "Sizden beklenen içerik").
+- [x] **8. Dil tutarlılığı:** "Kodla sipariş verin", "Üç adımda sipariş" — süreç bir teklif talebi; "teklif" demek beklentiyi doğru kurar.
+- [x] **9. Marka duvarı:** 19 Kasım 2026 — Carmon ve Format logoları eklendi; Star Tool olduğu gibi kalıyor.
 
 ### Ürünlerimiz ve ürün grubu sayfaları
 - [ ] **10. Otomatik grup tahmini:** `CNMG 120408` yazılınca "Torna Uçları", `M8x1.25` yazılınca "Kılavuz" kendiliğinden seçilsin.
 - [ ] **11. Grup sayfalarında "Markalar" bölümü görünmüyor (siz):** marka–grup eşleşmesi boş; genel bakış metinleri taslak.
-- [ ] **12. Telefonda teklif formu ikinci ekranda:** büyük teknik çizim formun önünde; çizim küçültülsün.
+- [x] **12. Telefonda teklif formu ikinci ekranda:** büyük teknik çizim formun önünde; çizim küçültülsün.
 
 ### Kataloglar
 - [ ] **13. 40 MB'ı aşan PDF'ler telefonda mobil veriyle açılıyor:** "Wi-Fi önerilir" notu; Faz 1'de "çevrimdışı kaydet".
 - [ ] **14. Büyük kataloglara içindekiler:** bölümlere doğrudan giden bağlantılar (ör. "Diş tornalama → s. 412"); bölümler elle çıkarılmalı.
 
 ### Kurumsal ve İletişim
-- [ ] **15. Telefonda kartlar çok yüksek:** İletişim'de 5 kart haritadan önce ~2,5 ekran; Kurumsal'daki sektör kartları çok boş. Sıkı liste.
-- [ ] **16. "Şu an açık / kapalı" göstergesi** çalışma saatlerinden.
+- [x] **15. Telefonda kartlar çok yüksek:** İletişim'de 5 kart haritadan önce ~2,5 ekran; Kurumsal'daki sektör kartları çok boş. Sıkı liste.
+- [ ] ~~**16. "Şu an açık / kapalı" göstergesi**~~ — 19 Kasım 2026: gerek görülmedi.
 - [ ] **17. Teklife dönüş süresi (siz):** `src/config/site.ts` → `replyTime` hâlâ boş.
 
 ### Yasal ve teknik
 - [ ] **18. Ticaret unvanı, MERSİS ve KVKK aydınlatma metni (siz) — hukuki risk.** Eski site başlığında unvan "Format Kesici Takım Ltd. Şti."; bilgilerin sitede bulunması gerekebilir.
-- [ ] **19. Yazı tipleri siteye gömülsün:** şu an Google'dan geliyor. Ziyaretçi IP'si Google'a gitmez (KVKK), site hızlanır, uygulama çevrimdışıyken garanti.
+- [x] **19. Yazı tipleri siteye gömülsün:** şu an Google'dan geliyor. Ziyaretçi IP'si Google'a gitmez (KVKK), site hızlanır, uygulama çevrimdışıyken garanti.
 - [ ] **20. Ölçüm:** çerezsiz bir analitik aracıyla gönderilen fiş, indirilen katalog sayıları.
 
 ### Önerilen sıra
 1. Unvan, MERSİS, KVKK metni (18)
-2. Hızlı düzeltmeler: 1, 2, 3, 8, 12, 15, 16, 19
+2. ~~Hızlı düzeltmeler: 1, 2, 3, 8, 12, 15, 19~~ — 19 Kasım 2026 tamamlandı (16 çıkarıldı)
 3. Otomatik grup tahmini (10), anasayfada kod alanı / son fişiniz (5)
 4. Güven içeriği ve marka eşleşmesi (6, 9, 11, 17)
 5. Faz 1: katalogları çevrimdışı kaydet, büyük kataloglara içindekiler (13, 14)

@@ -203,7 +203,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (ready) write(ORDER_KEY, order)
   }, [ready, order])
-  // Ad ve firma bir sonraki siparişte hazır gelsin; not her fişe özeldir.
+  // Ad ve firma bir sonraki fişte hazır gelsin; not her fişe özeldir.
   useEffect(() => {
     if (ready) write(CUSTOMER_KEY, { name: customer.name, company: customer.company })
   }, [ready, customer.name, customer.company])

@@ -29,7 +29,7 @@ export const COMPANY = {
    * (Kurumsal sayfasındaki rakamlar şeridi 8 Kasım 2026'da kaldırıldı). Doldurulsalar da görünmezler.
    */
   /** Kuruluş yılı, ör. 2015. 0 = gösterilmez. */
-  foundedYear: 0 as number,
+  foundedYear: 2024 as number,
   /** Teslimat yapılan bölge, ör. 'Çorlu, Çerkezköy, Ergene OSB ve Tekirdağ geneli'. '' = gösterilmez. */
   deliveryArea: '' as string,
   /** Teslimat süresi, ör. 'Stoktaki ürünlerde aynı gün'. '' = gösterilmez. */

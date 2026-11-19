@@ -248,14 +248,14 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
           </div>
         ) : (
-          <button type="button" onClick={() => setBrandOpen(true)} className="inline-flex items-center gap-1 text-graphite underline-offset-4 hover:text-ink hover:underline">
+          <button type="button" onClick={() => setBrandOpen(true)} className="tap inline-flex items-center gap-1 text-graphite underline-offset-4 hover:text-ink hover:underline">
             <Plus className="size-3.5" /> Marka tercihi
           </button>
         )}
         <button
           type="button"
           onClick={() => switchMode(mode === 'one' ? 'list' : 'one')}
-          className="inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline"
+          className="tap inline-flex items-center gap-1.5 text-graphite underline-offset-4 hover:text-ink hover:underline"
         >
           {mode === 'one' ? (
             <>

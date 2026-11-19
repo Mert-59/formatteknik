@@ -54,11 +54,14 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
   - `CartBar.tsx` — telefonda fişte kalem varken alttaki çubuk.
   - Hepsi yalnızca cihazda: ad/firma `ft-customer-v1`, fiş `ft-cart-v1` + `ft-order-v1`, son fişler `ft-history-v1`.
 - `src/lib/scroll.ts` — kaydırma kilidi ve modal odak yönetimi (sepet, mobil menü).
+- **Yazı tipleri** (Archivo değişken, IBM Plex Mono) sitenin kendi dosyaları: `src/assets/fonts/` + `src/fonts.css` (yalnızca Latin/Latin-ext; OFL lisansı aynı klasörde).
+  Google Fonts'a istek gitmez (KVKK); ana yazı tipi `index.html`'de preload edilir.
+- **Dokunma alanı:** küçük metin bağlantılarına `tap` sınıfı (`index.css`) — telefonda görünüm değişmeden tıklama alanı ≥36 px.
 - **Uygulama (PWA)** — site telefona "ana ekrana eklenebilir"; açılış akışı web sitesiyle aynıdır (anasayfa + giriş).
   - `public/manifest.webmanifest` — ad, renkler, simgeler, kısayollar. Simgeler `public/icons/`, `Formatlogo.pdf`'ten üretildi
     (logo değişirse simgeler yeniden üretilmeli).
   - `public/sw.js` — service worker şablonu; `npm run build` önceden indirilecek dosya listesini ve sürümü yazar
-    (`scripts/pwa.mjs`). Sayfalar, kod, stil, logolar (~2 MB) cihaza iner; **PDF kataloglar inmez**, ağdan açılır.
+    (`scripts/pwa.mjs`). Sayfalar, kod, stil, yazı tipleri, logolar (~2,3 MB) cihaza iner; **PDF kataloglar inmez**, ağdan açılır.
     İnternet yokken site ve teklif fişi çalışır. Yeni sürüm bir sonraki sayfa açılışında kendiliğinden gelir.
   - `src/lib/install.ts` + `src/components/InstallInvite.tsx` — "Ana ekrana ekle" daveti: fiş gönderimi onaylanınca bir kez;
     "şimdi değil" kalıcıdır, altbilgideki bağlantı kalır. iPhone'da "Paylaş → Ana Ekrana Ekle" tarifi gösterilir.

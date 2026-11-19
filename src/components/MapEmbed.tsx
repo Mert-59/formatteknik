@@ -58,7 +58,7 @@ export default function MapEmbed() {
                   href={SITE.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline"
+                  className="tap inline-flex items-center gap-1 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline"
                 >
                   Yol tarifi al <ArrowUpRight className="size-4" />
                 </a>

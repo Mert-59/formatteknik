@@ -17,9 +17,9 @@ export const BRANDS: Brand[] = [
   { name: 'Mitutoyo', logo: '/brands/mitutoyo.svg', ratio: 171.158 / 42.974 },
   { name: 'Morrisflex', logo: '/brands/morrisflex.png', ratio: 184 / 32 },
   { name: 'Karnasch', logo: '/brands/karnasch.png', ratio: 310 / 49 },
-  { name: 'Carmon' },
+  { name: 'Carmon', logo: '/brands/carmon.png', ratio: 155 / 45 },
   { name: 'TEMAK', logo: '/brands/temak.png', ratio: 326 / 104 },
   { name: 'SANOWA', logo: '/brands/sanowa.svg', ratio: 496 / 156.44 },
   { name: 'STARTOOL', logo: '/brands/startool.png', ratio: 250 / 23 },
-  { name: 'Format' },
+  { name: 'Format', logo: '/brands/format.png', ratio: 576 / 162 },
 ]

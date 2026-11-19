@@ -79,10 +79,10 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
 
       {/* başlık */}
-      <section className="mx-auto max-w-[1440px] px-5 pb-14 pt-28 md:px-10 md:pb-20 md:pt-40">
+      <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-24 md:px-10 md:pb-20 md:pt-40">
         <nav aria-label="Sayfa konumu" className={`anim-fade-up flex items-center gap-3 ${mono}`}>
           <span className="size-1.5 rounded-full bg-accent" />
-          <Link to="/urunler" className="hover:text-ink">
+          <Link to="/urunler" className="tap hover:text-ink">
             ÜRÜNLERİMİZ
           </Link>
           <span aria-hidden>/</span>
@@ -92,7 +92,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
           <span className="h-px flex-1 bg-line" />
         </nav>
 
-        <div className="mt-8 grid items-end gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="mt-6 grid items-end gap-6 md:mt-8 md:gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <h1 className="-mt-[0.16em] overflow-hidden pb-[0.06em] pt-[0.16em] font-wide text-[clamp(40px,7vw,104px)] font-semibold leading-[0.92] tracking-[-0.04em]">
               <span className="anim-line-up block [--anim-delay:0.1s]">
@@ -114,8 +114,17 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
               </a>
             )}
           </div>
-          <div className="hero-plot rounded-3xl bg-mist px-6 py-8 text-ink md:px-10 md:py-12 lg:col-span-5">
-            <ToolDrawing kind={c.drawing} className="mx-auto w-full max-w-[420px]" />
+          {/*
+            Telefonda/tablette alçak şerit (teknik resimdeki antet gibi): solda etiket, sağda küçük çizim —
+            teklif formu ilk ekrana çıksın diye. Masaüstünde büyük çizim kutusu.
+          */}
+          <div className="hero-plot flex items-center justify-between gap-4 rounded-2xl bg-mist py-3 pl-5 pr-3 text-ink lg:col-span-5 lg:block lg:rounded-3xl lg:px-10 lg:py-12">
+            <span aria-hidden className={`${mono} leading-relaxed lg:hidden`}>
+              TEKNİK ÇİZİM
+              <br />
+              <span className="text-ink">{p2(index + 1)}</span> / {p2(CATEGORIES.length)}
+            </span>
+            <ToolDrawing kind={c.drawing} className="w-[150px] shrink-0 md:w-[200px] lg:mx-auto lg:w-full lg:max-w-[420px]" />
           </div>
         </div>
       </section>
@@ -133,7 +142,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
               href={photoWhatsappUrl(count ? orderNo : '')}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-flex items-center gap-1.5 text-[13px] text-graphite underline-offset-4 hover:text-ink hover:underline"
+              className="tap mt-1 inline-flex items-center gap-1.5 text-[13px] text-graphite underline-offset-4 hover:text-ink hover:underline"
             >
               <Camera className="size-4" /> Kodu bilmiyorum, fotoğrafla sor
             </a>
@@ -167,7 +176,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
               </div>
               <Link
                 to="/kataloglar"
-                className="group mt-5 inline-flex items-center gap-1.5 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline"
+                className="tap group mt-5 inline-flex items-center gap-1.5 text-[14px] text-graphite underline-offset-4 hover:text-ink hover:underline"
               >
                 Tüm kataloglar <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
@@ -211,7 +220,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
               </li>
             ))}
           </ul>
-          <Link to="/urunler" className="group mt-10 inline-flex items-center gap-2 text-[15px] font-medium underline-offset-4 hover:underline">
+          <Link to="/urunler" className="tap group mt-10 inline-flex items-center gap-2 text-[15px] font-medium underline-offset-4 hover:underline">
             Tüm ürün grupları <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>

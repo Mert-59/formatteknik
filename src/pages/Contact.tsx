@@ -24,21 +24,24 @@ function Card({
   external?: boolean
   className?: string
 }) {
+  // Telefonda (<768 px) sıkı satır: ikon | etiket + değer | ok (açıklama gizli; satırın tamamı bağlantı).
+  // Tablet/masaüstünde kart: üstte ikon ve ok, altta etiket, değer, açıklama.
+  // Satırda ikon ve ok, kart başlığındaki kutunun içinde; telefonda bu kutu `contents` olur ve ızgaraya dağılır.
   return (
     <a
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
-      className={`group flex flex-col justify-between gap-10 bg-paper p-6 transition-colors duration-500 hover:bg-mist md:p-8 ${className}`}
+      className={`group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 bg-paper px-4 py-4 transition-colors duration-500 hover:bg-mist md:flex md:flex-col md:items-stretch md:justify-between md:gap-10 md:p-8 ${className}`}
     >
-      <div className="flex items-center justify-between">
-        <span className="grid size-11 place-items-center rounded-full border border-line text-ink">{icon}</span>
-        <ArrowUpRight className="size-5 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
+      <div className="contents md:flex md:items-center md:justify-between">
+        <span className="col-start-1 row-start-1 grid size-10 place-items-center rounded-full border border-line text-ink md:size-11">{icon}</span>
+        <ArrowUpRight className="col-start-3 row-start-1 size-5 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
       </div>
-      <div>
+      <div className="col-start-2 row-start-1">
         <p className="font-mono text-[10px] tracking-[0.22em] text-muted">{label}</p>
-        <div className="mt-3 text-[18px] font-semibold leading-snug md:text-[20px]">{children}</div>
-        <p className="mt-4 text-[13px] text-muted group-hover:text-ink">{cta}</p>
+        <div className="mt-1 text-[16px] font-semibold leading-snug md:mt-3 md:text-[20px]">{children}</div>
+        <p className="mt-4 text-[13px] text-muted group-hover:text-ink max-md:hidden">{cta}</p>
       </div>
     </a>
   )
@@ -57,7 +60,7 @@ export default function Contact() {
 
       <section className="mx-auto max-w-[1440px] px-5 pb-16 md:px-10">
         {/* 5 kart: geniş ekranda 3 + 2 (adres iki sütun), tablette 2 + 2 + 1 (adres tam satır) — ızgarada boşluk kalmaz */}
-        <div className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2 md:rounded-3xl lg:grid-cols-3">
           <Card icon={<Phone className="size-4" />} label="TELEFON" href={SITE.phoneHref} cta="Hemen arayın">
             {SITE.phoneDisplay}
           </Card>
@@ -71,7 +74,7 @@ export default function Contact() {
             <span className="break-all">{SITE.email}</span>
           </Card>
           <Card icon={<MapPin className="size-4" />} label="ADRES" href={SITE.mapsUrl} cta="Yol tarifi alın" external className="md:col-span-2">
-            <span className="text-[15px] font-medium md:text-[16px]">{SITE.address}</span>
+            <span className="text-[14px] font-medium md:text-[16px]">{SITE.address}</span>
           </Card>
         </div>
         {(SITE.hours || SITE.replyTime) && (
