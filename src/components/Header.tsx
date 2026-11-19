@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { NAV, SITE, whatsappUrl } from '../config/site'
 import { useCart } from '../cart/CartContext'
 import { useModal, useScrollLock } from '../lib/scroll'
+import Emblem from './Emblem'
 import { anim, usePresence } from '../lib/presence'
 
 /**
@@ -44,8 +45,8 @@ function CartButton({ onClick }: { onClick: () => void }) {
       className="group relative flex h-11 items-center gap-2.5 rounded-full max-sm:pl-3.5 md:h-10 border border-ink/15 bg-paper pl-4 pr-1.5 text-[13px] font-medium transition-colors hover:border-ink"
       aria-label={`Teklif fişi, ${count} kalem`}
     >
-      {/* çok dar ekranda (<360 px) simge kalkar, yazı ve sayı kalır */}
-      <ReceiptText className="size-4 shrink-0 max-[359px]:hidden" strokeWidth={1.6} />
+      {/* dar ekranda (<400 px) simge kalkar, yazı ve sayı kalır: başlıkta amblem + yazı + düğmeler sığsın */}
+      <ReceiptText className="size-4 shrink-0 max-[399px]:hidden" strokeWidth={1.6} />
       <span className="whitespace-nowrap">Teklif Fişi</span>
       <span
         ref={badge}
@@ -87,8 +88,15 @@ export default function Header() {
           scrolled || menu ? 'border-b border-line bg-paper/85 backdrop-blur-md' : 'border-b border-transparent'
         }`}
       >
-        <div className="safe-x mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 min-[360px]:gap-4 md:h-20 md:gap-6">
-          <Link to="/" className="shrink-0 text-[16px] min-[360px]:text-[19px] md:text-[21px]" aria-label="Format Teknik — Anasayfa">
+        <div className="safe-x mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-2 min-[360px]:gap-3 min-[400px]:gap-4 md:h-20 md:gap-6">
+          <Link
+            to="/"
+            className="flex shrink-0 items-center gap-[0.35em] text-[16px] min-[360px]:text-[19px] sm:gap-[0.45em] md:text-[21px]"
+            aria-label="Format Teknik — Anasayfa"
+          >
+            {/* amblem: kaydırdıkça dişli döner, üzerine gelince bir diş ilerler (bkz. Emblem). Telefonda iki satırlık
+                yazı bloğu, masaüstünde tek satır yüksekliğinde. Çok dar ekranda (<360 px) sığmadığı için gizli. */}
+            <Emblem spin className="size-[1.7em] shrink-0 max-[359px]:hidden sm:size-[1.55em]" />
             <Wordmark />
           </Link>
 
