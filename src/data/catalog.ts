@@ -27,7 +27,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: 'takma-uclu-freze',
     name: 'Takma Uçlu Freze',
-    short: 'Alın, köşe ve kopya frezeleme gövdeleri.',
+    short: 'Alın, omuz ve kopya frezeleme gövdeleri.',
     description: 'Değiştirilebilir uç kullanan freze gövdeleri ve bu gövdelere uygun kesici uçlar.',
     example: 'Örn. Ø63 alın frezesi',
     drawing: 'facemill',
@@ -52,7 +52,7 @@ export const CATEGORIES: Category[] = [
     slug: 'karbur-freze',
     name: 'Karbür Freze',
     short: 'Parmak frezeler ve özel geometriler.',
-    description: 'Kaba ve hassas işleme için düz, küre ve köşe radyuslu karbür parmak frezeler.',
+    description: 'Kaba ve hassas işleme için düz, küre ve köşe radyüslü karbür parmak frezeler.',
     example: 'Örn. Ø10 4 ağız',
     drawing: 'endmill',
   },

@@ -33,7 +33,7 @@ export const SITE = {
    * Teklif fişine ortalama dönüş süresi — boş bırakılırsa gösterilmez.
    * Fiş gönderildikten sonra "… dönüş yapıyoruz" cümlesinde kullanılır. Örn. 'aynı iş günü içinde'
    */
-  replyTime: '' as string,
+  replyTime: 'aynı iş günü içerisinde' as string,
 } as const
 
 export const NAV = [

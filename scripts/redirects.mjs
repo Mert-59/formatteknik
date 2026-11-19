@@ -12,8 +12,9 @@
  * Hedefte (destination) aynı adlar kullanılabilir: /yeni/:path*
  * Sıra önemlidir: ilk eşleşen kural uygulanır — özel kurallar üstte, genel ("yakalayıcı") kurallar en altta.
  *
- * `has` içeren kurallar (alan adı yönlendirmesi: formatteknik.com.tr → www) yalnızca Vercel'e özeldir;
- * Apache ve Netlify karşılığı aşağıda hostRules* işlevlerinde ayrıca üretilir.
+ * `has` içeren kurallar (alan adı yönlendirmesi: formatteknik.com.tr, formatteknik.com, www.formatteknik.com →
+ * www.formatteknik.com.tr) yalnızca Vercel'e özeldir; Apache ve Netlify karşılığı aşağıda hostRules* işlevlerinde
+ * aynı alan adı listesinden (hostAliases) üretilir. Yeni bir alan adı için vercel.json'a aynı biçimde bir satır yeterli.
  */
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -83,14 +84,25 @@ export function matchRedirect(rules, pathname) {
 
 /* ------------------------------------------------------------ Apache (.htaccess) */
 
-/** Alan adı + https kuralı: formatteknik.com.tr → https://www.formatteknik.com.tr (siteUrl SITE.url'dir) */
-export function hostRulesApache(siteUrl) {
+/** vercel.json alan adı kurallarının kaynak alan adları: ['formatteknik.com.tr', 'formatteknik.com', 'www.formatteknik.com'] */
+export function hostAliases(hostRules) {
+  return hostRules.map((r) => {
+    const h = r.has.find((x) => x.type === 'host')
+    if (!h || r.has.length !== 1 || r.source !== '/:path*' || !r.destination.endsWith('/:path*')) {
+      throw new Error(`[redirects] alan adı kuralı { source: "/:path*", has: [{ type: "host", … }], destination: "https://…/:path*" } biçiminde olmalı: ${JSON.stringify(r)}`)
+    }
+    return h.value
+  })
+}
+
+/** Alan adı + https kuralı: diğer alan adları (aliases) → https://www.formatteknik.com.tr (siteUrl SITE.url'dir) */
+export function hostRulesApache(siteUrl, aliases) {
   const host = new URL(siteUrl).host // www.formatteknik.com.tr
-  const bare = host.replace(/^www\./, '')
   const q = (s) => s.replace(/\./g, '\\.')
   return [
-    `# Tek adres: ${bare} → ${host}, http → https (yerel denemelerde ve başka alan adlarında çalışmaz)`,
-    `RewriteCond %{HTTP_HOST} ^${q(bare)}$ [NC]`,
+    `# Tek adres: ${aliases.join(', ')} → ${host}, http → https (yerel denemelerde ve başka alan adlarında çalışmaz)`,
+    `# Diğer alan adları da bu klasörü göstermeli (cPanel: "Alias" / "Parked" alan adı) ve SSL sertifikaları olmalı.`,
+    `RewriteCond %{HTTP_HOST} ^(${aliases.map(q).join('|')})$ [NC]`,
     `RewriteRule ^ https://${host}%{REQUEST_URI} [R=301,NE,L]`,
     `RewriteCond %{HTTP_HOST} ^${q(host)}$ [NC]`,
     `RewriteCond %{HTTPS} off`,
@@ -110,12 +122,10 @@ export function toHtaccess(rules) {
 
 /* ------------------------------------------------------------ Netlify (_redirects) */
 
-export function hostRulesNetlify(siteUrl) {
+export function hostRulesNetlify(siteUrl, aliases) {
   const host = new URL(siteUrl).host
-  const bare = host.replace(/^www\./, '')
   return [
-    `http://${bare}/* https://${host}/:splat 301!`,
-    `https://${bare}/* https://${host}/:splat 301!`,
+    ...aliases.flatMap((a) => [`http://${a}/* https://${host}/:splat 301!`, `https://${a}/* https://${host}/:splat 301!`]),
     `http://${host}/* https://${host}/:splat 301!`,
   ]
 }

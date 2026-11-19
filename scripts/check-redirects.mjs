@@ -9,7 +9,7 @@
  *   1) vercel.json'da ona ÖZEL bir kural olmalı (genel "yakalayıcı" kurala düşmemeli),
  *   2) sunucu kalıcı yönlendirme (301/308) dönmeli,
  *   3) yönlendirme zinciri, kuralın gösterdiği sayfada 200 ile bitmeli.
- * Ayrıca genel kurallar birkaç örnek adresle, yayındaki sitede de alan adı (www + https) yönlendirmesi denenir.
+ * Ayrıca genel kurallar birkaç örnek adresle, yayındaki sitede de alan adı (www + https, formatteknik.com) yönlendirmesi denenir.
  * Bir sorun varsa çıkış kodu 1'dir.
  */
 import { readFile } from 'node:fs/promises'
@@ -118,6 +118,15 @@ if (new URL(base).host === SITE_HOST) {
     const r = await follow(from).catch(() => null)
     if (r && r.final === 200 && r.finalUrl === expected) ok(`${from.padEnd(52)} → ${expected}`)
     else bad(`${from}: ${r ? `${r.finalUrl} (durum ${r.final})` : 'ulaşılamadı'} — beklenen ${expected}`)
+  }
+  // .com alan adları: DNS'i henüz yeni sunucuyu göstermiyorsa (ulaşılamıyorsa) yalnızca uyarı; ulaşılıp yanlış yere gidiyorsa hata
+  console.log('\nDiğer alan adı: formatteknik.com → https://www.formatteknik.com.tr')
+  for (const from of ['https://formatteknik.com/urunler', 'http://formatteknik.com/urunler', 'https://www.formatteknik.com/urunler', 'http://www.formatteknik.com/']) {
+    const expected = from.endsWith('/urunler') ? `https://${SITE_HOST}/urunler` : `https://${SITE_HOST}/`
+    const r = await follow(from).catch(() => null)
+    if (!r) warnings.push(`${from}: ulaşılamadı — formatteknik.com DNS'i henüz yeni sunucuyu göstermiyor olabilir (ya da SSL sertifikası yok)`)
+    else if (r.final === 200 && r.finalUrl.replace(/\/$/, '') === expected.replace(/\/$/, '')) ok(`${from.padEnd(52)} → ${expected}`)
+    else bad(`${from}: ${r.finalUrl} (durum ${r.final}) — beklenen ${expected}`)
   }
 } else {
   console.log(`\n(Alan adı yönlendirmesi yalnızca yayındaki sitede denenir: npm run check:redirects -- https://${SITE_HOST})`)

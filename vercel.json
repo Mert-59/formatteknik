@@ -19,6 +19,8 @@
   ],
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "formatteknik.com.tr" }], "destination": "https://www.formatteknik.com.tr/:path*", "permanent": true },
+    { "source": "/:path*", "has": [{ "type": "host", "value": "formatteknik.com" }], "destination": "https://www.formatteknik.com.tr/:path*", "permanent": true },
+    { "source": "/:path*", "has": [{ "type": "host", "value": "www.formatteknik.com" }], "destination": "https://www.formatteknik.com.tr/:path*", "permanent": true },
 
     { "source": "/tr", "destination": "/", "permanent": true },
     { "source": "/tr/urunler", "destination": "/urunler", "permanent": true },

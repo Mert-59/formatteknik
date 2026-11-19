@@ -89,6 +89,9 @@ Gereken ayarlar projede hazır:
   `http://` adresler kalıcı olarak buraya yönlenir. Adres `src/config/site.ts` → `url`'de; `index.html`'de başka bir
   adres kalırsa derleme hata verir. DNS'te hem `formatteknik.com.tr` hem `www.formatteknik.com.tr` yeni sunucuyu
   göstermeli (Vercel'de iki alan adı da projeye eklenir).
+- **İkinci alan adı: `formatteknik.com`** (ve `www.formatteknik.com`) aynı sunucuyu gösterir ve kalıcı olarak
+  `https://www.formatteknik.com.tr`'ye yönlenir (adres yolu korunur: `formatteknik.com/urunler` → `…com.tr/urunler`).
+  Kurallar `vercel.json`'daki alan adı satırlarından üç barındırıcı için üretilir; yeni bir alan adı için oraya bir satır eklemek yeter.
 - **Yönlendirmeler tek listede: `vercel.json` → `redirects`.** Vercel bu listeyi doğrudan okur; Apache için
   `dist/.htaccess`, Netlify için `dist/_redirects` derlemede bu listeden üretilir (`scripts/redirects.mjs`).
   `.htaccess`'e elle yönlendirme yazmayın. Hedefi sitede olmayan bir yönlendirme derlemeyi durdurur.

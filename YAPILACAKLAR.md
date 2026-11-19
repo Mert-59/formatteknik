@@ -9,7 +9,7 @@ Son güncelleme: 19 Kasım 2026
 - [x] **Star Tool logosu.** 19 Kasım 2026: mevcut dosya (250×23 piksel) olduğu gibi kalıyor.
 - [x] **Paylaşım görseli.** `public/og-image.png` (1200×630) hazırlandı ve `index.html`'e eklendi. Kendi görselinizi kullanmak isterseniz aynı adla değiştirmeniz yeterli.
 - [x] **Çalışma saatleri.** `src/config/site.ts` → `hours` dolduruldu (`Hafta içi 09.00-18.00`).
-- [ ] **Teklife dönüş süresi.** `src/config/site.ts` → `replyTime` (ör. `'aynı iş günü içinde'`). Boşken fiş gönderildikten sonra "en kısa sürede dönüş yapacağız" yazar; doldurulunca bu süre yazılır ve İletişim sayfasında da görünür.
+- [x] **Teklife dönüş süresi.** 19 Kasım 2026: `aynı iş günü içerisinde` — fiş gönderildikten sonra ve İletişim sayfasında görünüyor. (`src/config/site.ts` → `replyTime` (ör. `'aynı iş günü içinde'`). Boşken fiş gönderildikten sonra "en kısa sürede dönüş yapacağız" yazar; doldurulunca bu süre yazılır ve İletişim sayfasında da görünür.
 
 ### Kurumsal sayfa bilgileri — `src/data/company.ts`
 
@@ -33,19 +33,10 @@ Logo dosyalarını proje klasörüne bırakmanız yeterli. Arka planı temizleni
 
 ### Ürün grubu sayfaları — `src/data/guides.ts`
 
-Dokuz grubun sayfası (`/urunler/torna-uclari` vb.) **taslak** metinlerle yayında. Teknik doğruluğu sizin gözden geçirmeniz gerekiyor;
-her grup için sayfa açıklaması ve "Genel bakış" metni aynı dosyada.
-
-- [ ] Torna Uçları
-- [ ] Takma Uçlu Freze
-- [ ] Kılavuz
-- [ ] Karbür Matkap
-- [ ] Karbür Freze
-- [ ] Ölçü Aletleri
-- [ ] HSS Matkap
-- [ ] Shrink-Fit Holder
-- [ ] Pens Kayar Otomat
-- [ ] **Marka–grup eşleşmesi.** Her grubun `brands` listesine o grupta tedarik edilen markaları yazın, ör. `brands: ['Mitsubishi', 'OSG']`.
+- [ ] **Metinlerin onayı (siz).** 19 Kasım 2026: dokuz grubun "Genel bakış" metinleri teknik olarak kontrol edildi ve düzeltilmiş
+      hâlleri sitede. Neyin neden değiştiği **`METIN-KONTROLU.md`** dosyasında; her grubu okuyup işaretleyin, itiraz ettiğiniz
+      cümleye not düşün.
+- [ ] **Marka–grup eşleşmesi** (19 Kasım 2026: şimdilik önemli değil, ertelendi). Her grubun `brands` listesine o grupta tedarik edilen markaları yazın, ör. `brands: ['Mitsubishi', 'OSG']`.
       Adlar `src/data/brands.ts`'teki gibi yazılmalı; logosu olan marka logosuyla görünür. Liste boşken "Markalar" bölümü gösterilmez.
 
 ### PDF kataloglar — `src/data/catalogs.ts`
@@ -96,7 +87,7 @@ Sitenin 8 sayfası masaüstü ve telefonda incelendi. Teknik denetim temiz (kons
 ### Kurumsal ve İletişim
 - [x] **15. Telefonda kartlar çok yüksek:** İletişim'de 5 kart haritadan önce ~2,5 ekran; Kurumsal'daki sektör kartları çok boş. Sıkı liste.
 - [ ] ~~**16. "Şu an açık / kapalı" göstergesi**~~ — 19 Kasım 2026: gerek görülmedi.
-- [ ] **17. Teklife dönüş süresi (siz):** `src/config/site.ts` → `replyTime` hâlâ boş.
+- [x] **17. Teklife dönüş süresi:** 19 Kasım 2026 — "aynı iş günü içerisinde".
 
 ### Yasal ve teknik
 - [ ] **18. Ticaret unvanı, MERSİS ve KVKK aydınlatma metni (siz) — hukuki risk.** Eski site başlığında unvan "Format Kesici Takım Ltd. Şti."; bilgilerin sitede bulunması gerekebilir.
@@ -117,6 +108,10 @@ Sitenin 8 sayfası masaüstü ve telefonda incelendi. Teknik denetim temiz (kons
 - [ ] **Barındırma hizmetini seçin.** Vercel, Netlify ve cPanel (Apache) için ayarlar hazır, yönlendirmeler de üçünde çalışır (`README.md` → "Yayına alma").
       cPanel'de `dist/` içindeki gizli `.htaccess` dosyası mutlaka yüklenmeli; yoksa eski site adresleri 404 verir.
 - [ ] **DNS:** hem `formatteknik.com.tr` hem `www.formatteknik.com.tr` yeni sunucuyu göstermeli. Sitenin tek adresi `https://www.formatteknik.com.tr`; diğeri buraya yönlenir.
+- [ ] **`formatteknik.com` (ikinci alan adı):** `formatteknik.com` ve `www.formatteknik.com` da yeni sunucuyu göstermeli; ikisi de
+      kalıcı olarak `https://www.formatteknik.com.tr`'ye yönlenir (aynı içerik iki adreste olmasın diye — Google bunu çift içerik sayar).
+      Vercel'de iki alan adı da projeye eklenir (yönlendirme `vercel.json`'da hazır); cPanel'de "Alias / Parked" alan adı olarak eklenip
+      SSL (AutoSSL) açılır. `.com`'un DNS'i ayrı firmadaysa oradan da yeni sunucuya yönlendirilmeli.
 - [ ] **`npm run build` çalıştırın.** Oluşan `dist/` klasörü yayına alınacak klasördür.
 - [ ] **Yayından önce:** `npm run preview` açıkken `npm run check:redirects` — eski 38 adresin hepsi ✓ olmalı.
 - [ ] **Uygulama (ana ekrana ekleme) — gerçek telefonlarda** (yayından sonra, https adresinde; bilgisayardan taklit edilemez):

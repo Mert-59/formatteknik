@@ -15,7 +15,7 @@
 import { copyFile, mkdir, readFile, writeFile, rm, stat } from 'node:fs/promises'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
-import { hostRulesApache, hostRulesNetlify, loadRedirects, toHtaccess, toNetlify } from './redirects.mjs'
+import { hostAliases, hostRulesApache, hostRulesNetlify, loadRedirects, toHtaccess, toNetlify } from './redirects.mjs'
 import { buildServiceWorker } from './pwa.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -124,12 +124,14 @@ for (const r of redirects.host) {
   if (!r.destination.startsWith(SITE.url + '/')) throw new Error(`[prerender] vercel.json alan adı kuralı SITE.url'e (${SITE.url}) gitmiyor: ${r.destination}`)
 }
 
+const aliases = hostAliases(redirects.host) // formatteknik.com.tr, formatteknik.com, www.formatteknik.com
+
 const htaccessPath = join(dist, '.htaccess')
 const htaccess = replaceOnce(
   await readFile(htaccessPath, 'utf8'),
   /^# @YONLENDIRMELER@$/m,
   [
-    ...hostRulesApache(SITE.url),
+    ...hostRulesApache(SITE.url, aliases),
     '',
     `# Eski site adresleri (${redirects.path.length} kural) — vercel.json'dan üretildi, burada düzenlemeyin`,
     ...toHtaccess(redirects.path),
@@ -139,9 +141,9 @@ const htaccess = replaceOnce(
 await writeFile(htaccessPath, htaccess)
 await writeFile(
   join(dist, '_redirects'),
-  ['# Netlify — vercel.json\'dan üretildi (scripts/redirects.mjs); burada düzenlemeyin', ...hostRulesNetlify(SITE.url), ...toNetlify(redirects.path), ''].join('\n'),
+  ['# Netlify — vercel.json\'dan üretildi (scripts/redirects.mjs); burada düzenlemeyin', ...hostRulesNetlify(SITE.url, aliases), ...toNetlify(redirects.path), ''].join('\n'),
 )
-console.log(`  ✓ yönlendirmeler: ${redirects.path.length} kural, hedeflerin hepsi sitede var → .htaccess, _redirects`)
+console.log(`  ✓ yönlendirmeler: ${redirects.path.length} kural, hedeflerin hepsi sitede var; ${aliases.join(', ')} → www.formatteknik.com.tr → .htaccess, _redirects`)
 
 // Uygulama (PWA): dist/sw.js'e önceden indirilecek dosyalar ve sürüm yazılır (bkz. scripts/pwa.mjs)
 const sw = await buildServiceWorker(dist, pages.filter((p) => p.route !== '404'))
