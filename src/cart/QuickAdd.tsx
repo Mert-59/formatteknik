@@ -106,11 +106,15 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
         input.current?.focus()
         return
       }
-      const q = clampQty(Number(qty))
-      add({ ...base, code: c, qty: q })
+      // Kod alanına yazılan adet ("CNMG 120408 x10", "M8 kılavuz 5 adet", "…; 4") — anasayfadaki alanla aynı (parse.ts).
+      // Adet kutusu elle değiştirildiyse o geçerlidir; değiştirilmediyse (1) metindeki adet kullanılır.
+      const typed = clampQty(Number(qty))
+      const line = parseLines(c)[0] ?? { code: c, qty: 1 }
+      const q = typed !== 1 ? typed : line.qty
+      add({ ...base, code: line.code, qty: q })
       // elle "grup yok" denmişse bir sonraki kalemde tahmin yeniden açılır; elle seçilen grup kalır
       if (manual && !slug) setManual(false)
-      setDone((d) => ({ text: `${c} × ${q}`, at: (d?.at ?? 0) + 1 }))
+      setDone((d) => ({ text: `${line.code} × ${q}`, at: (d?.at ?? 0) + 1 }))
       setCode('')
       setQty('1')
       input.current?.focus()

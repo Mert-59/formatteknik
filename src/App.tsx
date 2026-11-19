@@ -26,7 +26,7 @@ function Shell() {
   const navigate = useNavigate()
 
   /*
-   * Giriş anasayfa her açıldığında kendiliğinden oynar (karar index.html'deki betikte); altbilgiden tekrar izlenebilir.
+   * Giriş cihazdaki ilk anasayfa açılışında kendiliğinden oynar (karar index.html'deki betikte); altbilgiden tekrar izlenebilir.
    * Ön-render'daki HTML girişsiz ('done') çizilir; tarayıcıda karar, ekrana çizilmeden hemen önce uygulanır.
    * O ana kadar index.html'deki betik sayfayı koyu zemin + `ft-intro` sınıfıyla gizli tutar (bkz. index.css).
    */

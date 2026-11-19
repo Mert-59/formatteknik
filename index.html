@@ -11,7 +11,8 @@
     <meta name="apple-mobile-web-app-title" content="Format Teknik" />
     <meta name="mobile-web-app-capable" content="yes" />
     <script>
-      // 3D giriş, anasayfa her açıldığında kendiliğinden oynar (yenileme dahil; site içi menüyle anasayfaya dönmek sayfayı yüklemez).
+      // 3D giriş, bu cihazdaki İLK anasayfa açılışında kendiliğinden oynar; izlenince ya da atlanınca bir daha oynamaz
+      // (ft-intro-v2 — bkz. src/lib/introState.ts → markIntroSeen). Dönen müşteri ve ana ekrandaki uygulama doğrudan anasayfayı görür.
       // Hareket azaltma, veri tasarrufu ya da zayıf cihazda oynamaz; altbilgideki "Girişi izle" her zaman çalışır.
       // Anasayfada giriş koyu zeminde başlar: JS yüklenene kadar açık renk parlama olmasın.
       window.__ftIntro = (function () {
@@ -20,6 +21,9 @@
           ;['ft-home-loads', 'ft-visits', 'ft-last-active', 'ft-intro-seen-v1'].forEach(function (k) { localStorage.removeItem(k) })
         } catch (e) {}
         if (location.pathname !== '/') return false
+        try {
+          if (localStorage.getItem('ft-intro-v2')) return false // bu cihazda görüldü
+        } catch (e) {}
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false
         var n = navigator
         if (n.connection && n.connection.saveData) return false

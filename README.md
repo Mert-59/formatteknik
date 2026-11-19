@@ -44,8 +44,9 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
   - Kural: **çizim sırasında** tarayıcıya özgü bir şey (`window`, `localStorage`, ekran genişliği, `#çapa`) okunmaz;
     bunlar `src/lib/client.ts` kancalarıyla ya da `useLayoutEffect` içinde okunur. Aksi hâlde derleme
     hata verir ya da tarayıcı konsolunda "hydration" uyarısı çıkar.
-- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; anasayfa her açıldığında (yenileme dahil) kendiliğinden
-  oynar, diğer sayfalar bu yükü indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
+- `src/intro/` — anasayfanın 3D girişi (Three.js). Ayrı parça olarak yüklenir; cihazdaki **ilk** anasayfa açılışında kendiliğinden
+  oynar, izlenince ya da atlanınca bir daha oynamaz (`ft-intro-v2`, bkz. `src/lib/introState.ts`). Diğer sayfalar bu yükü
+  indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
 - `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp mesajı olarak gönderilir. Sunucu gerekmez.
   - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
   - `guess.ts` — koddan ürün grubu tahmini (`CNMG 120408` → Torna Uçları, `M8x1.25` → Kılavuz). Grup seçilmemişse
@@ -62,7 +63,7 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
 - **Yazı tipleri** (Archivo değişken, IBM Plex Mono) sitenin kendi dosyaları: `src/assets/fonts/` + `src/fonts.css` (yalnızca Latin/Latin-ext; OFL lisansı aynı klasörde).
   Google Fonts'a istek gitmez (KVKK); ana yazı tipi `index.html`'de preload edilir.
 - **Dokunma alanı:** küçük metin bağlantılarına `tap` sınıfı (`index.css`) — telefonda görünüm değişmeden tıklama alanı ≥36 px.
-- **Uygulama (PWA)** — site telefona "ana ekrana eklenebilir"; açılış akışı web sitesiyle aynıdır (anasayfa + giriş).
+- **Uygulama (PWA)** — site telefona "ana ekrana eklenebilir"; açılış akışı web sitesiyle aynıdır (anasayfa; giriş yalnızca cihazdaki ilk açılışta).
   - `public/manifest.webmanifest` — ad, renkler, simgeler, kısayollar. Simgeler `public/icons/`, `Formatlogo.pdf`'ten üretildi
     (logo değişirse simgeler yeniden üretilmeli).
   - `public/sw.js` — service worker şablonu; `npm run build` önceden indirilecek dosya listesini ve sürümü yazar
