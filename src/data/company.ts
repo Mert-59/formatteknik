@@ -25,10 +25,10 @@ export type Reference = {
 
 export const COMPANY = {
   /*
-   * DİKKAT: foundedYear, deliveryArea ve deliveryTime şu an sitede HİÇBİR YERDE gösterilmiyor
+   * DİKKAT: deliveryArea ve deliveryTime şu an sitede HİÇBİR YERDE gösterilmiyor
    * (Kurumsal sayfasındaki rakamlar şeridi 8 Kasım 2026'da kaldırıldı). Doldurulsalar da görünmezler.
    */
-  /** Kuruluş yılı, ör. 2015. 0 = gösterilmez. */
+  /** Kuruluş yılı — Kurumsal sayfasının üst satırında "KURULUŞ 2024" (19 Kasım 2026'dan beri). 0 = gösterilmez. */
   foundedYear: 2024 as number,
   /** Teslimat yapılan bölge, ör. 'Çorlu, Çerkezköy, Ergene OSB ve Tekirdağ geneli'. '' = gösterilmez. */
   deliveryArea: '' as string,

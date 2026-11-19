@@ -1,30 +1,13 @@
-import { useEffect, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { useCart } from './CartContext'
 import { usePresence } from '../lib/presence'
 import { useIntro } from '../lib/introState'
+import { useTyping } from '../lib/typing'
 
 /**
  * Telefonda fiş her sayfada bir dokunuş uzakta: fişte kalem varsa altta ince bir çubuk.
  * Masaüstünde başlıktaki düğme ve ürünler sayfasındaki yan panel bu işi görür.
  */
-/** Bir yazı alanı odaktayken (telefonda klavye açık) çubuk alanın üstüne binmesin. */
-function useTyping() {
-  const [typing, setTyping] = useState(false)
-  useEffect(() => {
-    const isField = (el: EventTarget | null) => el instanceof HTMLElement && el.matches('input, textarea, select, [contenteditable="true"]')
-    const onIn = (e: FocusEvent) => setTyping(isField(e.target))
-    const onOut = (e: FocusEvent) => setTyping(isField(e.relatedTarget))
-    document.addEventListener('focusin', onIn)
-    document.addEventListener('focusout', onOut)
-    return () => {
-      document.removeEventListener('focusin', onIn)
-      document.removeEventListener('focusout', onOut)
-    }
-  }, [])
-  return typing
-}
-
 export default function CartBar() {
   const { count, units, open, orderNo, sentAt, openedAt, openCart } = useCart()
   const { phase } = useIntro()

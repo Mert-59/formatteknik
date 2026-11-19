@@ -21,10 +21,10 @@ Boş bırakılan alan sitede **hiç gösterilmez**; doldurdukça ilgili bölüm 
 - [ ] **Referans firmalar** (yalnızca izin alınanlar) → `references` listesine:
       `{ name: 'Firma Adı', sector: 'Otomotiv' }` — logo varsa `logo: '/kurumsal/referanslar/firma.svg'` ekleyin.
 
-- [x] **Kuruluş yılı:** 2024 (`foundedYear`, 19 Kasım 2026).
+- [x] **Kuruluş yılı:** 2024 (`foundedYear`, 19 Kasım 2026) — Kurumsal sayfasının üst satırında "KURULUŞ 2024".
 - [x] **Fotoğraflar:** 19 Kasım 2026 itibarıyla fotoğraf yok; bölüm gizli kalıyor.
 
-Not: `foundedYear` (kuruluş yılı), `deliveryTime` ve `deliveryArea` (teslimat) alanları Kurumsal sayfasındaki rakamlar şeridinde
+Not: `deliveryTime` ve `deliveryArea` (teslimat) alanları Kurumsal sayfasındaki rakamlar şeridinde
 gösteriliyordu; şerit 8 Kasım 2026'da kaldırıldı. Bu alanlar şu an sitede **hiçbir yerde görünmez** — doldurmak isterseniz nerede
 gösterileceğine birlikte karar verelim.
 Sektör açıklamaları da `src/data/company.ts` içinde (`SECTORS`); dilediğiniz gibi düzenleyebilirsiniz.
@@ -75,17 +75,17 @@ Sitenin 8 sayfası masaüstü ve telefonda incelendi. Teknik denetim temiz (kons
 - [x] **1. Kataloglar üst menüye (ve mobil menüye) eklensin.** Şu an yalnızca altbilgide ve ürünler sayfasında bağlantı olarak var.
 - [x] **2. Altbilgi telefonda sıkıştırılsın.** ~1,5 ekran; iletişim bilgisi, sayfa listesi, "Girişi izle" ve büyük yazı her sayfada tekrarlanıyor.
 - [x] **3. Telefonda dokunma alanları büyütülsün.** Altbilgi bağlantıları 16 px, metin içi bağlantılar 20 px yüksek; en az 24 px olmalı.
-- [ ] **4. Telefonda hızlı iletişim:** fişte kalem yokken ekranda sabit WhatsApp / Ara düğmesi yok.
+- [x] **4. Telefonda hızlı iletişim:** 19 Kasım 2026 — sağ altta "Ara | WhatsApp" hapı (`src/components/QuickContact.tsx`). fişte kalem yokken ekranda sabit WhatsApp / Ara düğmesi yok.
 
 ### Anasayfa
-- [ ] **5. Telefonda açılış ekranının alt üçte biri boş.** Doğrudan kod yazma alanı; dönen müşteriye "Son fişiniz: FT-… · Tekrarla".
+- [x] **5. Telefonda açılış ekranının alt üçte biri boş.** 19 Kasım 2026 — anasayfada kod alanı + "Son fişiniz / Açık fişiniz" (`src/components/HeroCode.tsx`). Doğrudan kod yazma alanı; dönen müşteriye "Son fişiniz: FT-… · Tekrarla".
 - [ ] **6. Güven unsurları (siz):** fotoğraf, kuruluş yılı, teslimat bilgisi, referanslar (bkz. "Kurumsal sayfa bilgileri").
-- [ ] **7. Kataloglar anasayfada hiç geçmiyor.** "12 katalog · 2.217 sayfa" gibi kısa bir şerit.
+- [x] **7. Kataloglar anasayfada hiç geçmiyor.** 19 Kasım 2026 — katalog şeridi (sayılar `catalogs.ts`'ten). "12 katalog · 2.217 sayfa" gibi kısa bir şerit.
 - [x] **8. Dil tutarlılığı:** "Kodla sipariş verin", "Üç adımda sipariş" — süreç bir teklif talebi; "teklif" demek beklentiyi doğru kurar.
 - [x] **9. Marka duvarı:** 19 Kasım 2026 — Carmon ve Format logoları eklendi; Star Tool olduğu gibi kalıyor.
 
 ### Ürünlerimiz ve ürün grubu sayfaları
-- [ ] **10. Otomatik grup tahmini:** `CNMG 120408` yazılınca "Torna Uçları", `M8x1.25` yazılınca "Kılavuz" kendiliğinden seçilsin.
+- [x] **10. Otomatik grup tahmini:** 19 Kasım 2026 — `src/cart/guess.ts`, örnek tablosu `npm run test:guess`. `CNMG 120408` yazılınca "Torna Uçları", `M8x1.25` yazılınca "Kılavuz" kendiliğinden seçilsin.
 - [ ] **11. Grup sayfalarında "Markalar" bölümü görünmüyor (siz):** marka–grup eşleşmesi boş; genel bakış metinleri taslak.
 - [x] **12. Telefonda teklif formu ikinci ekranda:** büyük teknik çizim formun önünde; çizim küçültülsün.
 
@@ -106,7 +106,7 @@ Sitenin 8 sayfası masaüstü ve telefonda incelendi. Teknik denetim temiz (kons
 ### Önerilen sıra
 1. Unvan, MERSİS, KVKK metni (18)
 2. ~~Hızlı düzeltmeler: 1, 2, 3, 8, 12, 15, 19~~ — 19 Kasım 2026 tamamlandı (16 çıkarıldı)
-3. Otomatik grup tahmini (10), anasayfada kod alanı / son fişiniz (5)
+3. ~~Otomatik grup tahmini (10), anasayfada kod alanı / son fişiniz (5)~~ — 19 Kasım 2026 tamamlandı (4 ve 7 ile birlikte)
 4. Güven içeriği ve marka eşleşmesi (6, 9, 11, 17)
 5. Faz 1: katalogları çevrimdışı kaydet, büyük kataloglara içindekiler (13, 14)
 

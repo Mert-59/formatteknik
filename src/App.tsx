@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './cart/CartDrawer'
 import CartBar from './cart/CartBar'
+import QuickContact from './components/QuickContact'
 import PrintSlip from './cart/PrintSlip'
 import { CartProvider } from './cart/CartContext'
 import { IntroContext, markIntroSeen, shouldAutoPlayIntro, type IntroPhase } from './lib/introState'
@@ -90,6 +91,7 @@ function Shell() {
       </main>
       <Footer />
       <CartBar />
+      <QuickContact />
       <CartDrawer />
       <PrintSlip />
       {phase !== 'done' && (

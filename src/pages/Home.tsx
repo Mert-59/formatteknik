@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CATEGORIES } from '../data/catalog'
+import { ALL_CATALOGS, catalogCover } from '../data/catalogs'
 import { categoryPath } from '../config/site'
 import { useIntro } from '../lib/introState'
 import { useCart } from '../cart/CartContext'
@@ -13,6 +14,7 @@ import Caliper from '../components/Caliper'
 import ToolDrawing from '../components/ToolDrawing'
 import SectionHead from '../components/SectionHead'
 import BrandWall from '../components/BrandWall'
+import HeroCode from '../components/HeroCode'
 
 /*
  * Açılış sırası (saf CSS, index.css .anim-*): üst satır → iki başlık satırı → metin → kumpas, 80 ms arayla.
@@ -27,7 +29,6 @@ const line = (i: number) => anim({ delay: START + i * STAGGER, dur: 1.2, y: '110
 
 function Hero() {
   const { phase, run } = useIntro()
-  const { openCart } = useCart()
   const entered = phase !== 'intro'
 
   return (
@@ -65,18 +66,8 @@ function Hero() {
             <p className="text-[16px] leading-relaxed text-graphite">
               Kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri. Havacılık, medikal, otomotiv ve makina sektörlerine.
             </p>
-            <div className="mt-6 flex flex-wrap gap-2.5">
-              <button
-                type="button"
-                onClick={() => openCart({ focus: true })}
-                className="group inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-accent-ink"
-              >
-                Kodla teklif isteyin <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
-              <Link to="/urunler" className="inline-flex items-center rounded-full border border-ink/15 px-5 py-3 text-[14px] font-medium transition-colors hover:border-ink">
-                Ürün grupları
-              </Link>
-            </div>
+            {/* doğrudan kod alanı + dönen müşteriye son fiş (bkz. HeroCode) */}
+            <HeroCode />
           </div>
         </div>
 
@@ -107,7 +98,7 @@ function ProductGrid() {
   )
 
   return (
-    <section ref={root} className="mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-32">
+    <section ref={root} className="mx-auto max-w-[1440px] px-5 pb-10 pt-24 md:px-10 md:pb-12 md:pt-32">
       <SectionHead
         index="01"
         label="ÜRÜN GRUPLARI"
@@ -139,6 +130,78 @@ function ProductGrid() {
           </li>
         ))}
       </ul>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------- KATALOG ŞERİDİ */
+
+/** Yelpazedeki kapaklar (soldan sağa); listede olmayan kimlik atlanır. */
+const FEATURED_COVERS = ['mitsubishi-tornalama', 'mitutoyo-olcu-aletleri', 'format-kilavuz', 'pens-kayar-otomat']
+/** yelpazedeki kapakların duruşu: dönüş (derece) ve yatay kayma (px), --fan ile çarpılır: dar telefonda 0.7, üzerine gelince 1.35 */
+const FAN = [
+  { r: -10, x: -66 },
+  { r: -3.5, x: -22 },
+  { r: 3.5, x: 22 },
+  { r: 10, x: 66 },
+]
+
+/**
+ * Ürün grupları ile markalar arasında kısa bir şerit: katalog ve sayfa sayısı + kapak yelpazesi → /kataloglar.
+ * Sayılar data/catalogs.ts'ten hesaplanır; katalog eklenince kendiliğinden güncellenir.
+ */
+function CatalogStrip() {
+  const pages = ALL_CATALOGS.reduce((n, k) => n + k.pages, 0)
+  // marka adları büyükten küçüğe (sayfa sayısına göre), "Mitsubishi Materials" → "Mitsubishi"
+  const byBrand = new Map<string, number>()
+  for (const k of ALL_CATALOGS) {
+    const b = k.brand.replace(/ Materials$/, '')
+    byBrand.set(b, (byBrand.get(b) ?? 0) + k.pages)
+  }
+  const brands = [...byBrand.entries()].sort((a, b) => b[1] - a[1]).map(([b]) => b)
+  const covers = FEATURED_COVERS.map((id) => ALL_CATALOGS.find((k) => k.id === id)).filter((k) => k !== undefined)
+
+  return (
+    <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10 md:pb-32" aria-label="PDF kataloglar">
+      <Link
+        to="/kataloglar"
+        className="group grid items-center gap-8 md:hover:[--fan:1.35] overflow-hidden rounded-3xl bg-ink p-7 text-paper [--fan:0.7] min-[400px]:[--fan:1] md:grid-cols-[minmax(0,1fr)_auto] md:gap-12 md:p-12"
+      >
+        <div>
+          <p className="font-mono text-[10px] tracking-[0.22em] text-paper/60">PDF KATALOGLAR</p>
+          <p className="mt-3 font-wide text-[clamp(28px,3.4vw,48px)] font-semibold leading-[1.05] tracking-[-0.03em]">
+            {ALL_CATALOGS.length} katalog
+            <span className="text-paper/40 max-md:hidden"> · </span>
+            <br className="md:hidden" />
+            <span className="whitespace-nowrap">{pages.toLocaleString('tr-TR')} sayfa</span>
+          </p>
+          <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-paper/70">
+            {brands.slice(0, 4).join(', ')}
+            {brands.length > 4 ? ` ve ${brands.length - 4} marka daha` : ''}. Kodu katalogda bulun, teklif fişine yazın.
+          </p>
+          <span className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-paper px-5 text-[14px] font-medium text-ink transition-colors group-hover:bg-accent-ink group-hover:text-white">
+            Kataloglara göz atın <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </div>
+
+        {/* kapak yelpazesi — gerçek ilk sayfalar; telefonda metnin altında ortada */}
+        {/* dar ekranda (--fan 0.7) yelpaze daralır: kutu metin sütununu genişletmesin */}
+        <div aria-hidden className="relative mx-auto h-[150px] w-full max-w-[260px] md:h-[190px] md:w-[300px] md:max-w-none">
+          {covers.map((k, i) => (
+            <img
+              key={k.id}
+              src={catalogCover(k)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width={120}
+              height={160}
+              style={{ transform: `translateX(calc(${FAN[i].x}px * var(--fan))) rotate(calc(${FAN[i].r}deg * var(--fan)))` }}
+              className="absolute bottom-0 left-1/2 -ml-[52px] aspect-[3/4] w-[104px] origin-bottom rounded-[6px] bg-mist object-cover object-top shadow-[0_10px_30px_-8px_rgba(0,0,0,0.6)] ring-1 ring-white/10 transition-transform duration-700 ease-out-expo md:-ml-[60px] md:w-[120px]"
+            />
+          ))}
+        </div>
+      </Link>
     </section>
   )
 }
@@ -217,6 +280,7 @@ export default function Home() {
     <>
       <Hero />
       <ProductGrid />
+      <CatalogStrip />
       <Brands />
       <HowToOrder />
     </>

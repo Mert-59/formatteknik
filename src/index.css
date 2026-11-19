@@ -265,3 +265,7 @@ html.js .plot {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
+/* yuvarlak kutu içindeki alan (anasayfa kod alanı): odak çerçevesi kutunun kendisinde (focus-within), alanda değil */
+.pill-field:focus-visible {
+  outline: none;
+}

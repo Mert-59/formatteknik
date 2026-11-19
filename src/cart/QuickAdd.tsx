@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type ClipboardEvent, type 
 import { Check, ChevronDown, ListPlus, Minus, Plus } from 'lucide-react'
 import { useCart } from './CartContext'
 import { parseLines } from './parse'
+import { guessCategory } from './guess'
 import { BRANDS } from '../data/brands'
 import { CATEGORIES } from '../data/catalog'
 
@@ -29,6 +30,10 @@ type Props = {
  * Enter ekler, odak kod alanında kalır: art arda hızlı giriş.
  * "Liste yapıştır": her satır bir kalem (bkz. parse.ts). Kod alanına çok satırlı
  * metin yapıştırılırsa liste kipine kendiliğinden geçer.
+ *
+ * Grup tahmini (guess.ts): müşteri grubu elle seçmediyse, yazdığı koddan grup kendiliğinden seçilir
+ * (CNMG 120408 → Torna Uçları). Chip'e dokunmak tahmini geçersiz kılar. Listede her satır ayrı tahmin edilir.
+ * Sabit gruplu formda (grup sayfası) tahmin yapılmaz: sayfanın grubu geçerlidir.
  */
 export default function QuickAdd({ category, chips = true, autoFocus, showOpen, inputRef }: Props) {
   const { add, addMany, openCart } = useCart()
@@ -42,15 +47,36 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
   const [code, setCode] = useState('')
   const [qty, setQty] = useState('1') // yazarken boş kalabilsin; eklerken sayıya çevrilir
   const [slug, setSlug] = useState(category ?? '')
+  // müşteri chip'e dokundu mu: dokunduysa (seçerek ya da tahmini kaldırarak) tahmin devre dışı
+  const [manual, setManual] = useState(false)
+  const chipRow = useRef<HTMLDivElement>(null)
   const [brand, setBrand] = useState('')
   const [brandOpen, setBrandOpen] = useState(false)
   const [list, setList] = useState('')
   const [error, setError] = useState('')
+  // at: her eklemede artan sayı — mesaj yeniden takılıp animasyon tekrar oynar
   const [done, setDone] = useState<{ text: string; at: number } | null>(null)
 
   const fixed = category !== undefined
-  const cat = CATEGORIES.find((c) => c.slug === (fixed ? category : slug))
+  const guessing = !fixed && !manual
+  const guessed = guessing && mode === 'one' ? guessCategory(code) : null
+  const active = fixed ? category : manual ? slug : (guessed ?? '')
+  const cat = CATEGORIES.find((c) => c.slug === active)
   const parsed = useMemo(() => (mode === 'list' ? parseLines(list) : []), [mode, list])
+  /** listede satır başına grup: seçili (ya da sabit) grup, yoksa satırın kodundan tahmin */
+  const lineCategory = (lineCode: string) =>
+    cat?.name ?? (guessing ? (CATEGORIES.find((c) => c.slug === guessCategory(lineCode))?.name ?? '') : '')
+
+  // tahmin edilen grup yatay kayan chip satırında görünür olsun (sayfa dikey kaymaz)
+  useEffect(() => {
+    const row = chipRow.current
+    const chip = guessed && row?.querySelector<HTMLElement>(`[data-slug="${guessed}"]`)
+    if (!row || !chip) return
+    const left = chip.offsetLeft - row.offsetLeft
+    if (left < row.scrollLeft || left + chip.offsetWidth > row.scrollLeft + row.clientWidth * 0.88) {
+      row.scrollTo({ left: Math.max(0, left - 16), behavior: 'smooth' })
+    }
+  }, [guessed])
 
   useEffect(() => {
     if (autoFocus) input.current?.focus({ preventScroll: true })
@@ -82,7 +108,9 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
       }
       const q = clampQty(Number(qty))
       add({ ...base, code: c, qty: q })
-      setDone({ text: `${c} × ${q}`, at: Date.now() })
+      // elle "grup yok" denmişse bir sonraki kalemde tahmin yeniden açılır; elle seçilen grup kalır
+      if (manual && !slug) setManual(false)
+      setDone((d) => ({ text: `${c} × ${q}`, at: (d?.at ?? 0) + 1 }))
       setCode('')
       setQty('1')
       input.current?.focus()
@@ -92,8 +120,8 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
         area.current?.focus()
         return
       }
-      addMany(parsed.map((p) => ({ ...base, ...p })))
-      setDone({ text: `${parsed.length} kalem eklendi`, at: Date.now() })
+      addMany(parsed.map((p) => ({ ...base, category: lineCategory(p.code), ...p })))
+      setDone((d) => ({ text: `${parsed.length} kalem eklendi`, at: (d?.at ?? 0) + 1 }))
       setList('')
       switchMode('one')
     }
@@ -185,7 +213,11 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
                 {parsed.slice(0, 5).map((p, i) => (
                   <li key={i} className="flex justify-between gap-3">
                     <span className="truncate">{p.code}</span>
-                    <span className="shrink-0 tabular-nums text-graphite">× {p.qty}</span>
+                    <span className="flex shrink-0 gap-3">
+                      {/* grup: seçili değilse satırdan tahmin edilen */}
+                      {!fixed && lineCategory(p.code) && <span className="text-muted max-[359px]:hidden">{lineCategory(p.code)}</span>}
+                      <span className="tabular-nums text-graphite">× {p.qty}</span>
+                    </span>
                   </li>
                 ))}
                 {parsed.length > 5 && <li className="text-muted">+ {parsed.length - 5} kalem daha</li>}
@@ -199,23 +231,43 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
       {!fixed && chips && (
         <div className="mt-4">
           <p className={label} id={`${id}-cats`}>
-            ÜRÜN GRUBU <span className="tracking-normal normal-case">(isteğe bağlı)</span>
+            ÜRÜN GRUBU{' '}
+            <span className="tracking-normal normal-case">
+              {guessed ? (
+                // tahmin: kısa vurgu; chip'e dokunarak değiştirilebilir
+                <span key={guessed} className="anim-fade text-accent-ink [--anim-dur:0.3s]">· koddan tahmin edildi</span>
+              ) : mode === 'list' && guessing ? (
+                '(seçmezseniz her satır için tahmin edilir)'
+              ) : (
+                '(isteğe bağlı)'
+              )}
+            </span>
           </p>
           <div
+            ref={chipRow}
             role="group"
             aria-labelledby={`${id}-cats`}
             className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] mask-[linear-gradient(90deg,#000_88%,transparent)] [&::-webkit-scrollbar]:hidden"
           >
             {CATEGORIES.map((c) => {
-              const on = slug === c.slug
+              const on = active === c.slug
+              const auto = on && !manual
               return (
                 <button
                   key={c.slug}
+                  data-slug={c.slug}
                   type="button"
                   aria-pressed={on}
-                  onClick={() => setSlug(on ? '' : c.slug)}
+                  onClick={() => {
+                    setManual(true)
+                    setSlug(on ? '' : c.slug)
+                  }}
                   className={`h-8 shrink-0 rounded-full border px-3 text-[12.5px] transition-colors ${
-                    on ? 'border-ink bg-ink text-paper' : 'border-line bg-paper text-graphite hover:border-ink/40 hover:text-ink'
+                    auto
+                      ? 'border-ink bg-mist text-ink' // tahmin: çerçeveli, dolu değil — elle seçimden ayırt edilsin
+                      : on
+                        ? 'border-ink bg-ink text-paper'
+                        : 'border-line bg-paper text-graphite hover:border-ink/40 hover:text-ink'
                   }`}
                 >
                   {c.name}

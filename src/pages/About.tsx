@@ -37,6 +37,13 @@ export default function About() {
     <>
       <PageHero
         label="KURUMSAL"
+        aside={
+          COMPANY.foundedYear > 0 && (
+            <span>
+              KURULUŞ <span className="text-ink">{COMPANY.foundedYear}</span>
+            </span>
+          )
+        }
         title={<>Çorlu’dan üretime güç.</>}
         text="Format Teknik; talaşlı imalat sektörüne kesici takımlar, ölçüm ekipmanları ve endüstriyel sarf malzemeleri tedarik eden, Çorlu merkezli bir çözüm ortağıdır."
       />

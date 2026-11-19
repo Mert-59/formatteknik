@@ -11,6 +11,7 @@ npm install
 npm run dev      # geliştirme sunucusu
 npm run build    # tip denetimi + üretim derlemesi + ön-render → dist/
 npm run lint     # oxlint
+npm run test:guess  # ürün grubu tahmininin örnek tablosu (src/cart/guess.ts)
 npm run preview  # dist/ klasörünü yayındaki gibi sunar (temiz adresler, 404.html, yönlendirmeler) → http://localhost:4173
 npm run check:redirects                                 # eski site adreslerini önizlemede dener (preview açıkken)
 npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki sitede (yayından hemen sonra)
@@ -47,11 +48,15 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
   oynar, diğer sayfalar bu yükü indirmez. Altbilgideki "Girişi izle" ile istenildiğinde tekrar oynatılabilir.
 - `src/cart/` — **teklif fişi** (sepet): tarayıcıda saklanır, WhatsApp mesajı olarak gönderilir. Sunucu gerekmez.
   - `QuickAdd.tsx` — tek ekleme formu (çekmece ve ürünler sayfası). Kod + adet zorunlu; grup ve marka isteğe bağlı. Enter ekler.
+  - `guess.ts` — koddan ürün grubu tahmini (`CNMG 120408` → Torna Uçları, `M8x1.25` → Kılavuz). Grup seçilmemişse
+    kendiliğinden seçilir (çerçeveli chip); listede her satır ayrı tahmin edilir. Örnek tablosu: `npm run test:guess`.
   - `parse.ts` — "Liste yapıştır": her satır bir kalem; `x10`, `10 adet`, `; 10` veya Excel sekmesi adet olarak okunur.
   - `CartDrawer.tsx` — fiş çekmecesi: fiş no (`FT-YYAAGG-NNNN`), mesaj önizleme. WhatsApp açılınca "Mesajı gönderdiniz mi?"
     sorulur; "GÖNDERİLDİ" mührü müşterinin onayıyla basılır. Gönderilmiş fiş değişirse yeni numara alır.
   - `History.tsx` — son fişler (en fazla 20) ve "Tekrarla".
-  - `CartBar.tsx` — telefonda fişte kalem varken alttaki çubuk.
+  - `CartBar.tsx` — telefonda fişte kalem varken alttaki çubuk. Fiş boşken yerinde `components/QuickContact.tsx`
+    ("Ara | WhatsApp", ilk ekrandan sonra; İletişim'de ve altbilgide gizli).
+  - Anasayfa açılışında doğrudan kod alanı ve dönen müşteriye son fiş: `components/HeroCode.tsx`.
   - Hepsi yalnızca cihazda: ad/firma `ft-customer-v1`, fiş `ft-cart-v1` + `ft-order-v1`, son fişler `ft-history-v1`.
 - `src/lib/scroll.ts` — kaydırma kilidi ve modal odak yönetimi (sepet, mobil menü).
 - **Yazı tipleri** (Archivo değişken, IBM Plex Mono) sitenin kendi dosyaları: `src/assets/fonts/` + `src/fonts.css` (yalnızca Latin/Latin-ext; OFL lisansı aynı klasörde).
