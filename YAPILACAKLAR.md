@@ -2,7 +2,7 @@
 
 Son güncelleme: 23 Kasım 2026
 
-## 23 Kasım 2026 — kataloglar ve yeni ürün grupları
+## 23 Kasım 2026 oturumunda yapılanlar (özet)
 
 - Karbür Freze: **Boomerang Carbide** 2026 kataloğu (164 s., 62 → 10 MB sıkıştırıldı).
 - Pens Kayar Otomat: Gisstec kataloğu **kaldırıldı**, yerine **Schlenker** (136 s., İngilizce). Eski sitenin Gisstec PDF adresi artık Schlenker kataloğuna yönlenir.
@@ -11,25 +11,27 @@ Son güncelleme: 23 Kasım 2026
   **Pens Tutucular** (Kraft Werkzeuge), **Kater Tarama Kafası** (Teknik Cutting Tools, AKKO, SMOXH). Ürün grubu sayısı 9 → 12, katalog 12 → 20.
 - Kod tahmini yeni gruplar için genişletildi ("BT40 ER32" → Pens Tutucular, "PCLNR 2525 M12" ve "kater" → Kater Tarama Kafası, "ayna" → CNC Torna Aynası).
 - Yeni üç grubun metinleri onaylandı (`METIN-KONTROLU.md` 10–12, 23 Kasım 2026). İlk dokuz grubun onayı hâlâ bekliyor.
+- Teklif ve katalog iyileştirmeleri: 40 MB üstü kataloglarda "Wi-Fi önerilir" notu (13), Ürünlerimiz'de satır grup sayfasına /
+  "+" formu açar (22), telefonda kalem eklenince klavye açılmaz (23), form etiketleri / katalog boyutu / fiş no 12 px (24),
+  masaüstü başlığında telefon (21; e-postayla gönderme şimdilik yok).
+- Büyük kataloglara içindekiler (14): 100 sayfa üstü 9 katalog, `src/data/catalogToc.ts`; derleme sayfa aralığını denetler.
+- Favicon: orijinal logo (`Formatlogo.pdf`), beyaz yuvarlak zeminde — `public/favicon.ico` + `public/icons/favicon-96.png`.
 - Not: Teknik (46 MB) ve AKKO (45 MB) katalogları da 40 MB'ı aşıyor (bkz. madde 13). Teknik kataloğu sıkıştırılamadı:
   Ghostscript bu dosyadaki bir yazı tipini hatalı çiziyor, sıkıştırma rakamları bozabilirdi.
 
 ## Kalan işler — öncelik sırasıyla
 
 **(siz)** = sizden bilgi, içerik ya da karar gerekiyor; diğerleri sitede yapılabilir. Numaralar aşağıdaki geliştirme listesindeki maddelerdir.
+GitHub'daki `main` 23 Kasım 2026 oturum sonunda yereldekiyle aynı.
 
-1. **GitHub'a gönderme.** `main` dalı GitHub'dakinden ileride (logo çalışması, hızlı düzeltmeler ve bu dosya). `git push origin main`.
-   GitHub deposu bir barındırıcıya bağlıysa gönderim yayına çıkar.
-2. **(siz) Ticaret unvanı, MERSİS, KVKK aydınlatma metni (18)** — hukuki risk ve en büyük güven eksiği.
-3. **(siz) Grup sayfası metinlerinin onayı** — `METIN-KONTROLU.md`'deki dokuz grubu okuyup işaretleyin.
-4. **Teklif gönderiminde sürtünme (21, 22, 23).** E-postayla gönderme seçeneği; masaüstü başlığında telefon numarası;
-   Ürünlerimiz'de grup başlığının davranışı; telefonda fiş açılınca klavyenin ekranı kapatması.
-5. **(siz) Güven içeriği (6)** — depo/ofis fotoğrafları, izinli referans firmalar, teslimat bilgisi.
-6. **Kataloglar (13, 14)** — büyük PDF'ler için "Wi-Fi önerilir" notu ve çevrimdışı kaydetme; büyük kataloglara içindekiler.
-7. **Okunabilirlik (24)** — önemli bilgilerin 12 px altında kalan yazıları.
-8. **Ölçüm (20)** — çerezsiz analitik.
-9. **Küçük temizlikler (25, 26)** — Mitsubishi kataloglarının 2. kısmı; kullanılmayan logo dosyaları.
-10. **Yayına alma** — aşağıdaki "Yayına almadan önce" ve "Yayın günü" listeleri.
+1. **(siz) Ticaret unvanı, MERSİS, KVKK aydınlatma metni (18)** — hukuki risk ve en büyük güven eksiği.
+2. **(siz) İlk dokuz grubun metinlerinin onayı** — `METIN-KONTROLU.md` 1–9 (10–12 onaylandı). Onaydan sonra dosya silinebilir.
+3. **(siz) Güven içeriği (6)** — depo/ofis fotoğrafları, izinli referans firmalar, teslimat bilgisi.
+4. **Kataloglarda "çevrimdışı kaydet" (13'ün kalan kısmı).**
+5. **Ölçüm (20)** — çerezsiz analitik.
+6. **Küçük temizlikler (25, 26)** — Mitsubishi Tornalama / Takma Uçlu Freze yeniden sıkıştırma; kullanılmayan `carmon.jpg`, `format.jpg`.
+7. **Yayına alma** — aşağıdaki "Yayına almadan önce" ve "Yayın günü" listeleri. Gerçek telefonda ayrıca: Ürünlerimiz'de "+" ve satır,
+   kod alanından eklemede klavye, alt çubukta fiş numarası, katalog içindekiler bağlantıları (bilgisayarda).
 
 ## 19 Kasım 2026 oturumunda yapılanlar (özet)
 
