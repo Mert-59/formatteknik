@@ -9,7 +9,7 @@ import { CATEGORIES } from '../data/catalog'
 const field = 'w-full rounded-lg border bg-paper px-3.5 py-3 text-[15px] outline-none transition-colors placeholder:text-muted/80'
 const ok = 'border-line focus:border-ink'
 const bad = 'border-accent-ink'
-const label = 'mb-1.5 block font-mono text-[10px] tracking-[0.18em] text-muted'
+const label = 'mb-1.5 block font-mono text-[12px] tracking-[0.1em] text-muted'
 
 const clampQty = (n: number) => Math.max(1, Math.min(9999, Math.round(n) || 1))
 const LIST_EXAMPLE = 'CNMG 120408 x10\nM8x1.25 makine kılavuzu 5 adet\nØ8,5 5xD karbür matkap; 4'
@@ -212,7 +212,7 @@ export default function QuickAdd({ category, chips = true, autoFocus, showOpen, 
           />
           {parsed.length > 0 && (
             <div className="mt-2 rounded-lg bg-mist px-3 py-2.5">
-              <p className="font-mono text-[10px] tracking-[0.18em] text-muted">{parsed.length} KALEM ALGILANDI</p>
+              <p className="font-mono text-[12px] tracking-[0.1em] text-muted">{parsed.length} KALEM ALGILANDI</p>
               <ul className="mt-1.5 space-y-0.5 font-mono text-[12px]">
                 {parsed.slice(0, 5).map((p, i) => (
                   <li key={i} className="flex justify-between gap-3">

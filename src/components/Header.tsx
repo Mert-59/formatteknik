@@ -123,6 +123,17 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-1.5 min-[360px]:gap-2">
+            {/* masaüstünde telefon: geniş ekranda numarayla, 1024–1279 px'de (menü sığsın diye) yalnızca simge.
+                Telefonda başlıkta yok; orada "Ara | WhatsApp" (QuickContact) ve mobil menü var. */}
+            <a
+              href={SITE.phoneHref}
+              className="hidden h-10 items-center gap-2 rounded-full px-3 text-[14px] font-medium tabular-nums text-graphite transition-colors hover:text-ink lg:inline-flex"
+              aria-label={`Telefon: ${SITE.phoneDisplay}`}
+              title={`Arayın: ${SITE.phoneDisplay}`}
+            >
+              <Phone className="size-4 shrink-0" strokeWidth={1.6} aria-hidden />
+              <span className="whitespace-nowrap max-xl:hidden">{SITE.phoneDisplay}</span>
+            </a>
             <CartButton onClick={() => openCart()} />
             <button
               type="button"

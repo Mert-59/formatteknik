@@ -121,7 +121,7 @@ Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya b
 - [x] **12. Telefonda teklif formu ilk ekranda** (çizim alçak şeride döndü). 19 Kasım 2026.
 
 ### Kataloglar
-- [ ] **13. 40 MB'ı aşan PDF'ler telefonda mobil veriyle açılıyor:** "Wi-Fi önerilir" notu; Faz 1'de "çevrimdışı kaydet".
+- [ ] **13. 40 MB'ı aşan PDF'ler telefonda mobil veriyle açılıyor:** ~~"Wi-Fi önerilir" notu~~ (23 Kasım 2026: 40 MB üstü kartlarda, eşik `catalogs.ts` → `LARGE_PDF_MB`); kalan: Faz 1'de "çevrimdışı kaydet".
       19 Kasım incelemesi: Android'de "Görüntüle" çoğu zaman 42–62 MB'lık dosyanın tamamını indiriyor.
 - [ ] **14. Büyük kataloglara içindekiler:** bölümlere doğrudan giden bağlantılar (ör. "Diş tornalama → s. 412"); bölümler elle çıkarılmalı.
 
@@ -141,13 +141,13 @@ Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya b
 ### 19 Kasım 2026 kullanıcı deneyimi incelemesi — kalan bulgular
 - [x] **Adet yazımı:** grup sayfalarında "x20" metinde kalıyor, kalem 1 adet ekleniyordu ("x20 × 1"). Düzeltildi — her form okur.
 - [x] **Giriş her açılışta ~9 sn:** dönen müşteri ve ana ekrandaki uygulama her seferinde bekliyordu. Düzeltildi — yalnızca ilk ziyarette.
-- [ ] **21. Masaüstünde gönderimin tek yolu WhatsApp.** Ofis bilgisayarında WhatsApp Web açık değilse ya da şirket ağı engelliyorsa
+- [ ] **21. Masaüstünde gönderimin tek yolu WhatsApp.** 23 Kasım 2026: e-postayla gönderme şimdilik yapılmayacak (firma kararı); masaüstü başlığına telefon eklendi (1280 px ve üstünde numarayla, 1024–1279 px'de simge). Ofis bilgisayarında WhatsApp Web açık değilse ya da şirket ağı engelliyorsa
       yalnızca "Kopyala" ve "Yazdır / PDF" kalıyor. Fişe "E-postayla gönder" (mailto, aynı mesaj) eklensin; masaüstü başlığına telefon numarası.
-- [ ] **22. Ürünlerimiz'de grup başlığı:** anasayfada aynı görünümdeki kart grup sayfasına gider, Ürünlerimiz'de yerinde form açar;
+- [x] **22. Ürünlerimiz'de grup başlığı** — 23 Kasım 2026: satır grup sayfasına gider, "+" formu açar. anasayfada aynı görünümdeki kart grup sayfasına gider, Ürünlerimiz'de yerinde form açar;
       grup sayfası bağlantısı formun altında küçük kalıyor. Başlık grup sayfasına gitsin, "+" formu açsın.
-- [ ] **23. Telefonda fiş açılınca klavye:** anasayfadaki kod alanından eklenince fiş kod kutusuna odaklı açılıyor; klavye eklenen kalemi
+- [x] **23. Telefonda fiş açılınca klavye** — 23 Kasım 2026: kalem eklenerek açılınca dokunmatik ekranda odak verilmez (masaüstünde verilir). anasayfadaki kod alanından eklenince fiş kod kutusuna odaklı açılıyor; klavye eklenen kalemi
       ve "WhatsApp ile gönder"i kapatıyor. Kalem eklenerek açılınca odak kutuya verilmesin (boş fiş açılırken verilsin).
-- [ ] **24. Küçük yazılar:** telefonda metin öğelerinin ~üçte biri 12 px altında. Dekoratif etiketler sorun değil; form etiketleri
+- [x] **24. Küçük yazılar** — 23 Kasım 2026: form etiketleri, katalog boyutları ve fiş numarası 12 px. telefonda metin öğelerinin ~üçte biri 12 px altında. Dekoratif etiketler sorun değil; form etiketleri
       ("ÜRÜN KODU / TARİF", "ADET"), katalog boyutları ("42,6 MB") ve fiş numarası en az 12 px olsun (45 yaş üstü kullanıcılar).
 - [ ] **25. Mitsubishi kataloglarının 2. kısmı:** Tornalama (sitede 42,6 MB) ve Takma Uçlu Freze (31,8 MB) yeni asıllardan
       (`Kataloglar/`) yeniden sıkıştırılmadı; diğerleri 18 Kasım'da yenilendi. İçerik aynı, yalnızca kalite/boyut farkı olabilir.

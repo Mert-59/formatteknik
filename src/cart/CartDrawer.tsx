@@ -14,7 +14,7 @@ import { usePresence } from '../lib/presence'
 
 const field =
   'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-[14px] outline-none transition-colors placeholder:text-muted focus:border-ink'
-const label = 'mb-1.5 block font-mono text-[10px] tracking-[0.18em] text-muted'
+const label = 'mb-1.5 block font-mono text-[12px] tracking-[0.1em] text-muted'
 const mono = 'font-mono text-[10px] tracking-[0.22em] text-muted'
 
 /** WhatsApp biçimini (*kalın*) önizlemede gerçekten kalın gösterir. */
@@ -124,7 +124,7 @@ export default function CartDrawer() {
             <div className="relative flex items-start justify-between gap-4 border-b border-line px-5 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:py-5">
               <div className="min-w-0">
                 <p className={`${mono} whitespace-nowrap`}>
-                  TEKLİF FİŞİ{orderNo && <span className="text-ink"> · {orderNo}</span>}
+                  TEKLİF FİŞİ{orderNo && <span className="text-[12px] tracking-[0.04em] text-ink"> · {orderNo}</span>}
                 </p>
                 <p className="mt-1.5 whitespace-nowrap text-[19px] font-semibold tracking-[-0.01em]">
                   {count ? (

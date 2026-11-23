@@ -30,8 +30,10 @@ export default function CartBar() {
               className="flex h-14 w-full items-center justify-between gap-3 rounded-full bg-ink pl-5 pr-2 text-paper shadow-[0_12px_40px_rgba(15,18,21,0.25)]"
             >
               <span className="min-w-0 text-left">
-                <span className="block truncate whitespace-nowrap font-mono text-[9.5px] tracking-[0.14em] text-paper/55">
-                  {sentAt ? 'GÖNDERİLDİ' : openedAt ? 'ONAYINIZ BEKLENİYOR' : 'TEKLİF FİŞİ'} · {orderNo}
+                {/* fiş numarası okunur boyda (12 px) ve her zaman görünür; dar ekranda kısalan durum yazısıdır */}
+                <span className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap font-mono text-paper/55">
+                  <span className="truncate text-[9.5px] tracking-[0.14em]">{sentAt ? 'GÖNDERİLDİ' : openedAt ? 'ONAYINIZ BEKLENİYOR' : 'TEKLİF FİŞİ'} ·</span>
+                  <span className="shrink-0 text-[12px] tracking-[0.02em] text-paper/80">{orderNo}</span>
                 </span>
                 <span className="block text-[14px] font-medium">
                   {count} kalem <span className="text-paper/60">· {units} adet</span>

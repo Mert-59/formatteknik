@@ -52,13 +52,13 @@ function SlipPanel() {
         <span className="size-1.5 rounded-full bg-accent" />
         <span className={mono}>TEKLİF FİŞİ</span>
         <span className="h-px flex-1 bg-line" />
-        {orderNo && <span className="font-mono text-[11px] text-ink">{orderNo}</span>}
+        {orderNo && <span className="font-mono text-[12px] text-ink">{orderNo}</span>}
       </div>
 
       {count === 0 ? (
         <div className="px-6 py-8">
           <p className="text-[15px] leading-relaxed text-graphite">
-            Fişiniz boş. Soldan bir ürün grubunu açın, kodu yazıp <span className="font-medium text-ink">Enter</span>’a basın.
+            Fişiniz boş. Soldan bir grubun yanındaki + ile formu açın, kodu yazıp <span className="font-medium text-ink">Enter</span>’a basın.
           </p>
           <button type="button" onClick={() => openCart({ focus: true })} className="tap mt-5 text-[14px] font-medium underline underline-offset-4 hover:text-accent-ink">
             Grubunu bilmiyorum, kodla ekleyeceğim
@@ -170,7 +170,7 @@ export default function Products() {
       <PageHero
         label="ÜRÜNLERİMİZ"
         title={<>Ürün grupları</>}
-        text="Bir grubu açın, kodu ya da tarifi yazın, Enter’a basın. Fişiniz hazır olunca tek dokunuşla WhatsApp’tan gönderin."
+        text="Grubun yanındaki + ile formu açın, kodu ya da tarifi yazın, Enter’a basın. Fişiniz hazır olunca tek dokunuşla WhatsApp’tan gönderin."
       />
 
       <div className="mx-auto grid max-w-[1440px] items-start gap-10 px-5 pb-28 md:px-10 lg:grid-cols-12 lg:gap-12">
@@ -204,13 +204,11 @@ export default function Products() {
               const isOpen = c.slug === openSlug
               return (
                 <li key={c.slug} id={c.slug} className={`cat transition-colors duration-300 ${isOpen ? 'bg-mist' : 'bg-paper'}`}>
-                  <button
-                    type="button"
-                    onClick={() => toggle(c.slug)}
-                    aria-expanded={isOpen}
-                    aria-controls={`${c.slug}-ekle`}
-                    className="group grid w-full grid-cols-[88px_minmax(0,1fr)] items-start gap-4 p-4 text-left sm:grid-cols-[168px_minmax(0,1fr)] sm:items-center sm:gap-6 md:p-6"
-                  >
+                  {/*
+                    Satırın tamamı grup sayfasına gider (anasayfadaki kartla aynı davranış): başlıktaki bağlantı satırı kaplar.
+                    "+" düğmesi bağlantının üstündedir ve teklif formunu yerinde açıp kapatır.
+                  */}
+                  <div className="group relative grid w-full grid-cols-[88px_minmax(0,1fr)] items-start gap-4 p-4 text-left sm:grid-cols-[168px_minmax(0,1fr)] sm:items-center sm:gap-6 md:p-6">
                     <div
                       className={`rounded-xl px-2 py-3 transition-colors duration-300 sm:px-3 sm:py-4 ${
                         isOpen ? 'bg-paper text-accent-ink' : 'bg-mist text-ink group-hover:text-accent-ink'
@@ -223,20 +221,29 @@ export default function Products() {
                         <span className="font-mono text-[10px] tracking-[0.2em] text-muted">
                           <span className="text-ink">{String(i + 1).padStart(2, '0')}</span> / {String(CATEGORIES.length).padStart(2, '0')}
                         </span>
-                        <span
-                          className={`grid size-9 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
-                            isOpen ? 'rotate-45 border-ink bg-ink text-paper' : 'border-ink/15 group-hover:border-ink'
+                        <button
+                          type="button"
+                          onClick={() => toggle(c.slug)}
+                          aria-expanded={isOpen}
+                          aria-controls={`${c.slug}-ekle`}
+                          aria-label={`${c.name}: teklif formunu ${isOpen ? 'kapat' : 'aç'}`}
+                          title={isOpen ? 'Formu kapat' : 'Bu gruptan teklif iste'}
+                          className={`relative z-10 grid size-10 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
+                            isOpen ? 'rotate-45 border-ink bg-ink text-paper' : 'border-ink/15 bg-paper hover:border-ink hover:bg-ink hover:text-paper'
                           }`}
-                          aria-hidden
                         >
-                          <Plus className="size-4" />
-                        </span>
+                          <Plus className="size-4" aria-hidden />
+                        </button>
                       </div>
-                      <h2 className="mt-1 font-wide text-[clamp(20px,2.2vw,28px)] font-semibold leading-tight tracking-[-0.02em]">{c.name}</h2>
+                      <h2 className="mt-1 font-wide text-[clamp(20px,2.2vw,28px)] font-semibold leading-tight tracking-[-0.02em]">
+                        <Link to={categoryPath(c.slug)} className="underline-offset-4 after:absolute after:inset-0 group-hover:underline">
+                          {c.name}
+                        </Link>
+                      </h2>
                       <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-muted md:text-[15px]">{c.description}</p>
                       <span className="mt-3 block font-mono text-[11px] tracking-[0.06em] text-muted max-sm:hidden">{c.example}</span>
                     </div>
-                  </button>
+                  </div>
 
                   <Collapse open={isOpen} id={`${c.slug}-ekle`}>
                         <div className="px-4 pb-4 sm:pl-[calc(168px+2.5rem)] md:px-6 md:pb-6 md:pl-[calc(168px+3rem)]">

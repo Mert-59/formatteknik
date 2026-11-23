@@ -30,7 +30,11 @@ export default function HeroCode() {
       add({ code: line.code, qty: line.qty, category: CATEGORIES.find((c) => c.slug === slug)?.name ?? '' })
       setCode('')
     }
-    openCart({ focus: true })
+    // Kalem eklendiyse fiş, eklenen kalemi ve "Gönder"i göstererek açılır: dokunmatik ekranda kod kutusuna odaklanılmaz
+    // (klavye açılıp fişi örtmesin). Fare/klavye kullanan masaüstünde odak kutuda kalır, art arda eklenebilir.
+    // Boş gönderimde (kod yazılmadan) fiş her cihazda kod kutusuna odaklı açılır.
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    openCart({ focus: !line || finePointer })
   }
 
   return (

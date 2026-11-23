@@ -81,6 +81,9 @@ export const CATALOGS: Record<string, Catalog[]> = {
   ],
 }
 
+/** Bu boyutun (MB) üstündeki PDF'lerin kartında "Wi-Fi önerilir" notu çıkar: telefonda mobil veriyle açılmasın. */
+export const LARGE_PDF_MB = 40
+
 /** Gerçek dosya boyutu (MB) — derlemede public/kataloglar/'dan okunur; dosya yoksa 0 (derleme zaten hata verir) */
 export const catalogSizeMB = (c: Catalog) => (sizes[c.id] ?? 0) / 1048576
 
