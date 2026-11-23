@@ -10,7 +10,7 @@ Son güncelleme: 23 Kasım 2026
 - Yeni gruplar (sayfaları, site haritası ve menüdeki listeler kendiliğinden oluştu): **CNC Torna Aynası** (AUTOGRIP föyü, TUMA),
   **Pens Tutucular** (Kraft Werkzeuge), **Kater Tarama Kafası** (Teknik Cutting Tools, AKKO, SMOXH). Ürün grubu sayısı 9 → 12, katalog 12 → 20.
 - Kod tahmini yeni gruplar için genişletildi ("BT40 ER32" → Pens Tutucular, "PCLNR 2525 M12" ve "kater" → Kater Tarama Kafası, "ayna" → CNC Torna Aynası).
-- **(siz)** Yeni üç grubun metinleri onay bekliyor: `METIN-KONTROLU.md` 10–12.
+- Yeni üç grubun metinleri onaylandı (`METIN-KONTROLU.md` 10–12, 23 Kasım 2026). İlk dokuz grubun onayı hâlâ bekliyor.
 - Not: Teknik (46 MB) ve AKKO (45 MB) katalogları da 40 MB'ı aşıyor (bkz. madde 13). Teknik kataloğu sıkıştırılamadı:
   Ghostscript bu dosyadaki bir yazı tipini hatalı çiziyor, sıkıştırma rakamları bozabilirdi.
 

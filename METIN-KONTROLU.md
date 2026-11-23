@@ -101,7 +101,7 @@ Bu üç grubun "Genel bakış" metinleri sıfırdan yazıldı (eklenen katalogla
 Okuyup işaretleyin; firmanızın kullandığı terimlerle örtüşmeyen ifadeyi not edin.
 
 ## 10. CNC Torna Aynası
-- [ ] Onaylandı
+- [x] Onaylandı (23 Kasım 2026)
 
 | İçerik | Not |
 |---|---|
@@ -110,7 +110,7 @@ Okuyup işaretleyin; firmanızın kullandığı terimlerle örtüşmeyen ifadeyi
 | Sert / yumuşak ayak farkı; teklifte belirtilecekler (çap, ayak sayısı, burun tipi, **çektirme dişi**, ör. M60x2) | ⚠️ "Çektirme dişi" ifadesi AUTOGRIP föyündeki terimdir; sizin kullandığınız terimle aynı mı, teyit edin. |
 
 ## 11. Pens Tutucular
-- [ ] Onaylandı
+- [x] Onaylandı (23 Kasım 2026)
 
 | İçerik | Not |
 |---|---|
@@ -119,7 +119,7 @@ Okuyup işaretleyin; firmanızın kullandığı terimlerle örtüşmeyen ifadeyi
 | Bağlantı tipleri **BT30/40/50, SK (DIN 69871), ISO (DIN 2080)**; teklif örneği "BT40 ER32 100 mm" | Katalogdaki kod yapısı: BT40.ER32.100. |
 
 ## 12. Kater Tarama Kafası
-- [ ] Onaylandı
+- [x] Onaylandı (23 Kasım 2026)
 
 | İçerik | Not |
 |---|---|

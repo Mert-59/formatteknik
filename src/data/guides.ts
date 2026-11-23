@@ -1,7 +1,7 @@
 /**
  * Ürün grubu sayfalarının içeriği (/urunler/<grup>).
  * Teknik kontrol: 19 Kasım 2026 (Claude) — firma onayı bekliyor; değişiklikler ve gerekçeleri METIN-KONTROLU.md'de.
- * CNC Torna Aynası, Pens Tutucular, Kater Tarama Kafası: 23 Kasım 2026'da eklendi; metinleri de onay bekliyor (METIN-KONTROLU.md, 10–12).
+ * CNC Torna Aynası, Pens Tutucular, Kater Tarama Kafası: 23 Kasım 2026'da eklendi; metinleri aynı gün firma tarafından onaylandı.
  *
  * Her grup için:
  *  - metaDescription: arama sonuçlarında ve paylaşım önizlemesinde görünen açıklama (~150 karakter)
