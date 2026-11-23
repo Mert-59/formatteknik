@@ -3,7 +3,7 @@
  *
  * public/sw.js şablonundaki VERSION ve PRECACHE doldurulup dist/sw.js'e yazılır:
  *  - PRECACHE: ön-render edilen her sayfa (temiz adresiyle: /urunler) + dist/assets, brands, icons,
- *    favicon.svg, manifest.webmanifest. PDF kataloglar ve kapakları bilerek dışarıda (bkz. sw.js).
+ *    favicon.ico, manifest.webmanifest. PDF kataloglar ve kapakları bilerek dışarıda (bkz. sw.js).
  *  - VERSION: bu dosyaların içeriğinden üretilen kısa özet. İçerik değişmezse sürüm de değişmez;
  *    gereksiz yere herkesin önbelleği yenilenmez.
  */
@@ -12,7 +12,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
 
 const DIRS = ['assets', 'brands', 'icons']
-const FILES = ['favicon.svg', 'manifest.webmanifest', 'logo/format-teknik.webp'] // logo: Kurumsal sayfası (PNG yedeği gerektiğinde iner)
+const FILES = ['favicon.ico', 'manifest.webmanifest', 'logo/format-teknik.webp'] // logo: Kurumsal sayfası (PNG yedeği gerektiğinde iner)
 
 async function walk(dir) {
   const out = []
