@@ -62,7 +62,7 @@
     { "source": "/uploads/files/202512/upload_694a9180df0e1.pdf", "destination": "/kataloglar/mitsubishi-frezeleme.pdf", "permanent": true },
     { "source": "/uploads/files/202512/upload_694e6468624f0.pdf", "destination": "/kataloglar/izar-hss-matkap.pdf", "permanent": true },
     { "source": "/uploads/files/202509/upload_68bfca8f4eda4.pdf", "destination": "/kataloglar/format-hss-matkap.pdf", "permanent": true },
-    { "source": "/uploads/files/202503/upload_67d1d57d74b91.pdf", "destination": "/kataloglar/pens-kayar-otomat.pdf", "permanent": true },
+    { "source": "/uploads/files/202503/upload_67d1d57d74b91.pdf", "destination": "/kataloglar/schlenker-kayar-otomat.pdf", "permanent": true },
 
     { "source": "/tr/:page/:id", "destination": "/urunler", "permanent": true },
     { "source": "/tr/:path*", "destination": "/", "permanent": true },

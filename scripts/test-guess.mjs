@@ -60,6 +60,22 @@ const CASES = [
   // pens
   ['Ø12 ana iş mili pensi', 'pens-kayar-otomat'],
   ['pens 6 mm', 'pens-kayar-otomat'],
+  // CNC torna aynası
+  ['210 mm 3 ayaklı hidrolik ayna', 'cnc-torna-aynasi'],
+  ['CNC TORNA AYNASI 8 inç', 'cnc-torna-aynasi'],
+  ['sert ayak 3H-208', 'cnc-torna-aynasi'],
+  // pens tutucular
+  ['BT40 ER32', 'pens-tutucular'],
+  ['BT40.ER32.100', 'pens-tutucular'],
+  ['ER25 pens Ø10', 'pens-tutucular'],
+  ['SK40 pens başlığı', 'pens-tutucular'],
+  // kater / tarama kafası
+  ['PCLNR 2525 M12', 'kater-tarama-kafasi'],
+  ['SVJBR2020K16', 'kater-tarama-kafasi'],
+  ['S20R-PCLNR09', 'kater-tarama-kafasi'],
+  ['torna kateri', 'kater-tarama-kafasi'],
+  ['Ø80 tarama kafası', 'kater-tarama-kafasi'],
+  ['delik büyütme kafası', 'kater-tarama-kafasi'],
   // belirsiz → tahmin yok
   ['Ø10 matkap', null],
   ['12345', null],

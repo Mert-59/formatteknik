@@ -5,6 +5,8 @@
  *   guessCategory('M8x1.25')             → 'kilavuz'
  *   guessCategory('Ø8,5 5xD')            → 'karbur-matkap'
  *   guessCategory('0–25 mm mikrometre')  → 'olcu-aletleri'
+ *   guessCategory('BT40 ER32')           → 'pens-tutucular'
+ *   guessCategory('PCLNR 2525 M12')      → 'kater-tarama-kafasi'
  *   guessCategory('Ø10 matkap')          → null   (karbür mü HSS mi belli değil: tahmin yok)
  *
  * Sıra önemli: önce açık kelimeler (kullanıcı ne yazdıysa o), sonra kod kalıpları.
@@ -38,9 +40,14 @@ type Rule = [RegExp, string]
 
 /** 1) Açık kelimeler — sadeleştirilmiş küçük harf metinde */
 const WORDS: Rule[] = [
-  [/tornala|\btorna\b|kanal (ucu|bicagi)|dis (ucu|tornalama)|kater/, 'torna-uclari'],
+  // "torna aynası", "torna kateri" torna kelimesinden önce okunur
+  [/\bayna|chuck|sert ayak|yumusak ayak/, 'cnc-torna-aynasi'],
+  [/kater|tarama (kafa|basli)|delik buyutme|boring|\bbara\b/, 'kater-tarama-kafasi'],
+  [/tornala|\btorna\b|kanal (ucu|bicagi)|dis (ucu|tornalama)/, 'torna-uclari'],
   [/kilavuz|klavuz|dis acma|\btap\b/, 'kilavuz'],
   [/mikrometre|kumpas|komparator|mihengir|mastar|pasametre|mitutoyo|olcu (aleti|saati)|derinlik olcer/, 'olcu-aletleri'],
+  // ER / OZ pens başlığı: "BT40 ER32" shrink-fit'teki BT40'tan, "ER25 pens" kayar otomat pensinden önce okunur
+  [/pens (tutucu|basli|kafa)|\ber ?(8|11|16|20|25|32|40|50)\b|\boz ?(16|20|25|32)\b/, 'pens-tutucular'],
   [/shrink|isil sikma|\bbt ?(30|40|50)\b|\bhsk\b|\bsk ?(40|50)\b|takim tutucu|holder/, 'shrink-fit-holder'],
   [/\bpens|kayar|swiss|is mili/, 'pens-kayar-otomat'],
   [/takma uclu freze|alin frez|freze govde|kose frez|kopya frez|tablali frez|yuzey frez/, 'takma-uclu-freze'],
@@ -51,6 +58,8 @@ const WORDS: Rule[] = [
 
 /** 2) Kod kalıpları — büyük harf, özgün metinde */
 const CODES: Rule[] = [
+  // torna kateri (ISO 5608): PCLNR 2525 M12, SVJBR2020K16; iç çap barası: S20R-PCLNR09, A16R-SCLCR09
+  [/\b[A-Z]{4}[RLN]\s?\d{4}\s?[A-Z]\s?\d{2}\b|\b[ACES]\d{2}[A-Z]-?[A-Z]{4}[RL]\s?\d{2}/, 'kater-tarama-kafasi'],
   // frezeleme ucu (ISO): APMT 1135, SEKT 1204, RPMT 1204, ODMT 0605, LNMU 0303, XOMX 0904
   [/\b(AP[MK][TX]|SE[EKM][NT]|SPKN|RP[MH][TW]|RD[MH][TW]|OD[MH]T|ONMU|LNMU|XOMX|AD[MK]T|JDMT|JOMT|R390)\s?-?\d{2}/, 'takma-uclu-freze'],
   // tornalama ucu (ISO): CNMG 120408, DCMT 11T304, VBMT 160404, TNMG 1604, CCGT 09T3

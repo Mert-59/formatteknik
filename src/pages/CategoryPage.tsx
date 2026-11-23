@@ -58,6 +58,9 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
     return () => window.clearTimeout(t)
   }, [hash])
   const others = CATEGORIES.filter((o) => o.slug !== c.slug)
+  // Diğer gruplar ızgarasının son satırında boş kalan hücreler kâğıt rengiyle doldurulur (2 ve 4 sütun);
+  // yoksa ızgaranın çizgi rengi boş hücrede gri bir blok olarak görünür.
+  const blank = (cols: number) => (cols - (others.length % cols)) % cols
 
   // Bölüm numaraları sırayla (gizli marka bölümü numara atlatmaz)
   let n = 0
@@ -206,7 +209,7 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
       {/* diğer gruplar */}
       <section className="border-t border-line">
         <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-10">
-          <SectionHead compact index={next()} label="DİĞER ÜRÜN GRUPLARI" title={<>Tek adreste dokuz grup.</>} />
+          <SectionHead compact index={next()} label="DİĞER ÜRÜN GRUPLARI" title={<>Tek adreste on iki grup.</>} />
           <ul className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {others.map((o) => (
               <li key={o.slug} className="bg-paper">
@@ -218,6 +221,9 @@ function CategoryView({ category: c, guide: g, index }: { category: Category; gu
                   <ArrowUpRight className="size-4 shrink-0 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
                 </Link>
               </li>
+            ))}
+            {Array.from({ length: Math.max(blank(2), blank(4)) }, (_, i) => (
+              <li key={`bos-${i}`} aria-hidden className={`hidden bg-paper ${i < blank(2) ? 'sm:block' : ''} ${i < blank(4) ? 'lg:block' : 'lg:hidden'}`} />
             ))}
           </ul>
           <Link to="/urunler" className="tap group mt-10 inline-flex items-center gap-2 text-[15px] font-medium underline-offset-4 hover:underline">

@@ -156,6 +156,55 @@ const drawings: Record<DrawingKey, React.ReactNode> = {
       <Dim x1={140} x2={208} y={112} label="Ø12" />
     </>
   ),
+  // CNC torna aynası — önden: 3 kademeli ayak, kızak kanalları, bağlantı delikleri
+  chuck: (
+    <>
+      <Circle cx={120} cy={64} r={54} />
+      <Circle cx={120} cy={64} r={46} className="opacity-50" />
+      <Circle cx={120} cy={64} r={12} />
+      {[-90, 30, 150].map((a) => (
+        <g key={a} transform={`rotate(${a} 120 64)`}>
+          <Path d="M133 60.5H172M133 67.5H172" className="opacity-40" />
+          <Path d="M136 59 H148 V56 H164 V72 H148 V69 H136 Z" />
+        </g>
+      ))}
+      {[90, 210, 330].map((a) => (
+        <Circle key={a} cx={120 + 30 * Math.cos((a * Math.PI) / 180)} cy={64 + 30 * Math.sin((a * Math.PI) / 180)} r={3.5} />
+      ))}
+      <Center d="M58 64H182M120 2V126" />
+      <Label x={120} y={134}>Ø210 · 3 AYAK</Label>
+    </>
+  ),
+  // pens tutucu — yandan: BT konik, flanş, gövde, tırtıllı somun, pens burnu
+  colletChuck: (
+    <>
+      <Path d="M30 56 L82 44 L82 96 L30 84 Z" />
+      <Rect x={82} y={30} width={30} height={80} />
+      <Path d="M88 30 V36 L97 44 L106 36 V30 M88 110 V104 L97 96 L106 104 V110" className="opacity-60" />
+      <Rect x={112} y={50} width={40} height={40} />
+      <Path d="M152 46 H190 L196 52 V88 L190 94 H152 Z" />
+      <Path d={ticks(158, 186, 4, 46, 51) + ticks(158, 186, 4, 89, 94)} className="opacity-50" />
+      <Path d="M196 58 L208 62 V78 L196 82" />
+      <Path d="M199 65 H208 M199 75 H208" className="opacity-50" />
+      <Rect x={208} y={66} width={20} height={8} />
+      <Center d="M22 70H234" />
+      <Label x={130} y={128}>BT40 · ER32</Label>
+    </>
+  ),
+  // tarama kafası — yandan: sap, yaka, pahlı gövde ve pahlardaki takma uçlar
+  faceHead: (
+    <>
+      <Rect x={24} y={58} width={62} height={24} />
+      <Rect x={86} y={50} width={14} height={40} />
+      <Path d="M100 34 H172 L190 52 V88 L172 106 H100 Z" />
+      <Path d="M118 34 V106 M146 34 V106" className="opacity-40" />
+      <Rect x={-7} y={-3} width={14} height={6} transform="translate(181 43) rotate(45)" />
+      <Rect x={-7} y={-3} width={14} height={6} transform="translate(181 97) rotate(-45)" />
+      <Path d="M190 62 H180 V78 H190" className="opacity-50" />
+      <Center d="M14 70H228" />
+      <Label x={145} y={128}>Ø80 · 45°</Label>
+    </>
+  ),
 }
 
 export default function ToolDrawing({ kind, className = '' }: { kind: DrawingKey; className?: string }) {

@@ -1,6 +1,18 @@
 # Yapılacaklar
 
-Son güncelleme: 19 Kasım 2026 (oturum sonu)
+Son güncelleme: 23 Kasım 2026
+
+## 23 Kasım 2026 — kataloglar ve yeni ürün grupları
+
+- Karbür Freze: **Boomerang Carbide** 2026 kataloğu (164 s., 62 → 10 MB sıkıştırıldı).
+- Pens Kayar Otomat: Gisstec kataloğu **kaldırıldı**, yerine **Schlenker** (136 s., İngilizce). Eski sitenin Gisstec PDF adresi artık Schlenker kataloğuna yönlenir.
+- Ölçü Aletleri: **ASIMETO** kataloğu (85 s.).
+- Yeni gruplar (sayfaları, site haritası ve menüdeki listeler kendiliğinden oluştu): **CNC Torna Aynası** (AUTOGRIP föyü, TUMA),
+  **Pens Tutucular** (Kraft Werkzeuge), **Kater Tarama Kafası** (Teknik Cutting Tools, AKKO, SMOXH). Ürün grubu sayısı 9 → 12, katalog 12 → 20.
+- Kod tahmini yeni gruplar için genişletildi ("BT40 ER32" → Pens Tutucular, "PCLNR 2525 M12" ve "kater" → Kater Tarama Kafası, "ayna" → CNC Torna Aynası).
+- **(siz)** Yeni üç grubun metinleri onay bekliyor: `METIN-KONTROLU.md` 10–12.
+- Not: Teknik (46 MB) ve AKKO (45 MB) katalogları da 40 MB'ı aşıyor (bkz. madde 13). Teknik kataloğu sıkıştırılamadı:
+  Ghostscript bu dosyadaki bir yazı tipini hatalı çiziyor, sıkıştırma rakamları bozabilirdi.
 
 ## Kalan işler — öncelik sırasıyla
 
@@ -81,7 +93,7 @@ Eski siteden 11 katalog alındı (8 Kasım 2026); büyükler ekran için sıkı�
       Mitsubishi MMT diş tornalama uçları eklendi (Torna Uçları grubu). Klasördeki diğer 6 PDF sitedekilerle aynı içerikte.
 - [x] **Carmon kataloğunda Euro liste fiyatları var** (Mitutoyo'daki gibi) — 18 Kasım 2026: olduğu gibi kalması kararlaştırıldı.
 - [x] **Yeni klasörde olmayan 3 katalog** — SANOWA (Eco kampanya 2025), IZAR (ürün föyü), Gisstec (kayar otomat pensleri):
-      18 Kasım 2026: eski hâlleriyle kalması kararlaştırıldı.
+      18 Kasım 2026: eski hâlleriyle kalması kararlaştırıldı. 23 Kasım 2026: Gisstec kaldırıldı, yerine Schlenker.
 
 Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya bakın.
 

@@ -35,7 +35,7 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
 ## Yapı
 
 - **Ön-render** — `npm run build` her sayfanın HTML'ini içeriği dolu olarak üretir
-  (`dist/index.html`, `urunler.html`, `urunler/<grup>.html` ×9, `kurumsal.html`, `iletisim.html`, `404.html`)
+  (`dist/index.html`, `urunler.html`, `urunler/<grup>.html` ×12, `kurumsal.html`, `iletisim.html`, `404.html`)
   ve `dist/sitemap.xml`'i bu sayfalardan yazar. Yeni bir ürün grubu `catalog.ts` + `guides.ts`'e eklenince
   sayfası ve site haritası kaydı kendiliğinden oluşur. Her dosyada o sayfanın kendi
   başlığı, açıklaması, canonical adresi ve paylaşım etiketleri vardır; arama motorları ve WhatsApp/LinkedIn

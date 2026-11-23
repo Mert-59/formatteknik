@@ -5,6 +5,10 @@
  * 18 Kasım 2026 güncellemesi (proje klasöründeki Kataloglar/ — sıkıştırılmamış asıllar, git'e girmez):
  * Carmon (Multi Purpose Taps 2024–2025) ve Format HSS (yeni baskı) değişti, Mitsubishi diş uçları (MMT) eklendi.
  * Klasördeki Mitsubishi ×4, Mitutoyo ve Format kılavuz sitedekilerle aynı içerikte (sayfa sayfa karşılaştırıldı).
+ * 23 Kasım 2026: Boomerang Carbide (Karbür Freze), ASIMETO (Ölçü Aletleri) eklendi; Pens Kayar Otomat'ta Gisstec yerine Schlenker;
+ * yeni gruplar CNC Torna Aynası (AUTOGRIP, TUMA), Pens Tutucular (Kraft), Kater Tarama Kafası (Teknik, AKKO, SMOXH).
+ * Sıkıştırma ancak belirgin kazanç varsa uygulandı; Schlenker, TUMA, Teknik ve SMOXH asıllarıyla duruyor
+ * (Teknik'te Ghostscript bir yazı tipini hatalı çizdiği için sıkıştırılmadı).
  * Büyük dosyalar ekran okuması için Ghostscript ile sıkıştırıldı (/ebook, görseller 150 dpi);
  * metin ve çizimler vektörel kaldı.
  *
@@ -50,16 +54,30 @@ export const CATALOGS: Record<string, Catalog[]> = {
   ],
   'karbur-freze': [
     { id: 'mitsubishi-frezeleme', title: 'MS Plus Yekpare Karbür Parmak Frezeler', brand: 'Mitsubishi Materials', pages: 96, lang: 'Türkçe' },
+    { id: 'boomerang-karbur-freze', title: 'Karbür Parmak Frezeler ve Matkaplar — 2026 Katalog', brand: 'Boomerang Carbide', pages: 164, lang: 'Türkçe' },
   ],
   'olcu-aletleri': [
     { id: 'mitutoyo-olcu-aletleri', title: 'Genel Katalog 2019', brand: 'Mitutoyo', pages: 631, lang: 'Fransızca' },
+    { id: 'asimeto-olcu-aletleri', title: 'Hassas Ölçü Aletleri', brand: 'ASIMETO', pages: 85, lang: 'Türkçe' },
   ],
   'hss-matkap': [
     { id: 'format-hss-matkap', title: 'Taşlanmış HSS Matkaplar — DIN 338', brand: 'Format', pages: 13, lang: 'Türkçe' },
     { id: 'izar-hss-matkap', title: 'Taşlanmış Ekstra Uzun Matkap — DIN 1869', brand: 'IZAR', pages: 1, lang: 'Türkçe', note: 'Tek sayfalık ürün föyü' },
   ],
   'pens-kayar-otomat': [
-    { id: 'pens-kayar-otomat', title: 'Kayar Otomat Bağlama Takımları', brand: 'Gisstec', pages: 66, lang: 'Almanca / İngilizce' },
+    { id: 'schlenker-kayar-otomat', title: 'Pensler ve Kılavuz Burçları', brand: 'Schlenker', pages: 136, lang: 'İngilizce' },
+  ],
+  'cnc-torna-aynasi': [
+    { id: 'autogrip-hidrolik-ayna', title: 'Hidrolik Aynalar', brand: 'AUTOGRIP', pages: 6, lang: 'Türkçe', note: 'Ürün föyü' },
+    { id: 'tuma-torna-aynasi', title: 'Hidrolik ve Üniversal Aynalar, Puntalar', brand: 'TUMA', pages: 48, lang: 'Türkçe / İngilizce' },
+  ],
+  'pens-tutucular': [
+    { id: 'kraft-pens-tutucular', title: 'Pens Başlıkları ve Pensler', brand: 'Kraft Werkzeuge', pages: 52, lang: 'Türkçe' },
+  ],
+  'kater-tarama-kafasi': [
+    { id: 'teknik-genel-katalog', title: 'Genel Katalog 2026 — Kater, Tarama ve Delik Büyütme', brand: 'Teknik Cutting Tools', pages: 194, lang: 'Türkçe / İngilizce' },
+    { id: 'akko-takim-katalogu', title: 'Takım Kataloğu 2026', brand: 'AKKO', pages: 510, lang: 'Türkçe / İngilizce / Almanca' },
+    { id: 'smoxh-genel-katalog', title: 'Genel Ürün Kataloğu 2026', brand: 'SMOXH', pages: 542, lang: 'İngilizce' },
   ],
 }
 

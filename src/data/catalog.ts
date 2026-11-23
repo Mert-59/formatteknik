@@ -1,5 +1,5 @@
 /**
- * Ürün grupları — mevcut sitedeki 9 kategori.
+ * Ürün grupları — eski sitedeki 9 kategori + 23 Kasım 2026'da eklenen 3 grup (CNC Torna Aynası, Pens Tutucular, Kater Tarama Kafası).
  * `drawing`: components/ToolDrawing.tsx içindeki teknik çizimin anahtarı.
  */
 export type Category = {
@@ -14,6 +14,7 @@ export type Category = {
 export type DrawingKey =
   | 'insert' | 'facemill' | 'tap' | 'carbideDrill' | 'endmill'
   | 'micrometer' | 'hssDrill' | 'shrink' | 'collet'
+  | 'chuck' | 'colletChuck' | 'faceHead'
 
 export const CATEGORIES: Category[] = [
   {
@@ -87,5 +88,29 @@ export const CATEGORIES: Category[] = [
     description: 'Kayar otomat (swiss-type) tezgâhlar için ana ve karşı iş mili pensleri.',
     example: 'Örn. Ø12 ana iş mili pensi',
     drawing: 'collet',
+  },
+  {
+    slug: 'cnc-torna-aynasi',
+    name: 'CNC Torna Aynası',
+    short: 'Hidrolik ve üniversal torna aynaları.',
+    description: 'CNC torna tezgâhları için hidrolik ve üniversal aynalar, sert ve yumuşak ayaklar, flanşlar ve puntalar.',
+    example: 'Örn. 210 mm 3 ayaklı hidrolik ayna',
+    drawing: 'chuck',
+  },
+  {
+    slug: 'pens-tutucular',
+    name: 'Pens Tutucular',
+    short: 'ER pens başlıkları ve pensler.',
+    description: 'BT, SK ve ISO bağlantılı ER ve OZ pens başlıkları, pensler ve somunlar.',
+    example: 'Örn. BT40 ER32',
+    drawing: 'colletChuck',
+  },
+  {
+    slug: 'kater-tarama-kafasi',
+    name: 'Kater Tarama Kafası',
+    short: 'Torna katerleri ve tarama kafaları.',
+    description: 'Torna katerleri, tarama (alın frezeleme) kafaları, delik büyütme kafaları ve baraları.',
+    example: 'Örn. PCLNR 2525 M12',
+    drawing: 'faceHead',
   },
 ]

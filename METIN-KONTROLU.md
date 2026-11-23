@@ -95,4 +95,38 @@ Arama sonuçlarında görünen açıklamalar (metaDescription) doğruydu, deği�
 
 ---
 
+## Yeni gruplar (23 Kasım 2026)
+
+Bu üç grubun "Genel bakış" metinleri sıfırdan yazıldı (eklenen katalogların içeriğine ve genel sektör bilgisine dayanarak).
+Okuyup işaretleyin; firmanızın kullandığı terimlerle örtüşmeyen ifadeyi not edin.
+
+## 10. CNC Torna Aynası
+- [ ] Onaylandı
+
+| İçerik | Not |
+|---|---|
+| Hidrolik ayna tanımı ve CNC'de neden tercih edildiği | Genel bilgi. |
+| Seçim ölçütleri: ayak sayısı, çap, açık / kapalı merkez, iş mili burnu (**A2-5, A2-6, A2-8**) | AUTOGRIP föyündeki adaptör tipleriyle (A5, A6, A8) uyumlu. |
+| Sert / yumuşak ayak farkı; teklifte belirtilecekler (çap, ayak sayısı, burun tipi, **çektirme dişi**, ör. M60x2) | ⚠️ "Çektirme dişi" ifadesi AUTOGRIP föyündeki terimdir; sizin kullandığınız terimle aynı mı, teyit edin. |
+
+## 11. Pens Tutucular
+- [ ] Onaylandı
+
+| İçerik | Not |
+|---|---|
+| Pens tutucunun çalışma şekli (somun → pens → konik yuva) | Genel bilgi. |
+| **ER (DIN 6499 / ISO 15488)** ve **OZ (DIN 6388)** pensleri; ER32 ile 2–20 mm örneği | Kraft kataloğundaki standart ve kapasitelerle aynı. |
+| Bağlantı tipleri **BT30/40/50, SK (DIN 69871), ISO (DIN 2080)**; teklif örneği "BT40 ER32 100 mm" | Katalogdaki kod yapısı: BT40.ER32.100. |
+
+## 12. Kater Tarama Kafası
+- [ ] Onaylandı
+
+| İçerik | Not |
+|---|---|
+| Kater = takma uçlu takım gövdesi; **ISO 5608** kodu örneği (PCLNR 2525 M12) | Teknik, AKKO ve SMOXH kataloglarının hepsinde bu kod yapısı var. |
+| Tarama kafaları (alın frezeleri) ve seçim ölçütleri | ⚠️ "Tarama kafası" ile "Takma Uçlu Freze" grubu kısmen örtüşür; iki grubun ayrımı size uygun mu, teyit edin. |
+| Delik büyütme kafaları ve baraları | Teknik ve AKKO kataloglarında yer alıyor. |
+
+---
+
 Onayladıktan sonra `src/data/guides.ts` başındaki "firma onayı bekliyor" notu kaldırılır ve bu dosya silinebilir.

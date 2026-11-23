@@ -4,7 +4,7 @@
  * 1) vite'ın ürettiği dist/index.html şablon olarak okunur.
  * 2) Her sayfa React ile sunucuda çizilir (dist-ssr/entry-server.js).
  * 3) Sayfanın HTML'i <div id="root"> içine, kendi başlık/açıklama/canonical/paylaşım etiketleri <head>'e yazılır.
- * 4) Çıktı: dist/index.html, urunler.html, urunler/<grup>.html (9 ürün grubu), kurumsal.html, iletisim.html, 404.html
+ * 4) Çıktı: dist/index.html, urunler.html, urunler/<grup>.html (12 ürün grubu), kurumsal.html, iletisim.html, 404.html
  *    (barındırıcı /urunler adresinde urunler.html'i sunar — ayarlar README.md "Yayına alma" bölümünde).
  * 5) dist/sitemap.xml bu sayfalardan üretilir.
  * 6) Yönlendirmeler (vercel.json) denetlenir; dist/.htaccess ve dist/_redirects yazılır.

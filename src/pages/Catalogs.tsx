@@ -17,7 +17,7 @@ const p2 = (n: number) => String(n).padStart(2, '0')
 export default function Catalogs() {
   usePageMeta(
     'Kataloglar',
-    'Mitsubishi Materials, Mitutoyo, Sanowa, Carmon, IZAR, Gisstec ve Format ürün katalogları (PDF): tornalama, frezeleme, delme, kılavuz, ölçü aletleri, kayar otomat pensleri.',
+    'Mitsubishi, Mitutoyo, Boomerang, Schlenker, AKKO, SMOXH, TUMA, Kraft ve diğer markaların PDF katalogları: tornalama, frezeleme, delme, kılavuz, ölçü, bağlama.',
   )
 
   const groups = CATEGORIES.map((c, i) => ({ c, i, list: CATALOGS[c.slug] ?? [] })).filter((g) => g.list.length > 0)

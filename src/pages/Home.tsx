@@ -103,7 +103,7 @@ function ProductGrid() {
         index="01"
         label="ÜRÜN GRUPLARI"
         title={<>Talaşlı imalatın tüm takımları.</>}
-        aside={<>Dokuz ürün grubu, tek bir adres. İhtiyacınızı kodla ya da tarifle teklif fişine ekleyin.</>}
+        aside={<>On iki ürün grubu, tek bir adres. İhtiyacınızı kodla ya da tarifle teklif fişine ekleyin.</>}
       />
       {/* teknik şartname tablosu: telefonda satır, geniş ekranda 3×3 */}
       <ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-3">
@@ -137,7 +137,7 @@ function ProductGrid() {
 /* ---------------------------------------------------------- KATALOG ŞERİDİ */
 
 /** Yelpazedeki kapaklar (soldan sağa); listede olmayan kimlik atlanır. */
-const FEATURED_COVERS = ['mitsubishi-tornalama', 'mitutoyo-olcu-aletleri', 'format-kilavuz', 'pens-kayar-otomat']
+const FEATURED_COVERS = ['mitsubishi-tornalama', 'mitutoyo-olcu-aletleri', 'format-kilavuz', 'schlenker-kayar-otomat']
 /** yelpazedeki kapakların duruşu: dönüş (derece) ve yatay kayma (px), --fan ile çarpılır: dar telefonda 0.7, üzerine gelince 1.35 */
 const FAN = [
   { r: -10, x: -66 },
