@@ -26,6 +26,7 @@ npm run check:redirects -- https://www.formatteknik.com.tr  # ...ve yayındaki s
 | Ürün grubu sayfalarının içeriği (`/urunler/<grup>`: genel bakış, sayfa açıklaması, markalar) | `src/data/guides.ts` |
 | Kurumsal sayfa bilgileri (kuruluş, teslimat, fotoğraflar, referanslar) | `src/data/company.ts` |
 | PDF kataloglar (grup sayfalarında ve `/kataloglar`'da) — dosyalar `public/kataloglar/`, kapaklar `public/kataloglar/kapak/` | `src/data/catalogs.ts` |
+| Büyük katalogların içindekiler listesi (sayfa = PDF'teki gerçek sayfa sırası; derleme denetler) | `src/data/catalogToc.ts` |
 | Eski siteden yönlendirmeler (`/tr/...`, eski PDF adresleri) — tek liste, tüm barındırıcılar için | `vercel.json` → `redirects` |
 | Markalar ve logoları (`public/brands/`) | `src/data/brands.ts` |
 | Sayfa başlıkları / açıklamaları | her sayfadaki `usePageMeta(...)` |

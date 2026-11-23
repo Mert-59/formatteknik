@@ -1,14 +1,18 @@
-import { Download, Eye, Wifi } from 'lucide-react'
+import { ChevronDown, Download, Eye, ListTree, Wifi } from 'lucide-react'
 import { LARGE_PDF_MB, catalogCover, catalogFileName, catalogPdf, catalogSizeMB, formatSize, type Catalog } from '../data/catalogs'
+import { CATALOG_TOC } from '../data/catalogToc'
 
 /**
  * PDF katalog kartı: gerçek kapak (ilk sayfa), marka, başlık, sayfa · boyut · dil,
  * "Görüntüle" (yeni sekmede tarayıcının PDF görüntüleyicisi) ve "İndir" (anlamlı dosya adıyla).
  * Büyük dosyada (LARGE_PDF_MB üstü) "Wi-Fi önerilir" notu: telefonda "Görüntüle" çoğu zaman dosyanın tamamını indirir.
+ * İçindekiler (data/catalogToc.ts) varsa kartın altında açılır liste: her bölüm PDF'i o sayfada açar (#page=N).
+ * Yerli <details>: JavaScript'siz de çalışır, ön-render'da kapalı çizilir (devralmada uyuşmazlık olmaz).
  */
 export default function CatalogCard({ catalog: c }: { catalog: Catalog }) {
   const pdf = catalogPdf(c)
   const big = catalogSizeMB(c) > LARGE_PDF_MB
+  const toc = CATALOG_TOC[c.id]
   const meta = [`${c.pages.toLocaleString('tr-TR')} SAYFA`, formatSize(catalogSizeMB(c)).toLocaleUpperCase('tr-TR'), c.lang.toLocaleUpperCase('tr-TR')]
 
   return (
@@ -58,6 +62,37 @@ export default function CatalogCard({ catalog: c }: { catalog: Catalog }) {
           </a>
         </div>
       </div>
+
+      {toc && (
+        <details className="group/toc col-span-2 border-t border-line pt-2">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 text-[14px] font-medium text-graphite transition-colors hover:text-ink [&::-webkit-details-marker]:hidden">
+            <span className="inline-flex items-center gap-2">
+              <ListTree className="size-4 shrink-0" aria-hidden /> İçindekiler
+              <span className="font-mono text-[12px] font-normal text-muted">· {toc.filter((e) => !e.sub).length} bölüm</span>
+            </span>
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-300 group-open/toc:rotate-180" aria-hidden />
+          </summary>
+          <ol className="divide-y divide-line">
+            {toc.map((e) => (
+              <li key={`${e.page}-${e.title}`}>
+                <a
+                  href={`${pdf}#page=${e.page}`}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`${e.title}: kataloğu ${e.page}. sayfada aç (PDF, yeni sekmede)`}
+                  className={`flex items-baseline justify-between gap-3 py-2 transition-colors hover:text-accent-ink ${e.sub ? 'pl-4 text-[13px] text-graphite' : 'text-[14px] font-medium'}`}
+                >
+                  <span className="min-w-0">{e.title}</span>
+                  <span className="shrink-0 font-mono text-[12px] tabular-nums text-muted">s. {e.page}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-2 text-[12px] leading-relaxed text-muted">
+            Bölüme dokunun, katalog o sayfada açılır. Bazı telefonlar PDF’i indirip ilk sayfadan açar; o durumda sayfa numarasına gidin.
+          </p>
+        </details>
+      )}
     </article>
   )
 }

@@ -123,7 +123,7 @@ Yeni katalog eklemek için `catalogs.ts` dosyasının başındaki açıklamaya b
 ### Kataloglar
 - [ ] **13. 40 MB'ı aşan PDF'ler telefonda mobil veriyle açılıyor:** ~~"Wi-Fi önerilir" notu~~ (23 Kasım 2026: 40 MB üstü kartlarda, eşik `catalogs.ts` → `LARGE_PDF_MB`); kalan: Faz 1'de "çevrimdışı kaydet".
       19 Kasım incelemesi: Android'de "Görüntüle" çoğu zaman 42–62 MB'lık dosyanın tamamını indiriyor.
-- [ ] **14. Büyük kataloglara içindekiler:** bölümlere doğrudan giden bağlantılar (ör. "Diş tornalama → s. 412"); bölümler elle çıkarılmalı.
+- [x] **14. Büyük kataloglara içindekiler** — 23 Kasım 2026: 100 sayfa üstü 9 katalogda (`src/data/catalogToc.ts`); kartta "İçindekiler" açılır, her bölüm PDF'i o sayfada açar. Eski not: bölümlere doğrudan giden bağlantılar (ör. "Diş tornalama → s. 412"); bölümler elle çıkarılmalı.
 
 ### Kurumsal ve İletişim
 - [x] **15. Telefonda sıkı listeler** (İletişim kartları, Kurumsal sektör/ürün kartları). 19 Kasım 2026.

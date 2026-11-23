@@ -22,7 +22,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ssrDir = join(root, 'dist-ssr')
 
-const { render, NAV, SITE, CATEGORY_PATHS, EXTRA_PATHS, CATALOG_FILES } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href)
+const { render, NAV, SITE, CATEGORY_PATHS, EXTRA_PATHS, CATALOG_FILES, CATALOG_TOC_ERRORS } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href)
 const template = await readFile(join(dist, 'index.html'), 'utf8')
 
 // Alan adı denetimi: index.html'deki tüm site adresleri SITE.url ile başlamalı (www'li ve www'siz karışmasın).
@@ -38,6 +38,7 @@ if (missing.length) {
   throw new Error(`[prerender] Katalog dosyası eksik (public/ altına koyun ya da src/data/catalogs.ts'ten çıkarın):\n  ${missing.join('\n  ')}`)
 }
 console.log(`  ✓ ${CATALOG_FILES.length / 2} katalog: PDF ve kapak dosyaları yerinde`)
+if (CATALOG_TOC_ERRORS.length) throw new Error(`[prerender] Katalog içindekiler hatalı (src/data/catalogToc.ts):\n  ${CATALOG_TOC_ERRORS.join('\n  ')}`)
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
